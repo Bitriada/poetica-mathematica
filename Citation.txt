@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Poetica Mathematica: Cogitatio ex Nihilo et Speculum Scientiae"
+author:
+  - family-names: Kovlekov
+    given-names: Kirill
+version: 0.25
+date-released: 2026
+doi: "10.5281/zenodo.23698076"
+url: "https://zenodo.org/records/23698076"
+license: CC-BY-4.0
+type: generic
