@@ -1,0 +1,25 @@
+# A Generative Integer Fractal from Minimal Rules
+### How a blocked rule forces the emergence of a 117-point hyper-structure
+
+**[📄 Read the full paper (PDF)](Generative_Integer_Fractal_from_minimal_rules.pdf)**
+
+## The Thought Experiment
+Imagine a mathematical construction that begins with a single seed: the number 2. It has only three available operations: addition, multiplication, and exponentiation. 
+
+It is governed by one strict rule: **Do not repeat the same operation more than three times in a row.** 
+
+The system always uses the most powerful move available, advancing as far as it can until it hits the triadic limit. What happens when the construction reaches step 9 and is blocked from taking a fourth step? 
+
+## The Grammatical Turn
+Because the rules forbid adding a new seed or terminating the process, the system must find a move that adds nothing new, imports nothing, and uses only the structure already present. This is **structural least-action**.
+
+By re-reading the construction in parallel—realizing it was building in three dimensions all along—the 9-step block resolves into a 117-point structure. The values didn't change; only the reading did. 
+
+## Inside the Paper:
+*   **The Four Rules:** The minimal instruction set that generates the fractal.
+*   **The Three Zones:** How Prime, Reflection, and Projection emerge from the triadic limit.
+*   **The FAQ:** Addressed to specialists. (Why is this not just an L-system? How is "dimension" defined here?)
+*   **The Cliffhanger:** Why the construction appears to naturally terminate at exactly 10 dimensions.
+
+---
+*This paper is a standalone reorganization of Interlude I and Chapter I of the Poetica Mathematica monograph. To see how the fractal continues, visit the [Zenodo Archive](https://doi.org/10.5281/zenodo.23698076).*
