@@ -14,6 +14,9 @@ The standalone papers are designed to be read independently in 3–5 minutes. Th
 ## Provenance & Correspondence
 - **[Provenance Inquiry](Provenance/README.md)** — A formal inquiry brief regarding structural correspondences between the Bitriada grammar (Fare Algebra) and a later mathematical proof released by OpenAI. This document outlines a chronology, technical correspondences, and questions for provenance review.
 
+* **[History of Math as a Sequence of Cognitive Revolutions](./History_of_Math_as_a_Sequence_of_Cognitive_Revolutions.docx)** 
+  *What toll did we pay to count differently?* A standalone thought experiment tracing the evolution of number systems from primitive tally marks to the complex plane, revealing the hidden "fare" of certainty paid at each mathematical boundary.
+
 ---
 ## Navigation
 - **[Main Repository](../README.md)**
