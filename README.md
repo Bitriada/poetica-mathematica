@@ -1,7 +1,7 @@
 # Poetica Mathematica
 
 **Cogitatio ex Nihilo et Speculum Scientiae**
-By Kirill I. Kovlekov. Independent researcher. AI-assisted.
+By Kirill Kovlekov. Independent researcher. AI-assisted.
 
 ## Overview
 
