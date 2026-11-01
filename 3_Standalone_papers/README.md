@@ -14,6 +14,9 @@ The standalone papers are designed to be read independently in 3–5 minutes. Th
 **[History of Math as a Sequence of Cognitive Revolutions](./History_of_Math_as_a_Sequence_of_Cognitive_Revolutions.docx)** 
   *What toll did we pay to count differently?* A standalone thought experiment tracing the evolution of number systems from primitive tally marks to the complex plane, revealing the hidden "fare" of certainty paid at each mathematical boundary.
 
+**[Generative Construction of 6 Geometric Freedoms](./Generative_Construction_of_6_Geometric_Freedoms.pdf)** 
+  *Why does a system trying to reach the complex plane shatter into an infinite-sided shape?* A standalone thought experiment tracing a 0D binary dot as it strictly builds the natural, integer, and float environments through a doubling moveset. It reveals that geometry is merely a "shadow" of algebraic rules, culminating in the Apeirogon—the structural boundary where the system hits its Gödelian threshold.
+
 ## Provenance
 - **[Provenance Inquiry](Provenance/README.md)** — A formal inquiry brief regarding structural correspondences between the Bitriada grammar (Fare Algebra) and a later mathematical proof released by OpenAI. This document outlines a chronology, technical correspondences, and questions for provenance review.
 
