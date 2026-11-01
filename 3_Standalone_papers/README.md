@@ -15,7 +15,7 @@ The standalone papers are designed to be read independently in 3–5 minutes. Th
   *What toll did we pay to count differently?* A standalone thought experiment tracing the evolution of number systems from primitive tally marks to the complex plane, revealing the hidden "fare" of certainty paid at each mathematical boundary.
 
 **[Generative Construction of 6 Geometric Freedoms](./Generative_Construction_of_6_Geometric_Freedoms.pdf)** 
-  *Why does a system trying to reach the complex plane shatter into an infinite-sided shape?* A standalone thought experiment tracing a 0D binary dot as it strictly builds the natural, integer, and float environments through a doubling moveset. It reveals that geometry is merely a "shadow" of algebraic rules, culminating in the Apeirogon—the structural boundary where the system hits its Gödelian threshold.
+  *Can a single 0D dot build the complex plane without ever importing an outside rule?* A standalone generative grammar thought experiment framed as a combinatorial game. Starting with only a binary flag and the moves \(+1\) and \(-1\), the system is forced to invent integers, fractions, and geometric shapes from scratch. It reveals how algebraic constraints cast a "shadow" into geometric form - and what happens when the system tries to operate on its own existence.
 
 ## Provenance
 - **[Provenance Inquiry](Provenance/README.md)** — A formal inquiry brief regarding structural correspondences between the Bitriada grammar (Fare Algebra) and a later mathematical proof released by OpenAI. This document outlines a chronology, technical correspondences, and questions for provenance review.
