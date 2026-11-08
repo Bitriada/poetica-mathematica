@@ -17,6 +17,10 @@ The standalone papers are designed to be read independently in 3–5 minutes. Th
 **[Generative Construction of 6 Geometric Freedoms](./Generative_Construction_of_6_Geometric_Freedoms.pdf)** 
   *Can a single 0D dot build the complex plane without ever importing an outside rule?* A standalone generative grammar thought experiment framed as a combinatorial game. Starting with only a binary flag and the moves \(+1\) and \(-1\), the system is forced to invent integers, fractions, and geometric shapes from scratch. It reveals how algebraic constraints cast a "shadow" into geometric form - and what happens when the system tries to operate on its own existence.
 
+### [Monkey Business Arithmetic Spectator Pipeline](Monkey_Business/README.md)
+**Premise:** Every layered system eventually fails the same way: a bug in one layer rewrites another layer's work, and by the time the corruption surfaces, the origin is unrecoverable. Traditional mitigations (sandboxing, type checks) are conventions, and conventions fail when a layer understands something it was not supposed to understand.
+**The Payoff:** A conjectural architectural framework that attempts an algebraic refactoring of the layered-system problem. The MBP separates the algebra of calculating from the algebra of computing into a 6-level nested hierarchy, governed by a scale-indexed operation sequence.
+
 ## Provenance
 - **[Provenance Inquiry](Provenance/README.md)** — A formal inquiry brief regarding structural correspondences between the Bitriada grammar (Fare Algebra) and a later mathematical proof released by OpenAI. This document outlines a chronology, technical correspondences, and questions for provenance review.
 
