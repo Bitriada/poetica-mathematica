@@ -25,7 +25,7 @@ jobs:
           audit = FareAudit(run_id="heron-sqrt2")
           
           print(f"{'"'"'Step'"'"':<5} | {'"'"'Fare Code'"'"':<10} | {'"'"'ULP Error'"'"':<15} | {'"'"'Exact Fraction Size'"'"':<20} | {'"'"'F64 Value'"'"'}")
-          print("-" * 85)
+          print("-" * 90)
           
           x_exact = Fraction(1, 1)
           x_float = 1.0
@@ -41,8 +41,10 @@ jobs:
               # 3. Calculate next step using computer floats
               x_float = (x_float + 2.0 / x_float) / 2.0
               
-              # 4. Print the data
-              ulp = record.ulp_distance if hasattr(record, "ulp_distance") else "N/A"
+              # 4. Safely extract data and print
+              fare_str = str(record.fare)
+              ulp_str = getattr(record, "ulp", getattr(record, "ulp_distance", "N/A"))
               frac_size = len(str(x_exact.numerator))
-              print(f"{i:<5} | {record.fare:<10} | {str(ulp):<15} | {frac_size:<20} | {x_float:.17g}")
+              
+              print(f"{i:<5} | {fare_str:<10} | {str(ulp_str):<15} | {frac_size:<20} | {x_float:.17g}")
           '
