@@ -1,0 +1,478 @@
+
+==============================================================================
+0. THE OBJECT
+==============================================================================
+Alphabet A = {1,2,3}.  Points are words over A of lengths 2, 3, 4;
+the first letter is the ZONE letter  s = 1 prime, 2 reflection, 3 projection;
+the tail alpha is the index tuple of the cell:
+
+    rank 1:  (s, a)          9 = 3^2  words
+    rank 2:  (s, a, b)      27 = 3^3  words
+    rank 3:  (s, a, b, c)   81 = 3^4  words
+                             -------------
+                             117 points altogether.
+
+Under the prefix relation this is the depth-2..4 skeleton of the full
+3-ary tree (every rank-3 word has a rank-2 prefix, every rank-2 word a
+rank-1 prefix), and the 117 points split 39 cells x 3 zones.
+
+VALUATION -- one rule, not three.  For w = (s, alpha), alpha = (a_1..a_l):
+
+    base   b(alpha) = 2 ** (l * a_1 * ... * a_l)
+    value  v(w)     = H_{l+1}(b, s)        on the hyperoperation ladder
+                                            H_1 = +, H_2 = *, H_3 = ^,
+                                            H_4 = ^^ (tetration):
+
+    rank 1, rung H_2:  v = b  *  s          = s * 2**a_1
+    rank 2, rung H_3:  v = b ** s           = 2 ** (2*s*a_1*a_2)
+    rank 3, rung H_4:  v = b ^^ s (tower)   = 2 ** E_s,
+                                              E_1 = 3h, E_{t+1} = 3h*2**E_t,
+                                              h = a_1*a_2*a_3
+
+So each rank lives on its own rung of the ladder, the zone letter s is
+the second OPERAND of that rung (s copies of the base under the rung
+operation), and the tail letters scale the base through their product.
+Every value is exact; unwritable values are kept as exact exponential
+expressions.
+
+==============================================================================
+1. RANK-1 BLOCK -- 9 points --  v = b*s = s * 2^a   (rung H_2)
+==============================================================================
+                      a=1    a=2    a=3
+   s=1 prime             2      4      8
+   s=2 reflection        4      8     16
+   s=3 projection        6     12     24
+
+Reading: the zone letter acts by ordinary multiplication (rung H_2);
+e.g. (3,2) is the projection point on cell (2,) with value 3 * 2^2 = 12.
+
+==============================================================================
+2. RANK-2 BLOCK -- 27 points --  v = b^s = 2^(2*s*a*b)   (rung H_3)
+==============================================================================
+
+   s=1 prime:  v = ( 2^(2*a*b) )^1
+              b=1               b=2               b=3
+   a=1                  4               16               64
+   a=2                 16              256             4096
+   a=3                 64             4096           262144
+
+   s=2 reflection:  v = ( 2^(2*a*b) )^2   (entrywise squares of prime)
+              b=1               b=2               b=3
+   a=1                 16              256             4096
+   a=2                256            65536         16777216
+   a=3               4096         16777216      68719476736
+
+   s=3 projection:  v = ( 2^(2*a*b) )^3   (entrywise cubes of prime)
+              b=1               b=2               b=3
+   a=1                 64             4096           262144
+   a=2               4096         16777216      68719476736
+   a=3             262144      6871947673618014398509481984
+
+==============================================================================
+3. RANK-3 BLOCK -- 81 points --  v = b^^s = 2^E_s,  h = a*b*c   (rung H_4)
+==============================================================================
+
+   Tower exponents:  E_1 = 3h,   E_{t+1} = 3h * 2^E_t.
+
+   s = 1 (prime):  v = 2^(3*h)  -- plain integers, up to 2^81
+
+      slice a = 1   (exponents 3*b*c):
+                b=1                 b=2                 b=3
+      b=1                    8                 64                512
+      b=2                   64               4096             262144
+      b=3                  512             262144          134217728
+
+      slice a = 2   (exponents 6*b*c):
+                b=1                 b=2                 b=3
+      b=1                   64               4096             262144
+      b=2                 4096           16777216        68719476736
+      b=3               262144        68719476736  18014398509481984
+
+      slice a = 3   (exponents 9*b*c):
+                b=1                 b=2                 b=3
+      b=1                  512             262144          134217728
+      b=2               262144        68719476736  18014398509481984
+      b=3            134217728  180143985094819842417851639229258349412352
+
+   s = 2 (reflection):  v = 2^E_2 (E_2 = 3h*2^3h) -- exact expressions
+
+      slice a = 1   (h = 1*b*c):
+                    b=1               b=2               b=3
+      b=1               2^24            2^384           2^4608
+      b=2              2^384          2^49152        2^4718592
+      b=3             2^4608        2^4718592      2^(27*2^27)
+
+      slice a = 2   (h = 2*b*c):
+                    b=1               b=2               b=3
+      b=1              2^384          2^49152        2^4718592
+      b=2            2^49152      2^402653184      2^(36*2^36)
+      b=3          2^4718592      2^(36*2^36)      2^(54*2^54)
+
+      slice a = 3   (h = 3*b*c):
+                    b=1               b=2               b=3
+      b=1             2^4608        2^4718592      2^(27*2^27)
+      b=2          2^4718592      2^(36*2^36)      2^(54*2^54)
+      b=3        2^(27*2^27)      2^(54*2^54)      2^(81*2^81)
+
+   s = 3 (projection):  v = 2^E_3 (E_3 = 3h*2^E_2) -- exact expressions
+
+      slice a = 1   (h = 1*b*c):
+                    b=1               b=2               b=3
+      b=1            2^(3*2^24)         2^(6*2^384)        2^(9*2^4608)
+      b=2           2^(6*2^384)      2^(12*2^49152)    2^(18*2^4718592)
+      b=3          2^(9*2^4608)    2^(18*2^4718592)  2^(27*2^(27*2^27))
+
+      slice a = 2   (h = 2*b*c):
+                    b=1               b=2               b=3
+      b=1           2^(6*2^384)      2^(12*2^49152)    2^(18*2^4718592)
+      b=2        2^(12*2^49152)  2^(24*2^402653184)  2^(36*2^(36*2^36))
+      b=3      2^(18*2^4718592)  2^(36*2^(36*2^36))  2^(54*2^(54*2^54))
+
+      slice a = 3   (h = 3*b*c):
+                    b=1               b=2               b=3
+      b=1          2^(9*2^4608)    2^(18*2^4718592)  2^(27*2^(27*2^27))
+      b=2      2^(18*2^4718592)  2^(36*2^(36*2^36))  2^(54*2^(54*2^54))
+      b=3    2^(27*2^(27*2^27))  2^(54*2^(54*2^54))  2^(81*2^(81*2^81))
+
+   The rank-3 exponents, tabulated by h = a*b*c
+   (h takes exactly 10 of the 27 possible values; the missing
+    products 5,7,10,11,... are not products of three letters).
+
+      h   mult   3h        E_2 = 3h*2^(3h)          E_3 = 3h*2^E_2
+      1     1     3                         24   3*2^24
+      2     3     6                        384   6*2^384
+      3     3     9                       4608   9*2^4608
+      4     3    12                      49152   12*2^49152
+      6     6    18                    4718592   18*2^4718592
+      8     1    24                  402653184   24*2^402653184
+      9     3    27   27*2^27             27*2^(27*2^27)
+     12     3    36   36*2^36             36*2^(36*2^36)
+     18     3    54   54*2^54             54*2^(54*2^54)
+     27     1    81   81*2^81             81*2^(81*2^81)
+
+==============================================================================
+4. THE INDEX SET -- grading, tree skeleton, monotonicity
+==============================================================================
+
+ 4.1  Grading
+   [ok] |P| = 117
+   [ok] block sizes 9 + 27 + 81 = 117
+
+ 4.2  Prefix structure (truncated 3-ary tree)
+   [ok] every rank-3 word has its length-3 and length-2 prefixes in P
+   [ok] each rank-2 word is the prefix of exactly 3 rank-3 words
+   [ok] each rank-1 word is the prefix of exactly 3 rank-2 words
+
+ 4.3  Monotonicity: v is strictly increasing in each letter
+       separately (not jointly: (1,3) -> 8 while (2,1) -> 4).
+   [ok] all 117 x 4 adjacent-letter comparisons are strict
+
+==============================================================================
+5. THE HYPEROPERATION LADDER -- v = H_(l+1)(b, s)
+==============================================================================
+
+The ladder:  H_1 = a+b,  H_2 = a*b,  H_3 = a^b,  H_4 = a^^b (tetration),
+H_5 = a^^^b (pentation), H_6 = a^^^^b (hexation), built by the recursion
+
+    H_{n+1}(a, 1) = a,       H_{n+1}(a, s+1) = H_n(a, H_{n+1}(a, s)).
+
+The valuation of sec 0 is exactly one ladder evaluation per point:
+rank l lives on rung H_{l+1}, the zone letter s is the second operand,
+and the tail scales the base b = 2^(l * a_1 * ... * a_l).
+
+ 5.1  The valuation, rung by rung (all 117 points)
+   [ok] rank 1: v(s,a) = H_2(b, s) = b * s     (exact integers)
+   [ok] rank 2: v(s,a,b) = H_3(b, s) = b ** s  (exact integers)
+   [ok] rank 3, prime: v(1,a,b,c) = H_4(b, 1) = b  (exact integers)
+   [ok] rank 3, reflection/projection: v = H_4(b,2) = b^b and H_4(b,3) = b^(b^b)  (exact canonical forms via the ladder recursion; the integers themselves are unwritable)
+   [ok] rank-1 table equals its closed form s*2^a
+   [ok] rank-2 prime matrix equals its closed form
+   [ok] rank-2 reflection matrix is the entrywise square of prime
+   [ok] rank-2 projection matrix is the entrywise cube of prime
+   [ok] rank-3 prime equals 2^(3*a*b*c), maximum 2^81 at (1,3,3,3)
+
+ 5.2  The ladder itself, at base 2 (exact integers)
+
+        rung                 H(2,1)  H(2,2)        H(2,3)
+        H_1  addition              3      4             5
+        H_2  multiplication        2      4             6
+        H_3  exponentiation        2      4             8
+        H_4  tetration             2      4            16
+        H_5  pentation             2      4         65536
+        H_6  hexation             2      4      2^^65536   (structural)
+   [ok] the operand-2 column is constantly 4 from H_2 up: 2*2 = 2^2 = 2^^2 = 2^^^2 = 4
+   [ok] ladder recursion at base 2: H_3(2,s+1) = H_2(2, H_3(2,s))
+   [ok] ladder recursion at base 2: H_4(2,s+1) = H_3(2, H_4(2,s)), s=1,2,3
+   [ok] ladder recursion at base 2: H_5(2,3) = H_4(2, H_5(2,2)) = 2^^4
+        H_6(2,3) = H_5(2, H_6(2,2)) = H_5(2,4) = 2^^65536, a
+        tower of 65536 twos.  Note H_6(2,3) = H_5(2,4): at base
+        2 the ladder folds -- the base-2 column is degenerate.
+
+ 5.3  The window.  v = H_{l+1}(b, s) puts rank l on rung l+1, the zone
+       letter s as second operand:
+
+                  prime    reflection    projection     (= operand s)
+        rank 1  H_2  * :    b          2b            3b
+        rank 2  H_3  ^ :    b          b^2           b^3
+        rank 3  H_4 ^^ :    b          b^b          b^(b^b)
+
+       a 3x3 (rung x operand) window of the ladder -- one rung per rank,
+       one operand per zone, the base ranging over the 39 cells.  Rank 4
+       would be pentation, rank 5 hexation; sec 8 locates this window in
+       the fast-growing hierarchy.
+
+==============================================================================
+6. ZONES AND ORBITS -- 39 orbits of size 3; self-similarity
+==============================================================================
+
+ 6.1  Orbits of the zone action
+   [ok] 39 index cells (3 + 9 + 27)
+   [ok] the 39 orbits {(s,alpha) : s in A} partition the 117 points
+   [ok] every orbit has size 3 -- one prime, one reflection, one projection point
+   [ok] in every orbit: prime < reflection < projection (strictly)
+
+       specimen orbits (cell -> its three zone values):
+         cell (1,)       b = 2        prime: 2   refl: 4   proj: 6
+         cell (3,)       b = 8        prime: 8   refl: 16   proj: 24
+         cell (1, 3)     b = 64       prime: 64   refl: 4096   proj: 262144
+         cell (2, 3)     b = 4096     prime: 4096   refl: 16777216   proj: 68719476736
+         cell (1, 1, 1)  b = 2^3      prime: 8   refl: 2^24   proj: 2^(3*2^24)
+         cell (2, 2, 2)  b = 2^24     prime: 16777216   refl: 2^402653184   proj: 2^(24*2^402653184)
+         cell (1, 2, 3)  b = 2^18     prime: 262144   refl: 2^4718592   proj: 2^(18*2^4718592)
+
+ 6.2  Monoid truncation: zone_s = g^s(unit), g(x) = H_l(b, x)
+       The zone ladder inside rank l is the orbit of the unit of
+       rung H_l under the map g(x) = H_l(b, x), stopped after three
+       steps -- the free monoid on one generator, truncated at 3:
+
+         rank 1:  g(x) = b + x   (rung H_1),  unit 0:   b,  2b,  3b
+         rank 2:  g(x) = b * x   (rung H_2),  unit 1:   b,  b^2, b^3
+         rank 3:  g(x) = b ^ x   (rung H_3),  unit 1:   b,  b^b, b^(b^b)
+   [ok] zone_s = g^s(unit of H_l) for all 39 cells
+   [ok] zone walk v_(s+1) = H_l(b, v_s) for all 39 cells -- the SAME recursion that builds the ladder (5.2)
+
+ 6.3  Self-similarity.  The zone ladder inside rank l is walked by rung
+       H_l (6.2); the rung ladder is built by that very recursion (5.2).
+       So the zones of rank l+1 are walked by H_{l+1} -- the rung that
+       rank l+1 itself lives on.  Transposing the grid,
+
+         (rank l, zone s)  |->  (rung H_{l+1}, operand s),
+
+       the 3x3 (rank x zone) grid of the object is the 3x3 (rung x
+       operand) segment of the ladder: the zone axis of one rank is the
+       rank axis of the whole ladder, both the triad {1,2,3}.  Zone
+       structure at rank l+1 = rank structure one rung up.
+
+==============================================================================
+7. FIBRES OF THE VALUATION -- 117 points, 37 values
+==============================================================================
+
+ 7.1  The collapse
+       v is NOT injective; the coincidences are multiplicative.
+   [ok] the 117 points fall into 37 distinct values
+   [ok] fibre sizes add back to 117
+   [ok] fibre size distribution {1:11, 3:17, 4:2, 5:1, 6:4, 9:2}
+   [ok] maximum fibre size is 9, attained exactly at 4096 and 262144
+   [ok] 2^24 has fibre 5: three rank-2 words, one rank-3 prime word, one rank-3 reflection word
+   [ok] rank-2 / rank-3(prime) collisions satisfy 2*sab = 3*h exactly
+
+ 7.2  Inside one (rank, zone): fibres = permutation orbits
+       Unique factorization: two tails from {1,2,3}^l have equal
+       product iff they are permutations of each other, so inside one
+       block the fibre of a value is exactly a permutation orbit of the
+       index letters -- this is where the fibre sizes 1, 3, 6 come from.
+   [ok] rank 2 and 3, every zone: equal value <=> permuted tails
+   [ok] multiplicity of a product of 3 letters: 1 for h=1,8,27;  3 for h=2,3,4,9,12,18;  6 for h=6  (1+3+3+3+6+1+3+3+3+1 = 27)
+
+ 7.3  Across blocks: the Diophantine collision laws
+       A rank-2 word (s,a,b) and a rank-3 prime word (1,i,j,k)
+       collide iff  2*s*a*b = 3*i*j*k  -- four letters {1,2,3} against
+       three.  The six solutions, with the multiplicities of 7.2:
+
+          E     sab (mult)     h (mult)    fibre of 2^E
+           6       3  (3)         2  (3)        6
+          12       6  (6)         4  (3)        9
+          18       9  (3)         6  (6)        9
+          24      12  (3)         8  (1)        4
+          36      18  (3)        12  (3)        6
+          54      27  (1)        18  (3)        4
+   [ok] exactly 6 solutions of 2*sab = 3*h, at E = 6,12,18,24,36,54, with h = (2/3)*sab
+   [ok] rank 1 merges into rank 2 at 4 and 16 only (4: rank-1 (1,2),(2,1) + rank-2 sab=1;  16: (2,3) + sab=2 x3)
+   [ok] rank 1 merges into rank-3 prime at 8 only (rank-1 (1,3),(2,2) + the rank-3 word (1,1,1,1))
+   [ok] reflection law h*2^(3h) = h' (rank-3 reflection vs prime) has the unique solution h=1, h'=8 -- giving the fibre-5 value 2^24
+   [ok] rank-1 projection values 6, 12, 24 (odd part 3) are isolated: every other value is a power of two
+       So the fibre sizes decompose as:  1, 3, 6 = permutation
+       multiplicities inside a block (7.2);  4, 9 = sums of two such
+       multiplicities over the 2sab = 3h law;  5 = the unique triple
+       meeting at 2^24 (3 rank-2 + 1 rank-3 prime + 1 rank-3 reflection).
+
+       Cross-block fibres (points from more than one block):
+
+         value 4  -- fibre 3
+           rank 1   (2):  (1,2)  (2,1)
+           rank 2   (1):  (1,1,1)
+
+         value 8  -- fibre 3
+           rank 1   (2):  (1,3)  (2,2)
+           rank 3   (1):  (1,1,1,1)
+
+         value 16  -- fibre 4
+           rank 1   (1):  (2,3)
+           rank 2   (3):  (1,1,2)  (1,2,1)  (2,1,1)
+
+         value 64  -- fibre 6
+           rank 2   (3):  (1,1,3)  (1,3,1)  (3,1,1)
+           rank 3   (3):  (1,1,1,2)  (1,1,2,1)  (1,2,1,1)
+
+         value 4096  -- fibre 9
+           rank 2   (6):  (1,2,3)  (1,3,2)  (2,1,3)  (2,3,1)  (3,1,2)  (3,2,1)
+           rank 3   (3):  (1,1,2,2)  (1,2,1,2)  (1,2,2,1)
+
+         value 262144  -- fibre 9
+           rank 2   (3):  (1,3,3)  (3,1,3)  (3,3,1)
+           rank 3   (6):  (1,1,2,3)  (1,1,3,2)  (1,2,1,3)  (1,2,3,1)  (1,3,1,2)  (1,3,2,1)
+
+         value 16777216  -- fibre 5
+           rank 2   (3):  (2,2,3)  (2,3,2)  (3,2,2)
+           rank 3   (2):  (1,2,2,2)  (2,1,1,1)
+
+         value 68719476736  -- fibre 6
+           rank 2   (3):  (2,3,3)  (3,2,3)  (3,3,2)
+           rank 3   (3):  (1,2,2,3)  (1,2,3,2)  (1,3,2,2)
+
+         value 18014398509481984  -- fibre 4
+           rank 2   (1):  (3,3,3)
+           rank 3   (3):  (1,2,3,3)  (1,3,2,3)  (1,3,3,2)
+
+       Block-internal fibres (multiplicity of the product):
+         value 256  -- fibre 3  (rank 2, zone s = 1)
+         value 512  -- fibre 3  (rank 3, zone s = 1)
+         value 134217728  -- fibre 3  (rank 3, zone s = 1)
+         value 2^(3*2^7)  -- fibre 3  (rank 3, zone s = 2)
+         value 2^(9*2^9)  -- fibre 3  (rank 3, zone s = 2)
+         value 2^(3*2^14)  -- fibre 3  (rank 3, zone s = 2)
+         value 2^(9*2^19)  -- fibre 6  (rank 3, zone s = 2)
+         value 2^(27*2^27)  -- fibre 3  (rank 3, zone s = 2)
+         value 2^(9*2^38)  -- fibre 3  (rank 3, zone s = 2)
+         value 2^(27*2^55)  -- fibre 3  (rank 3, zone s = 2)
+         value 2^(3*2^385)  -- fibre 3  (rank 3, zone s = 3)
+         value 2^(9*2^4608)  -- fibre 3  (rank 3, zone s = 3)
+         value 2^(3*2^49154)  -- fibre 3  (rank 3, zone s = 3)
+         value 2^(9*2^4718593)  -- fibre 6  (rank 3, zone s = 3)
+         value 2^(27*2^3623878656)  -- fibre 3  (rank 3, zone s = 3)
+         value 2^(9*2^2473901162498)  -- fibre 3  (rank 3, zone s = 3)
+         value 2^(27*2^972777519512027137)  -- fibre 3  (rank 3, zone s = 3)
+
+ 7.4  Canonical form and exact order
+   [ok] all 117 values fit c*2^(u*2^Y) with c <= 3 and u <= 81
+   [ok] global minimum is 2 at (1,1)
+   [ok] global maximum is the tower at (3,3,3,3)
+         global max = 2^(81*2^195845982777569926302400512)  = 2^(81*2^(81*2^81))
+         rank 1: min            2   max 24
+         rank 2: min            4   max 18014398509481984
+         rank 3: min            8   max 2^(81*2^195845982777569926302400512)
+   [ok] the blocks interleave: 2^(18*2^18) < 2^(3*2^24) < 2^(24*2^24)
+   [ok] smallest projection tower < largest reflection tower: 2^(3*2^24) < 2^(81*2^81)
+
+       The ten largest values of the object:
+                                2^(81*2^81)   (2,3,3,3)
+                                2^(3*2^385)   (3,1,1,2), (3,1,2,1), (3,2,1,1)
+                               2^(9*2^4608)   (3,1,1,3), (3,1,3,1), (3,3,1,1)
+                              2^(3*2^49154)   (3,1,2,2), (3,2,1,2), (3,2,2,1)
+                            2^(9*2^4718593)   (3,1,2,3), (3,1,3,2), (3,2,1,3), (3,2,3,1), (3,3,1,2), (3,3,2,1)
+                          2^(3*2^402653187)   (3,2,2,2)
+                        2^(27*2^3623878656)   (3,1,3,3), (3,3,1,3), (3,3,3,1)
+                      2^(9*2^2473901162498)   (3,2,2,3), (3,2,3,2), (3,3,2,2)
+                2^(27*2^972777519512027137)   (3,2,3,3), (3,3,2,3), (3,3,3,2)
+         2^(81*2^195845982777569926302400512)   (3,3,3,3)
+
+==============================================================================
+8. GROWTH -- the fast-growing hierarchy and Ackermann
+==============================================================================
+
+The fast-growing hierarchy:  F_0(n) = n+1,  F_{k+1}(n) = F_k^n(n).
+Each rung of the hyperoperation ladder is one level of it (at base 2):
+H_2(2, n) = 2n = F_1(n) exactly;  F_2(n) = n*2^n = n * H_3(2, n);  F_3
+is tower-class, like H_4.
+
+ 8.1  F_k(n) exactly (k <= 3)
+
+            n=1      n=2                     n=3
+   F_0      2        3                        4
+   F_1      2        4                        6   = H_2(2, n) exactly
+   F_2      2        8                       24   = n*2^n = n * H_3(2, n)
+   F_3      2     2048   402653184*2^402653184
+   [ok] F_1(n) = 2n = H_2(2,n) and F_2(n) = n*2^n for n = 1, 2, 3
+   [ok] F_3(2) = 2048 = 2^11 and F_3(3) = 402653184 * 2^402653184
+         F_3(3) has about 1.21e+08 digits (estimate from the bit length).
+         F_4(2) = F_3(F_3(2)) = F_3(2048) is a tower of height
+         ~2048 -- beyond any integer a machine holds.  F_4 grows
+         like pentation, F_5 like hexation: the ladder and the
+         hierarchy are the same construction read two ways.
+
+ 8.2  Ackermann  (A(m, .) lives on rung H_m for m >= 2)
+   [ok] A(2,n) = 2n+3 and A(3,n) = 2^(n+3)-3 for n = 0..4 (primitive recursion, exact)
+   [ok] A(4,0) = 13 by direct recursion; then A(4,1) = A(3,13) = 65533 and A(4,2) = A(3,65533) = 2^65536 - 3 (verified closed form)
+         A(4,2) = 2^65536 - 3 has exactly 19729 digits.
+         A(5,2) = A(4, A(5,1)) = A(4, 2^^65536 - 3) = 2^^(2^^65536) - 3:
+         structural only -- pentation class.
+
+ 8.3  Where the object sits.  Standard classification (Goodstein/Wainer;
+       a theorem about the hierarchy, not about this code): rung H_{m+2}
+       has the growth class of F_m, and A(m, .) ~ rung H_m:
+
+         rank 1  =  rung H_2  ~  F_1  ~  A(2, .)    multiplication
+         rank 2  =  rung H_3  ~  F_2  ~  A(3, .)    exponentiation
+         rank 3  =  rung H_4  ~  F_3  ~  A(4, .)    tetration
+         rank 4 (beyond the object)  ~  F_4  ~  A(5, .)   pentation
+
+       The 117 points are the 3x3 (rung x operand) window at F_1..F_3,
+       small operands, bases up to 2^81 -- large enough that the top of
+       the object already outscales F_3(3):
+         digit counts: top value 2^(81*2^(81*2^81)) has ~5.90e+25 digits, F_3(3) only ~1.21e+08.
+
+ 8.4  The omega^omega reading (structural interpretation).  A tail
+       (a_1, ..., a_l) reads as the Cantor normal form
+
+            omega^(l-1)*a_1 + omega^(l-2)*a_2 + ... + a_l.
+
+       Tails of unbounded length with unbounded digits address exactly
+       the ordinals below omega^omega -- the address space of the
+       fast-growing hierarchy F_alpha, alpha < omega^omega (F_omega is
+       the Ackermann diagonal; F_(omega^2), F_(omega^3), ... are further
+       nestings of the same construction).  The object truncates EVERY
+       axis at 3: tail length <= 3, digits <= 3, rungs H_2..H_4, operands
+       1.. 3 -- the triadic limit.  Remove the truncations and the 117
+       points unfold into the whole omega^omega segment; keep them and
+       it stays a finite, fully computable window of it.
+
+==============================================================================
+9. SPECIMENS -- exact expansions where they exist
+==============================================================================
+
+   2^81 = 2**(3*27) (point (1,3,3,3), the largest integer in
+   the object):
+     2417851639229258349412352
+
+   2^24 (point (2,1,1,1), the smallest reflection tower):
+     16777216
+
+   2^384 = 2**(6*2^6) (point (2,1,1,2), h=2):
+     39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816
+
+   Digit counts of the towers whose expansion still fits:
+     2^4608 has exactly 1388 digits   (h=3, points (2,1,1,3)...: 2^4608)
+     2^49152 has exactly 14797 digits   (h=4, points (2,1,2,2)...: 2^49152)
+
+   Beyond that only exponents are writable: the largest reflection value
+   is 2^(81*2^81), whose exponent is the exact integer
+        E_2 = 81*2^81 = 195845982777569926302400512
+   (a decimal expansion of 2^(81*2^81) would need roughly
+    5.90e+25 digits (an estimate, not an exact count).
+
+   Ackermann A(4,2) = 2^65536 - 3: 19729 digits (sec 8.2);
+   H_6(2,3) = 2^^65536, a tower of 65536 twos: structural (sec 5.2).
+
+==============================================================================
+SELF-TEST PASSED -- 47 checks, 117 points, 37 values, 39 orbits
+==============================================================================
