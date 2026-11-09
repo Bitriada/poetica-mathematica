@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Poetica Mathematica: Executable Theory (Lattice 117 & Fare-Audit)"
+authors:
+  - family-names: Kovlekov
+    given-names: Kirill
+version: 1.0
+date-released: 2026-11-09
+doi: "10.5281/zenodo.24088599"
+url: "https://github.com/Bitriada/poetica-mathematica/tree/main/5_Code"
+license: MIT
+type: software
