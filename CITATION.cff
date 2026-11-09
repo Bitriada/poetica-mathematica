@@ -1,12 +1,47 @@
 cff-version: 1.2.0
-message: "If you use this work, please cite it as below."
-title: "Poetica Mathematica: Cogitatio ex Nihilo et Speculum Scientiae"
-author:
+message: "If you use this work, please cite the specific artifact below, or cite the GitHub repository for general use."
+type: generic
+title: "Poetica Mathematica (GitHub Repository)"
+authors:
   - family-names: Kovlekov
     given-names: Kirill
-version: 0.25
 date-released: 2026
-doi: "10.5281/zenodo.23698076"
-url: "https://zenodo.org/records/23698076"
+url: "https://github.com/Bitriada/poetica-mathematica"
 license: CC-BY-4.0
-type: generic
+
+references:
+  # 1. The Main Monograph
+  - type: generic
+    title: "Poetica Mathematica: Cogitatio ex Nihilo et Speculum Scientiae"
+    authors:
+      - family-names: Kovlekov
+        given-names: Kirill
+    version: 0.25
+    date-released: 2026
+    doi: "10.5281/zenodo.23698076"
+    url: "https://doi.org/10.5281/zenodo.23698076"
+    license: CC-BY-4.0
+
+  # 2. The MBP Standalone Paper
+  - type: article
+    title: "Monkey Business Arithmetic Spectator Pipeline"
+    authors:
+      - family-names: Kovlekov
+        given-names: Kirill
+    version: 1.0
+    date-released: 2026
+    doi: "10.5281/zenodo.24056032"
+    url: "https://doi.org/10.5281/zenodo.24056032"
+    license: CC-BY-4.0
+
+  # 3. The Executable Software
+  - type: software
+    title: "Poetica Mathematica: Executable Theory (Lattice 117 & Fare-Audit)"
+    authors:
+      - family-names: Kovlekov
+        given-names: Kirill
+    version: 1.0
+    date-released: 2026-11-09
+    doi: "10.5281/zenodo.24088599"
+    url: "https://doi.org/10.5281/zenodo.24088599"
+    license: MIT
