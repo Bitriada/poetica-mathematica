@@ -2,7 +2,7 @@ name: verify fare-audit
 on:
   push:
     paths:
-      - 'Fare_Audit/**'
+      - '5_Code/Fare_Audit/**'
   workflow_dispatch:
 
 jobs:
