@@ -3,6 +3,10 @@ on:
   push:
     paths:
       - '5_Code/Lattice_117/**'
+  workflow_dispatch:
+  push:
+    paths:
+      - '5_Code/Lattice_117/**'
 jobs:
   run:
     runs-on: ubuntu-latest
