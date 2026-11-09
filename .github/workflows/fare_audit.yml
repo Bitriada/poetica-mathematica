@@ -1,0 +1,20 @@
+name: verify fare-audit
+on:
+  push:
+    paths:
+      - 'Fare_Audit/**'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pytest
+      - run: pip install -e ./fare-audit
+      - run: cd fare-audit && python3 -m pytest -q
+      - run: cd fare-audit && python3 -m rtfa demo --out out
+      - run: cd fare-audit && python3 -m rtfa verify --ledger out/ledger.jsonl
