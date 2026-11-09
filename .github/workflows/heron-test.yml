@@ -14,46 +14,56 @@ jobs:
         run: pip install orjson
       - name: Setup Folder
         run: cd 5_Code/Fare_Audit && ln -s . rtfa
-      - name: Run Heron Method on sqrt(2)
+      - name: Run Heron Method
         run: |
           cd 5_Code/Fare_Audit
-          python3 -c '
-          import sys
+          
+          # Write the Python script to a temporary file
+          cat > test_heron.py << 'PYEOF'
           from fractions import Fraction
           from rtfa import FareAudit
-          
+
           audit = FareAudit(run_id="heron-sqrt2")
-          
-          print(f"{'"'"'Step'"'"':<5} | {'"'"'Fare Flags'"'"':<10} | {'"'"'ULP Error'"'"':<12} | {'"'"'Abs Error'"'"':<12} | {'"'"'Fraction Size'"'"':<14} | {'"'"'F64 Value'"'"'}")
+
+          print(f"{'Step':<5} | {'Fare':<8} | {'ULP':<12} | {'Abs Error':<12} | {'Frac Size':<10} | {'F64 Value'}")
           print("-" * 90)
-          
+
           x_exact = Fraction(1, 1)
           x_float = 1.0
-          
+
           for i in range(1, 6):
-              # 1. Calculate next step using exact arithmetic
+              # 1. Exact math
               x_exact = (x_exact + Fraction(2, 1) / x_exact) / 2
-              
-              # 2. Audit the exact value transitioning to F64
               exact_str = f"Q:{x_exact.numerator}/{x_exact.denominator}"
+              
+              # 2. Audit transition
               record = audit.transition(source=exact_str, target="F64", operation="cast")
               
-              # 3. Calculate next step using computer floats
+              # 3. Float math
               x_float = (x_float + 2.0 / x_float) / 2.0
               
-              # 4. Safely extract data from the record object
-              # The FareVector holds the flags. We just want the letters (e.g., "R" or "E").
-              fare_flags = "".join([c for c in str(record.fare) if c.isupper() and c not in "FALSE"]).replace("EXACTNESS", "").replace("OVERFLOW", "").replace("UNDERFLOW", "").replace("DOMAIN", "").replace("VIOLATION", "").replace("SIGN", "").replace("LOST", "").replace("PHASE", "").replace("OBFUSCATED", "").replace("MAGNITUDE", "").replace("COLLAPSED", "").replace("LEVEL", "").replace("COLLISION", "").replace("SATURATION", "").replace("EVENT", "") or "E"
-              if "exactness='" in str(record.fare):
-                  fare_flags = str(record.fare).split("exactness='")[1][0]
+              # 4. Extract Fare Flags cleanly
+              f = record.fare
+              fare_str = getattr(f, 'exactness', '') 
+              if getattr(f, 'overflow', False): fare_str += "O"
+              if getattr(f, 'underflow', False): fare_str += "U"
+              if getattr(f, 'domain_violation', False): fare_str += "D"
+              if getattr(f, 'sign_lost', False): fare_str += "S"
+              if getattr(f, 'phase_obfuscated', False): fare_str += "P"
+              if getattr(f, 'magnitude_collapsed', False): fare_str += "M"
+              if getattr(f, 'level_collision', False): fare_str += "X"
+              if getattr(f, 'saturation_event', False): fare_str += "SAT"
               
-              # Extract ULP and Abs Error safely
-              ulp = getattr(record, "ulp", getattr(record, "ulp_distance", "N/A"))
-              abs_err = getattr(record, "abs_error", getattr(record, "absolute_error", "N/A"))
-              if abs_err != "N/A" and isinstance(abs_err, float):
-                  abs_err = f"{abs_err:.1e}"
+              # 5. Extract Errors
+              ulp = getattr(record, 'ulp', getattr(record, 'ulp_distance', 'N/A'))
+              abs_err = getattr(record, 'abs_error', getattr(record, 'absolute_error', 'N/A'))
+              if abs_err != 'N/A' and isinstance(abs_err, float):
+                  abs_err = f"{abs_err:.2e}"
               
               frac_size = len(str(x_exact.numerator))
               
-              print(f"{i:<5} | {fare_flags:<10} | {str(ulp):<12} | {str(abs_err):<12} | {frac_size:<14} | {x_float:.17g}")
-          '
+              print(f"{i:<5} | {fare_str:<8} | {str(ulp):<12} | {str(abs_err):<12} | {frac_size:<10} | {x_float:.17g}")
+          PYEOF
+          
+          # Run the script
+          python3 test_heron.py
