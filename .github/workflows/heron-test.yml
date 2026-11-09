@@ -1,0 +1,48 @@
+name: heron method convergence test
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Dependencies
+        run: pip install orjson
+      - name: Setup Folder
+        run: cd 5_Code/Fare_Audit && ln -s . rtfa
+      - name: Run Heron Method on sqrt(2)
+        run: |
+          cd 5_Code/Fare_Audit
+          python3 -c '
+          import sys
+          from fractions import Fraction
+          from rtfa import FareAudit
+          
+          audit = FareAudit(run_id="heron-sqrt2")
+          
+          print(f"{'"'"'Step'"'"':<5} | {'"'"'Fare Code'"'"':<10} | {'"'"'ULP Error'"'"':<15} | {'"'"'Exact Fraction Size'"'"':<20} | {'"'"'F64 Value'"'"'}")
+          print("-" * 85)
+          
+          x_exact = Fraction(1, 1)
+          x_float = 1.0
+          
+          for i in range(1, 6):
+              # 1. Calculate next step using exact arithmetic
+              x_exact = (x_exact + Fraction(2, 1) / x_exact) / 2
+              
+              # 2. Audit the exact value transitioning to F64
+              exact_str = f"Q:{x_exact.numerator}/{x_exact.denominator}"
+              record = audit.transition(source=exact_str, target="F64", operation="cast")
+              
+              # 3. Calculate next step using computer floats
+              x_float = (x_float + 2.0 / x_float) / 2.0
+              
+              # 4. Print the data
+              ulp = record.ulp_distance if hasattr(record, "ulp_distance") else "N/A"
+              frac_size = len(str(x_exact.numerator))
+              print(f"{i:<5} | {record.fare:<10} | {str(ulp):<15} | {frac_size:<20} | {x_float:.17g}")
+          '
