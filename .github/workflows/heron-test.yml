@@ -1,4 +1,4 @@
-name: heron method convergence test
+name: heron method 10-step test
 on:
   workflow_dispatch:
 
@@ -14,24 +14,48 @@ jobs:
         run: pip install orjson
       - name: Setup Folder
         run: cd 5_Code/Fare_Audit && ln -s . rtfa
-      - name: Run Heron Method
+      - name: Run Heron Method 10 Steps
         run: |
           cd 5_Code/Fare_Audit
           
-          # Write the Python script to a temporary file
           cat > test_heron.py << 'PYEOF'
           from fractions import Fraction
           from rtfa import FareAudit
+          import dataclasses
 
           audit = FareAudit(run_id="heron-sqrt2")
 
-          print(f"{'Step':<5} | {'Fare':<8} | {'ULP':<12} | {'Abs Error':<12} | {'Frac Size':<10} | {'F64 Value'}")
+          print(f"{'Step':<5} | {'Fare':<6} | {'ULP':<12} | {'Abs Error':<12} | {'Frac Size':<10} | {'F64 Value'}")
           print("-" * 90)
 
           x_exact = Fraction(1, 1)
           x_float = 1.0
 
-          for i in range(1, 6):
+          # A helper function to dynamically find the ULP and Abs Error
+          def extract_metrics(record):
+              ulp = "N/A"
+              abs_err = "N/A"
+              
+              # Convert to dict if it's a dataclass
+              data = dataclasses.asdict(record) if dataclasses.is_dataclass(record) else vars(record)
+              
+              # Search top-level keys
+              for k, v in data.items():
+                  if 'ulp' in k.lower(): ulp = v
+                  if 'error' in k.lower() or 'err' in k.lower(): abs_err = v
+                  
+                  # Search one level deep (in case metrics are nested)
+                  if isinstance(v, dict):
+                      for k2, v2 in v.items():
+                          if 'ulp' in k2.lower(): ulp = v2
+                          if 'error' in k2.lower() or 'err' in k2.lower(): abs_err = v2
+                  elif hasattr(v, '__dict__'):
+                      for k2, v2 in vars(v).items():
+                          if 'ulp' in k2.lower(): ulp = v2
+                          if 'error' in k2.lower() or 'err' in k2.lower(): abs_err = v2
+              return ulp, abs_err
+
+          for i in range(1, 11):
               # 1. Exact math
               x_exact = (x_exact + Fraction(2, 1) / x_exact) / 2
               exact_str = f"Q:{x_exact.numerator}/{x_exact.denominator}"
@@ -42,7 +66,7 @@ jobs:
               # 3. Float math
               x_float = (x_float + 2.0 / x_float) / 2.0
               
-              # 4. Extract Fare Flags cleanly
+              # 4. Extract Fare Flags
               f = record.fare
               fare_str = getattr(f, 'exactness', '') 
               if getattr(f, 'overflow', False): fare_str += "O"
@@ -55,15 +79,13 @@ jobs:
               if getattr(f, 'saturation_event', False): fare_str += "SAT"
               
               # 5. Extract Errors
-              ulp = getattr(record, 'ulp', getattr(record, 'ulp_distance', 'N/A'))
-              abs_err = getattr(record, 'abs_error', getattr(record, 'absolute_error', 'N/A'))
+              ulp, abs_err = extract_metrics(record)
               if abs_err != 'N/A' and isinstance(abs_err, float):
                   abs_err = f"{abs_err:.2e}"
               
               frac_size = len(str(x_exact.numerator))
               
-              print(f"{i:<5} | {fare_str:<8} | {str(ulp):<12} | {str(abs_err):<12} | {frac_size:<10} | {x_float:.17g}")
+              print(f"{i:<5} | {fare_str:<6} | {str(ulp):<12} | {str(abs_err):<12} | {frac_size:<10} | {x_float:.17g}")
           PYEOF
           
-          # Run the script
           python3 test_heron.py
