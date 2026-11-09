@@ -1,0 +1,16 @@
+COMPACTION (GIF) REPORT -- audits grouped by threes
+------------------------------------------------------------------------------
+
+  macro-fare block 1  [Z environment]
+      audit rows [2, 3, 4] compressed: three sequential operations at one algebraic level
+  macro-fare block 2  [F environment]
+      audit rows [9, 10, 11] compressed: three sequential operations at one algebraic level
+  macro-fare block 3  [F environment]
+      audit rows [12, 13, 14] compressed: three sequential operations at one algebraic level
+  macro-fare block 4  [F environment]
+      audit rows [15, 16, 17] compressed: three sequential operations at one algebraic level
+      rows [18] at [F] remain uncompressed (a triad is not complete)
+
+  Triadic rule (GIF): no more than three identical operations at one
+  level; the fourth is either annihilated by the ledger (tau^2=0) or
+  saturates the environment (the Apeirogon).

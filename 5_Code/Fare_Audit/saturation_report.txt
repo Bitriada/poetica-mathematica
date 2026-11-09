@@ -1,0 +1,17 @@
+SATURATION (APEIROGON) REPORT
+------------------------------------------------------------------------------
+Steps where an audit hit the Goedelian limit of the current
+algebra (G6GF section 4.6: the F environment cannot simulate
+the continuous curve).
+
+  run          fare-audit-demo-01
+  step         3 of 5
+  transition   F64:0x1.306fe0a31b715p+0 --sqrt--> F64
+  drift score  3
+  event        Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.
+
+  run          fare-audit-demo-01
+  step         5 of 200
+  transition   F64:0x1.0000000000001p+1 --sqrt--> F64
+  drift score  3
+  event        Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.

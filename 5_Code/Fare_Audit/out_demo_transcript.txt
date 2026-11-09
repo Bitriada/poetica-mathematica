@@ -1,0 +1,353 @@
+
+==============================================================================
+FARE-AUDIT DEMO SUITE -- the claimed outputs, one by one
+==============================================================================
+  Paradigm: Algebraic Observation (read-only).  The tool never
+  heals, fixes, or coerces the math; it observes transitions
+  and records the Fare (MBP Central Inversion).
+
+REPRESENTATION REGISTRY (G6GF moveset environments)
+------------------------------------------------------------------------------
+  BIN   binary string (L1 tape)                env=N  L1  F0 Binary Flag
+        moveset: flip, tally
+        incapacity: no arithmetic beyond +1/-1 tally (G6GF section 1: the binary environment is irreducibly one-dimensional)
+        incapacity: multiplication would require combining two counts into one address, which is not in the moveset
+  N64   natural counter, 64-bit unsigned       env=N  L2  F1 Cipher
+        moveset: add, sub, mul, div
+        incapacity: no values below 0 (subtraction below zero is a domain violation)
+        incapacity: negative integers reinterpreted as unsigned magnitudes lose their sign (wrap-around read)
+  Z64   signed integer, 64-bit two's complement env=Z  L2  F1 Cipher
+        moveset: add, sub, mul, div, cast
+        incapacity: no fractions: division with a remainder does not resolve in Z and bends to Q (G6GF section 2, 3/2)
+        incapacity: no irrational roots in its moveset
+  Q     rational, exact (fractions.Fraction)   env=Q  L3  F2 Address
+        moveset: add, sub, mul, div, cast
+        incapacity: cannot render irrational roots: sqrt(2) has no exact value here and is approximated (A) or bent toward F/C
+        incapacity: no phase: a complex value returning to Q is obfuscated
+  F64   IEEE 754 binary64                      env=F  L3  F2 Address
+        moveset: add, sub, mul, div, pow, sqrt, abs, cast
+        incapacity: cannot represent 1/10 exactly (binary mantissa)
+        incapacity: cannot preserve the sign of 0 under abs (-0.0)
+        incapacity: lacks exact phase representation (requires the C environment); returning from C applies the [[b]] marker
+        incapacity: stuck in transfinite smoothing under nested ^b/sqrt(b): the Apeirogon (G6GF section 4.6)
+  D128  IEEE 754 decimal128 (34 significant digits) env=F  L3  F2 Address
+        moveset: add, sub, mul, div, cast
+        incapacity: only 34 significant decimal digits: a value needing more is rounded
+        incapacity: cannot render values with infinite decimal expansions exactly (1/3)
+  C128  complex register (pair of binary64)    env=C  L4  F3 NaN (complex register)
+        moveset: add, sub, mul, div, conj, abs, phase, sqrt, cast
+        incapacity: phase is defined modulo 2*pi: position certainty is lost (Fare Principle)
+        incapacity: returning to a real environment destroys the imaginary part (phase obfuscated, [[b]])
+  ADDR  memory address (F2 location token)     env=F  L3  F2 Address
+        moveset: deref, cast
+        incapacity: an address is a container, not a number: reading it as a cipher (Z64) without an explicit cast is a level collision (CTS section 5, Ptr -> Int in C)
+
+FARE LADDER (monograph Ch. III, 3.5; MBP 6.3)
+------------------------------------------------------------------------------
+  F0  Binary Flag              Flip-Burger (L1)     e.g. tally mark / bit
+  F1  Cipher                   Line-Cook (L2)       e.g. integer counter
+  F2  Address                  Drink-Runner (L3)    e.g. float location
+  F3  NaN (complex register)   Manager (L4)         e.g. complex register
+  F4  Set                      Owner (L5)           e.g. matrix / tensor
+  F5  Instance                 Tax (L6)             e.g. full ledger
+
+==============================================================================
+1. THE Q -> F64 LOSS  (CTS Test 1, PDD demo 1)  --  Q:1/10 --cast--> F64
+==============================================================================
+  [Q:1/10] --cast--> [F64]  =  0.10000000000000000555...
+    fare: R   exact: 1/10   abs err: 5.551e-18   ulp: 2/5  (bound 1/2 ok)
+  [PASS] exactness is R (rounded)
+  [PASS] target is the nearest binary64 0.10000000000000000555...
+  [PASS] absolute error is 5.551e-18 (golden 5.55e-18)
+  [PASS] ULP distance is 2/5 (the golden 0.5 is the round-to-nearest bound, and it holds)
+  exact source      : 1/10
+  exact target bits : 3602879701896397/36028797018963968
+
+==============================================================================
+2. THE DIVISION BEND  (CTS Test 2, PDD demo 2)  --  Z64:3 --div(2)--> Z64
+==============================================================================
+  [Z64:3] --div(2)--> [Q]  =  3/2
+    fare: E,O   exact: 3/2   abs err: 0   ulp: 0  (bound 1/2 ok)
+    note: division did not resolve in Z64; the environment bent to Q (G6GF section 2: the broken perfection)
+  [PASS] environment bent: target repr is Q
+  [PASS] result is Q:3/2
+  [PASS] overflow flag set (division overflow forced the bend)
+  [PASS] the value itself is exact in Q (exactness E)
+
+==============================================================================
+3. THE SIGN LOSS  (CTS Test 3, PDD demo 3)  --  Z64:-1 --cast--> N64   (and the PDD variant -5)
+==============================================================================
+  [Z64:-1] --cast--> [N64]  =  18446744073709551615
+    fare: T,D,S,X   exact: -1   abs err: 1.845e+19
+    note: negative re-read as an unsigned magnitude (Z64/N64 share the bit pattern)
+    note: level collision: a signed cipher's bit pattern re-read as an unsigned cipher (MBP 9.6: levels must never share a representation)
+  [PASS] bit pattern re-read: 18446744073709551615
+  [PASS] sign lost (S)
+  [PASS] domain violation (D / PDD's V)
+  [PASS] level collision (X: signed cipher re-read as unsigned)
+  [PASS] exactness T (the signed reading was truncated away)
+  [Z64:-5] --cast--> [N64]  =  18446744073709551611
+    fare: T,D,S,X   exact: -5   abs err: 1.845e+19
+    note: negative re-read as an unsigned magnitude (Z64/N64 share the bit pattern)
+    note: level collision: a signed cipher's bit pattern re-read as an unsigned cipher (MBP 9.6: levels must never share a representation)
+  [PASS] PDD variant Z64:-5 -> N64 flags S,D,X
+
+==============================================================================
+4. THE PHASE OBFUSCATION  (CTS Test 4, PDD demo 4)  --  Q:-4 --sqrt--> F64
+==============================================================================
+  [Q:-4] --sqrt--> [F64]  =  2.0[[i]]
+    fare: A,P   exact: 2 (magnitude)   abs err: 0
+    note: dimensional lift: sqrt routed through the complex plane (C128); the fare is paid on return
+    note: complex value hailed back to a real environment: the phase is destroyed, the magnitude renders (G6GF 3.4)
+    note: the phase lost on return from the complex plane is the fare (P); it is not measurable as a distance
+  [PASS] routed through C128 (dimensional lift)
+  [PASS] result is 2.0[[i]] -- the [[b]] marker applied
+  [PASS] phase obfuscated (P)
+  [PASS] exactness A (the true value 2i is not representable in F64)
+  G6GF 3.4 companion: sqrt(Q:4) returns marked as well:
+  [Q:4] --sqrt--> [F64]  =  [[2.0]]
+    fare: A,P   exact: 2   abs err: 0
+    note: dimensional lift: sqrt routed through the complex plane (C128); the fare is paid on return
+    note: the phase lost on return from the complex plane is the fare (P); it is not measurable as a distance
+  [PASS] sqrt(Q:4) -> F64 renders [[2.0]] (G6GF: sqrt(4) = [[2]])
+
+==============================================================================
+5. REFLECTION AUDIT  --  Q:1/10 -> F64 -> Q   (irreversibility)
+==============================================================================
+  [Q:1/10] --cast--> [F64]  =  0.10000000000000000555...
+    fare: R   exact: 1/10   abs err: 5.551e-18   ulp: 2/5  (bound 1/2 ok)
+  [F64:0x1.999999999999ap-4] --cast--> [Q]  =  3602879701896397/36028797018963968
+    fare: E   exact: 3602879701896397/36028797018963968   abs err: 0   ulp: 0  (bound 1/2 ok)
+  [PASS] round trip returns 3602879701896397/36028797018963968, not 1/10 (PDD section 5 golden)
+  [PASS] round trip is NOT exact (irreversible)
+  delta: 1/180143985094819840
+  (note: the first leg annihilates into ledger entry 1 -- the same fare cannot be paid twice; tau^2 = 0)
+
+==============================================================================
+6. PROJECTION AUDIT  --  Q:1/10 -> F64 -> D128   (path dependence)
+==============================================================================
+  [Q:1/10] --cast--> [D128]  =  0.1
+    fare: E   exact: 1/10   abs err: 0   ulp: 0  (bound 1/2 ok)
+  [PASS] direct Q:1/10 -> D128 is exact (decimal holds tenths)
+  [Q:1/10] --cast--> [F64]  =  0.10000000000000000555...
+    fare: R   exact: 1/10   abs err: 5.551e-18   ulp: 2/5  (bound 1/2 ok)
+  [F64:0x1.999999999999ap-4] --cast--> [D128]  =  0.1000000000000000055511151231257827
+    fare: R   exact: 3602879701896397/36028797018963968   abs err: -2.118e-36
+    note: rounded to 34 significant decimal digits
+  [PASS] path Q->F64->D128 ends at 0.1000000000000000055511151231257827 (path dependence)
+  [PASS] the two paths disagree (cumulative fare is real)
+  path delta vs 1/10: 1/180143985094819840
+
+==============================================================================
+7. THE APEIROGON  (CTS golden 5)  --  F64:2.0 --sqrt--> F64, five times
+==============================================================================
+  [F64:2.0] --sqrt--> [F64]  =  1.41421356237309514547...
+    fare: A   exact: sqrt(2)   abs err: 9.667e-17   ulp: 4.354e-01  (bound 1/2 ok)
+    note: irrational value forced into a finite representation (approximated)
+  [F64:0x1.6a09e667f3bcdp+0] --sqrt--> [F64]  =  1.18920711500272102689...
+    fare: A   exact: sqrt(6369051672525773/4503599627370496)   abs err: -8.047e-17   ulp: -3.624e-01  (bound 1/2 ok)
+    note: irrational value forced into a finite representation (approximated)
+  [F64:0x1.306fe0a31b715p+0] --sqrt--> [F64]  =  1.09050773266525768967...
+    fare: A,SAT   exact: sqrt(5355712719992597/4503599627370496)   abs err: 4.873e-17   ulp: 2.194e-01  (bound 1/2 ok)
+    note: drift score 3: nested irrational operation inside the F environment (transfinite smoothing, G6GF 4.6)
+    note: irrational value forced into a finite representation (approximated)
+    SATURATION: Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.
+  [PASS] saturation event fires on the 3rd sqrt (drift limit 3)
+  [PASS] the halting record carries A + saturation_event
+  [PASS] message: 'Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.'
+
+==============================================================================
+8. THE APEIROGON  (PDD demo 5)  --  loop sqrt ; x^2, 100 iterations
+==============================================================================
+  [F64:2.0] --sqrt--> [F64]  =  1.41421356237309514547...
+    fare: A   exact: sqrt(2)   abs err: 9.667e-17   ulp: 4.354e-01  (bound 1/2 ok)
+    note: irrational value forced into a finite representation (approximated)
+  [F64:0x1.6a09e667f3bcdp+0] --pow(2)--> [F64]  =  2.00000000000000044408...
+    fare: R   exact: 40564819207303346393761349247529/20282409603651670423947251286016   abs err: 1.707e-16   ulp: 3.843e-01  (bound 1/2 ok)
+  [F64:0x1.0000000000001p+1] --sqrt--> [F64]  =  1.41421356237309514547...
+    fare: A   exact: sqrt(4503599627370497/2251799813685248)   abs err: -6.034e-17   ulp: -2.717e-01  (bound 1/2 ok)
+    note: irrational value forced into a finite representation (approximated)
+  [F64:0x1.6a09e667f3bcdp+0] --pow(2)--> [F64]  =  2.00000000000000044408...
+    fare: R   exact: 40564819207303346393761349247529/20282409603651670423947251286016   abs err: 1.707e-16   ulp: 3.843e-01  (bound 1/2 ok)
+  [F64:0x1.0000000000001p+1] --sqrt--> [F64]  =  1.41421356237309514547...
+    fare: A,SAT   exact: sqrt(4503599627370497/2251799813685248)   abs err: -6.034e-17   ulp: -2.717e-01  (bound 1/2 ok)
+    note: drift score 3: nested irrational operation inside the F environment (transfinite smoothing, G6GF 4.6)
+    note: irrational value forced into a finite representation (approximated)
+    SATURATION: Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.
+  [PASS] the audit halts at step 5 (3rd sqrt), long before step 100 or any overflow
+
+==============================================================================
+9. MBP LEVEL COLLISION  (PDD section 8)  --  L2_Multiply(3,4) with L1 binary-string operands
+==============================================================================
+  [BIN:0b11] --mul(BIN:0b100)--> [Z64]  =  BLOCKED
+    fare: D,X   exact: -   abs err: -
+    note: op 'mul' lives on rung F1 (Cipher), but the operand BIN is a rung-F0 binary flag
+  [PASS] blocked: the audit prevents the cross-layer leak
+  [PASS] flags D (domain violation) and X (level collision)
+  [PASS] no fare was ledgered for the blocked attempt
+
+==============================================================================
+10. THE ADDRESS READ  (CTS section 5)  --  ADDR:0x7f3a1c --deref--> Z64  without a cast
+==============================================================================
+  [ADDR:0x7f3a1c] --deref--> [Z64]  =  BLOCKED
+    fare: D,X   exact: -   abs err: -
+    note: op 'deref' lives on rung F2; target Z64 is rung F1 -- a downward crossing needs an explicit cast
+  [PASS] blocked with X (an F2 address may not be read as an F1 cipher without a cast)
+  [ADDR:0x7f3a1c] --cast--> [Z64]  =  8337948
+    fare: E   exact: 8337948   abs err: 0   ulp: 0  (bound 1/2 ok)
+  [PASS] the explicit cast is legal and exact
+
+==============================================================================
+11. IEEE 754 EDGE CASES  --  overflow, underflow, |b| on -0.0
+==============================================================================
+  [F64:1.7976931348623157e+308] --mul(2)--> [F64]  =  +inf
+    fare: A,O   exact: 359538626972463141629054847463408713596141135051689993197834953606314521560057077521179117265533756343080917907028764928468642653778928365536935093407075033972099821153102564152490980180778657888151737016910267884609166473806445896331617118664246696549595652408289446337476354361838599762500808052368249716736   abs err: -
+    note: overflow to +inf (IEEE 754 to_infinity)
+  [PASS] F64_max * 2 -> +inf with O (overflow)
+  [F64:5e-324] --div(2)--> [F64]  =  0.0
+    fare: A,U   exact: 1/404804506614621236704990693437834614099113299528284236713802716054860679135990693783920767402874248990374155728633623822779617474771586953734026799881477019843034848553132722728933815484186432682479535356945490137124014966849385397236206711298319112681620113024717539104666829230461005064372655017292012526615415482186989568   abs err: 0
+    note: underflow to zero (to_subnormal_then_zero)
+  [PASS] min subnormal / 2 -> 0.0 with U (underflow)
+  [F64:-0.0] --abs--> [F64]  =  0.0
+    fare: E,S,M   exact: 0   abs err: 0   ulp: 0  (bound 1/2 ok)
+    note: the sign bit of -0.0 did not survive |b| (F64 incapacity: sign of 0 not preserved)
+  [PASS] |b| on -0.0 flattens the sign bit (S) and collapses the magnitude (M)
+
+==============================================================================
+12. THE NILPOTENT LEDGER  (CTS Test 5)  --  the same transition, three times
+==============================================================================
+  3 executions of Q:1/10 -> F64 in run 'nilpotence-test':
+    ledger entries : 1
+    annihilation   : counter 2 on the single entry
+  [PASS] the ledger holds exactly 1 entry
+  [PASS] its annihilation_counter is 2
+  [PASS] the JSONL file has exactly 1 line
+  also, inside the main run, the reflection/projection first legs annihilated:
+    annihilated attempts so far: 5: step 7 -> entry 1, step 10 -> entry 1, step 15 -> entry 10, step 18 -> entry 13, step 19 -> entry 14
+
+==============================================================================
+13. HASH CHAIN INTEGRITY  (CTS Test 6)  --  tamper with line 3
+==============================================================================
+  [PASS] the pristine 5-conversion chain verifies clean
+  tampered line 3 -> verification says: ['Hash Mismatch at index 3']
+  [PASS] verify fails with 'Hash Mismatch at index 3'
+
+==============================================================================
+14. REPORTS AND LEDGER EXPORT
+==============================================================================
+  main ledger        : 18 entries, 5 annihilated attempts -> out/ledger.jsonl
+  audit table        : 18 rows -> out/audit_table.csv
+  irreversibility_report.txt-> out/irreversibility_report.txt
+  saturation_report.txt     -> out/saturation_report.txt
+  blocked_report.txt        -> out/blocked_report.txt
+  compaction_report.txt     -> out/compaction_report.txt
+  [PASS] the exported main ledger verifies clean
+  verify: OK, 18 entries, head sha256:5293ee03aa2fc679...
+
+IRREVERSIBILITY REPORT (reflection audits)
+------------------------------------------------------------------------------
+Round trips that did not return exactly the source value.
+
+  source      Q:1/10
+  path        Q -> F64 -> Q
+  returned    3602879701896397/36028797018963968
+  verdict     IRREVERSIBLE -- the fare paid on the way in cannot be refunded on the way out
+  delta       1/180143985094819840
+
+SATURATION (APEIROGON) REPORT
+------------------------------------------------------------------------------
+Steps where an audit hit the Goedelian limit of the current
+algebra (G6GF section 4.6: the F environment cannot simulate
+the continuous curve).
+
+  run          fare-audit-demo-01
+  step         3 of 5
+  transition   F64:0x1.306fe0a31b715p+0 --sqrt--> F64
+  drift score  3
+  event        Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.
+
+  run          fare-audit-demo-01
+  step         5 of 200
+  transition   F64:0x1.0000000000001p+1 --sqrt--> F64
+  drift score  3
+  event        Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.
+
+BLOCKED TRANSITIONS (level collisions prevented)
+------------------------------------------------------------------------------
+Attempts refused by the audit: the operation's home rung
+sits above the operand's or target's Fare-Ladder rung, so
+the transition would be a cross-layer leak (MBP 9.2/9.6).
+No fare is ledgered -- prevention, not repair.
+
+  BIN:0b11 --mul(BIN:0b100)--> Z64    fare: D,X
+      note: op 'mul' lives on rung F1 (Cipher), but the operand BIN is a rung-F0 binary flag
+
+  ADDR:0x7f3a1c --deref--> Z64    fare: D,X
+      note: op 'deref' lives on rung F2; target Z64 is rung F1 -- a downward crossing needs an explicit cast
+
+COMPACTION (GIF) REPORT -- audits grouped by threes
+------------------------------------------------------------------------------
+
+  macro-fare block 1  [Z environment]
+      audit rows [2, 3, 4] compressed: three sequential operations at one algebraic level
+  macro-fare block 2  [F environment]
+      audit rows [9, 10, 11] compressed: three sequential operations at one algebraic level
+  macro-fare block 3  [F environment]
+      audit rows [12, 13, 14] compressed: three sequential operations at one algebraic level
+  macro-fare block 4  [F environment]
+      audit rows [15, 16, 17] compressed: three sequential operations at one algebraic level
+      rows [18] at [F] remain uncompressed (a triad is not complete)
+
+  Triadic rule (GIF): no more than three identical operations at one
+  level; the fourth is either annihilated by the ledger (tau^2=0) or
+  saturates the environment (the Apeirogon).
+
+==============================================================================
+DEMO SUITE VERDICT
+==============================================================================
+  [PASS] exactness is R (rounded)
+  [PASS] target is the nearest binary64 0.10000000000000000555...
+  [PASS] absolute error is 5.551e-18 (golden 5.55e-18)
+  [PASS] ULP distance is 2/5 (the golden 0.5 is the round-to-nearest bound, and it holds)
+  [PASS] environment bent: target repr is Q
+  [PASS] result is Q:3/2
+  [PASS] overflow flag set (division overflow forced the bend)
+  [PASS] the value itself is exact in Q (exactness E)
+  [PASS] bit pattern re-read: 18446744073709551615
+  [PASS] sign lost (S)
+  [PASS] domain violation (D / PDD's V)
+  [PASS] level collision (X: signed cipher re-read as unsigned)
+  [PASS] exactness T (the signed reading was truncated away)
+  [PASS] PDD variant Z64:-5 -> N64 flags S,D,X
+  [PASS] routed through C128 (dimensional lift)
+  [PASS] result is 2.0[[i]] -- the [[b]] marker applied
+  [PASS] phase obfuscated (P)
+  [PASS] exactness A (the true value 2i is not representable in F64)
+  [PASS] sqrt(Q:4) -> F64 renders [[2.0]] (G6GF: sqrt(4) = [[2]])
+  [PASS] round trip returns 3602879701896397/36028797018963968, not 1/10 (PDD section 5 golden)
+  [PASS] round trip is NOT exact (irreversible)
+  [PASS] direct Q:1/10 -> D128 is exact (decimal holds tenths)
+  [PASS] path Q->F64->D128 ends at 0.1000000000000000055511151231257827 (path dependence)
+  [PASS] the two paths disagree (cumulative fare is real)
+  [PASS] saturation event fires on the 3rd sqrt (drift limit 3)
+  [PASS] the halting record carries A + saturation_event
+  [PASS] message: 'Apeirogon limit reached. F environment cannot simulate the continuous curve. Requires C environment.'
+  [PASS] the audit halts at step 5 (3rd sqrt), long before step 100 or any overflow
+  [PASS] blocked: the audit prevents the cross-layer leak
+  [PASS] flags D (domain violation) and X (level collision)
+  [PASS] no fare was ledgered for the blocked attempt
+  [PASS] blocked with X (an F2 address may not be read as an F1 cipher without a cast)
+  [PASS] the explicit cast is legal and exact
+  [PASS] F64_max * 2 -> +inf with O (overflow)
+  [PASS] min subnormal / 2 -> 0.0 with U (underflow)
+  [PASS] |b| on -0.0 flattens the sign bit (S) and collapses the magnitude (M)
+  [PASS] the ledger holds exactly 1 entry
+  [PASS] its annihilation_counter is 2
+  [PASS] the JSONL file has exactly 1 line
+  [PASS] the pristine 5-conversion chain verifies clean
+  [PASS] verify fails with 'Hash Mismatch at index 3'
+  [PASS] the exported main ledger verifies clean
+
+==============================================================================
+ALL 42 GOLDEN CHECKS PASSED -- the project's claimed outputs are reproduced.
+==============================================================================

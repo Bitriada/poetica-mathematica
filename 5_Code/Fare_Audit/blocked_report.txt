@@ -1,0 +1,12 @@
+BLOCKED TRANSITIONS (level collisions prevented)
+------------------------------------------------------------------------------
+Attempts refused by the audit: the operation's home rung
+sits above the operand's or target's Fare-Ladder rung, so
+the transition would be a cross-layer leak (MBP 9.2/9.6).
+No fare is ledgered -- prevention, not repair.
+
+  BIN:0b11 --mul(BIN:0b100)--> Z64    fare: D,X
+      note: op 'mul' lives on rung F1 (Cipher), but the operand BIN is a rung-F0 binary flag
+
+  ADDR:0x7f3a1c --deref--> Z64    fare: D,X
+      note: op 'deref' lives on rung F2; target Z64 is rung F1 -- a downward crossing needs an explicit cast

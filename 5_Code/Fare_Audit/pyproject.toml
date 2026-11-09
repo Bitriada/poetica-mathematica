@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rtfa"
+version = "1.0.0"
+description = "Representation Transition / Fare Audit (fare-audit): a read-only audit tool for lossy numeric-representation transitions, with a nilpotent hash-chained ledger."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "RTFA project" }]
+keywords = ["floating-point", "audit", "ieee754", "numerical", "ledger"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    "orjson>=3.9; python_version >= '3.11'",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+fare-audit = "rtfa.cli:main"
+
+[tool.setuptools]
+packages = ["rtfa"]

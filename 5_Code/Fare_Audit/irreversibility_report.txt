@@ -1,0 +1,9 @@
+IRREVERSIBILITY REPORT (reflection audits)
+------------------------------------------------------------------------------
+Round trips that did not return exactly the source value.
+
+  source      Q:1/10
+  path        Q -> F64 -> Q
+  returned    3602879701896397/36028797018963968
+  verdict     IRREVERSIBLE -- the fare paid on the way in cannot be refunded on the way out
+  delta       1/180143985094819840
