@@ -1,0 +1,33 @@
+name: test fare-audit manually
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Source (e.g., Q:1/3, Z:5, F64:0.1)'
+        required: true
+        default: 'Q:1/3'
+      target:
+        description: 'Target (e.g., F64, D128)'
+        required: true
+        default: 'F64'
+      operation:
+        description: 'Operation (e.g., cast, div(3), sqrt)'
+        required: true
+        default: 'cast'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Dependencies
+        run: pip install orjson
+      - name: Setup Folder
+        run: cd 5_Code/Fare_Audit && ln -s . rtfa
+      - name: Run Custom Audit
+        run: |
+          cd 5_Code/Fare_Audit
+          python3 -m rtfa run --src "${{ github.event.inputs.source }}" --tgt "${{ github.event.inputs.target }}" --op "${{ github.event.inputs.operation }}"
