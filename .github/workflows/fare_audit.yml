@@ -15,9 +15,11 @@ jobs:
           python-version: '3.11'
       - name: Install Dependencies
         run: pip install pytest orjson
+      - name: Fix flat folder structure
+        run: cd 5_Code/Fare_Audit && ln -s . rtfa
       - name: Run Tests
         run: cd 5_Code/Fare_Audit && python3 -m pytest -q
       - name: Run Demo
-        run: cd 5_Code/Fare_Audit && python3 __main__.py demo --out out
+        run: cd 5_Code/Fare_Audit && python3 -m rtfa demo --out out
       - name: Verify Ledger
-        run: cd 5_Code/Fare_Audit && python3 __main__.py verify --ledger out/ledger.jsonl
+        run: cd 5_Code/Fare_Audit && python3 -m rtfa verify --ledger out/ledger.jsonl
