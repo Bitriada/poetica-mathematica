@@ -13,8 +13,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install pytest
-      - run: pip install -e ./fare-audit
-      - run: cd fare-audit && python3 -m pytest -q
-      - run: cd fare-audit && python3 -m rtfa demo --out out
-      - run: cd fare-audit && python3 -m rtfa verify --ledger out/ledger.jsonl
+      - name: Install Dependencies
+        run: pip install pytest orjson
+      - name: Run Tests
+        run: cd fare-audit && python3 -m pytest -q
+      - name: Run Demo
+        run: cd fare-audit && python3 __main__.py demo --out out
+      - name: Verify Ledger
+        run: cd fare-audit && python3 __main__.py verify --ledger out/ledger.jsonl
