@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>π-clock — the Trinumeral Clock, operational</title>
+<style>
+  :root { color-scheme: dark;
+    --bg: #070d19; --card: #0b1220; --line: #22304a; --ink: #e2e8f0;
+    --muted: #64748b; --gold: #facc15; --sky: #7dd3fc; --pink: #f472b6; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink);
+    font: 14px/1.55 "Segoe UI", system-ui, sans-serif; padding: 24px; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 22px; color: var(--gold); letter-spacing: .3px; }
+  .sub { color: var(--muted); font-size: 12.5px; margin: 4px 0 18px; }
+  .card { background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+  .hero { display: flex; gap: 26px; align-items: center; flex-wrap: wrap; }
+  .bigpi { font: 700 64px/1.05 ui-monospace, "Cascadia Mono", monospace;
+    letter-spacing: 1px; }
+  .bigpi .lock { color: var(--gold); }
+  .bigpi .free { color: #475569; }
+  .law { color: var(--sky); font: 13px ui-monospace, monospace;
+    margin-top: 6px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit,
+    minmax(130px, 1fr)); gap: 10px; flex: 1; min-width: 300px; }
+  .cell { background: #101a2e; border: 1px solid var(--line);
+    border-radius: 9px; padding: 8px 10px; }
+  .k { color: var(--muted); font-size: 10px; text-transform: uppercase;
+    letter-spacing: .09em; }
+  .v { font: 600 15px ui-monospace, monospace; margin-top: 3px;
+    word-break: break-all; }
+  canvas { display: block; width: 100%; background: #0a1322;
+    border: 1px solid var(--line); border-radius: 10px; margin-top: 12px; }
+  .ctrl { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  button, select, input { background: #1e293b; color: var(--ink);
+    border: 1px solid #334155; border-radius: 8px; padding: 8px 14px;
+    font: 13px ui-monospace, monospace; cursor: pointer; }
+  button:hover { background: #273449; }
+  button.primary { background: #b45309; border-color: #d97706;
+    color: #fff7ed; font-weight: 700; }
+  .mask { display: grid; grid-template-columns: repeat(32, 1fr);
+    gap: 3px; margin-top: 10px; }
+  .mask i { height: 12px; border-radius: 3px; background: #1e293b; }
+  .mask i.on { background: var(--gold); box-shadow: 0 0 6px #facc1566; }
+  .epoch { position: relative; height: 14px; margin-top: 12px;
+    background: #101a2e; border: 1px solid var(--line);
+    border-radius: 7px; overflow: hidden; }
+  .epoch .fill { position: absolute; inset: 0 auto 0 0; width: 0%;
+    background: linear-gradient(90deg, #1d4ed8, #38bdf8); }
+  .epoch .foldmark { position: absolute; top: 0; bottom: 0; width: 2px;
+    background: var(--pink); }
+  .epoch .lbl { position: absolute; right: 6px; top: 0; font-size: 10px;
+    color: var(--muted); line-height: 14px; }
+  h2 { font-size: 14px; color: #93c5fd; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; font: 12px
+    ui-monospace, monospace; }
+  td { padding: 3px 8px 3px 0; vertical-align: top; word-break: break-all; }
+  td.k { color: var(--muted); white-space: nowrap; width: 190px; }
+  td.v { color: var(--ink); }
+  .ok { color: #4ade80; } .note { color: var(--muted); font-size: 11.5px;
+    margin-top: 8px; }
+  .tri { font: 12px ui-monospace, monospace; }
+  footer { color: var(--muted); font-size: 11.5px; margin-top: 6px;
+    text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>π-clock — the Trinumeral Clock, operational</h1>
+  <div class="sub">A timer whose tick is a counted Farey fraction. I = |F<sub>n</sub>| = 1 + Φ(n) exactly (BigInt) · F accumulates π/2 per tick · 2F/I = π(1 − 3/I) exactly · error = −3π/I. <i>Poetica Mathematica</i>, Book II §8 + the W1 build (time from counting).</div>
+
+  <div class="card">
+    <div class="hero">
+      <div>
+        <div class="bigpi" id="bigPi">3.1</div>
+        <div class="law" id="lawLine">press play</div>
+      </div>
+      <div class="stats">
+        <div class="cell"><div class="k">I · ticks (exact)</div>
+          <div class="v" id="vI">0</div></div>
+        <div class="cell"><div class="k">order n · |Fₙ|</div>
+          <div class="v" id="vN">1</div></div>
+        <div class="cell"><div class="k">F register (fold-wrapped)</div>
+          <div class="v" id="vF">0.000</div></div>
+        <div class="cell"><div class="k">spheres · precision wraps</div>
+          <div class="v" id="vSph">1 · 0 · 0</div></div>
+        <div class="cell"><div class="k">Farey fraction (this tick)</div>
+          <div class="v" id="vFrac">0/1</div></div>
+        <div class="cell"><div class="k">σ · phase (double cover)</div>
+          <div class="v" id="vSig">+1 · 0°</div></div>
+      </div>
+    </div>
+    <canvas id="chart" width="1880" height="460"></canvas>
+    <div class="ctrl">
+      <button class="primary" id="btnPlay">▶ play</button>
+      <button id="btnSpeed">×4</button>
+      <button id="btnStep">+10</button>
+      <button id="btnReset">reset</button>
+      <select id="selValue" title="the trinumeral's start value">
+        <option value="1/10">start value 1/10</option>
+        <option value="3/2">start value 3/2</option>
+        <option value="1/3">start value 1/3</option>
+        <option value="2/7">start value 2/7</option>
+        <option value="1/2">start value 1/2</option>
+      </select>
+      <select id="selRegion" title="the area region F accumulates">
+        <option value="half">half region → π</option>
+        <option value="full">full region → 2π</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The registers</h2>
+    <div class="mask" id="mask"></div>
+    <div class="note">B — the sphere-presence mask (a sphere fires at
+      each Farey order rollover; it is BigInt and never cleared).</div>
+    <div class="epoch" id="meterBar" title="F vs the 2^52 precision boundary">
+      <div class="fill" id="epochFill"></div>
+      <div class="lbl" id="epochLbl"></div>
+    </div>
+    <div class="note">The fold is the numerical precision boundary, not a
+      lattice constant: F accumulates π/2 per fraction (the accumulation
+      is the metaphor of time) and folds when F &gt; 2⁵² — the point
+      where adding π/2 to an IEEE double starts rounding the increment.
+      At the fold F ← F − n·2π (n = ⌊F/2π⌋); the exact layer
+      F_exact = (π/2)(I−3) keeps the ratio observable; the event is
+      logged as PRECISION_FOLD. No B clear, no I reload: B is BigInt
+      (unbounded), I never resets.</div>
+  </div>
+
+  <div class="card">
+    <h2>The Trinumeral state — three sheets, one trace (Ch. VIII §8.4)</h2>
+    <table class="tri" id="triTable"><tbody>
+      <tr><td class="k">B sheet (binary, 53 frac bits)</td>
+        <td class="v" id="tB">–</td></tr>
+      <tr><td class="k">i sheet (integer)</td><td class="v" id="tI">–</td></tr>
+      <tr><td class="k">f sheet (float)</td><td class="v" id="tF">–</td></tr>
+      <tr><td class="k">α = canon(B) − i</td><td class="v" id="tA">–</td></tr>
+      <tr><td class="k">β = i − exact(f)</td><td class="v" id="tBt">–</td></tr>
+      <tr><td class="k">γ = exact(f) − canon(B)</td><td class="v" id="tG">–</td></tr>
+      <tr><td class="k">telescope α+β+γ</td>
+        <td class="v" id="tTel">–</td></tr>
+      <tr><td class="k">ledger (e1 · e2 · e3)</td><td class="v" id="tLed">–</td></tr>
+      <tr><td class="k">ghost disc · τ-cycle αβγ</td>
+        <td class="v" id="tGhost">–</td></tr>
+    </tbody></table>
+    <div class="note">The conversion cycle bin2int → int2float → float2bin
+      is one tick each; every conversion pays its discrepancy to the
+      nilpotent ladder (a repeated transit annihilates: τ² = 0). The
+      telescope α+β+γ = 0 holds at every tick, exactly.</div>
+  </div>
+
+  <div class="card">
+    <h2>Franel–Landau audit — the Riemann hypothesis view (exact)</h2>
+    <div class="ctrl" style="margin: 0 0 10px">
+      <input type="number" id="franelN" value="30" min="1" max="120"
+        style="width: 90px" title="Farey order (exact audit capped at 120)">
+      <button id="btnFranel">audit Fₙ</button>
+      <button id="btnPi2">π² identity (square-free, N = 10⁶)</button>
+    </div>
+    <table class="tri"><tbody id="franelBody">
+      <tr><td class="k">d<sub>k,n</sub></td><td class="v">a<sub>k,n</sub> − k/m<sub>n</sub>,
+        the k-th Farey term minus the k-th uniform point.</td></tr>
+      <tr><td class="k">Franel (1924)</td><td class="v">RH ⟺ Σ d² = O(n<sup>r</sup>)
+        for all r &gt; −1</td></tr>
+      <tr><td class="k">Landau (1924)</td><td class="v">RH ⟺ Σ|d| = O(n<sup>r</sup>)
+        for all r &gt; ½</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card">
+    <h2>The identities, live</h2>
+    <table class="tri"><tbody>
+      <tr><td class="k">2F/I = π(1 − 3/I)</td>
+        <td class="v" id="id1">–</td></tr>
+      <tr><td class="k">Triangle Identity (W2)</td>
+        <td class="v" id="id2">T_n = |F_n| − 2 exactly (corrects §8.9's
+          |F_n|/2; the mediant bijection)</td></tr>
+      <tr><td class="k">|Fₙ| ~ 3n²/π²</td><td class="v" id="id3">–</td></tr>
+      <tr><td class="k">π² = 6N/SF(N)</td>
+        <td class="v" id="id4">square-free density 6/π² — see the audit
+          panel</td></tr>
+    </tbody></table>
+  </div>
+
+  <footer>piclock-browser · exact BigInt core cross-checked 244/244
+    against the verified Python implementation · zero dependencies</footer>
+</div>
+
+<script src="../core/rational.js"></script>
+<script src="../core/piclock.js"></script>
+<script src="demo.js"></script>
+</body>
+</html>

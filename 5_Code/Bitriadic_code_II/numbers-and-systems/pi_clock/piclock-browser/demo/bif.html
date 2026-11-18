@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Nested-Bif π-clock — a comparative analyzer</title>
+<style>
+  :root { color-scheme: dark;
+    --bg: #070d19; --card: #0b1220; --line: #22304a; --ink: #e2e8f0;
+    --muted: #64748b; --gold: #facc15; --sky: #7dd3fc; --pink: #f472b6;
+    --green: #4ade80; --red: #f87171; --violet: #a78bfa; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink);
+    font: 14px/1.55 "Segoe UI", system-ui, sans-serif; padding: 22px; }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+  h1 { font-size: 21px; color: var(--gold); letter-spacing: .3px; }
+  .sub { color: var(--muted); font-size: 12.5px; margin: 4px 0 16px; }
+  .card { background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+  .hero { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .bigpi { font: 700 54px/1.05 ui-monospace, "Cascadia Mono", monospace;
+    letter-spacing: 1px; }
+  .bigpi .lock { color: var(--gold); }
+  .bigpi .free { color: #475569; }
+  .biglaw { color: var(--sky); font: 12.5px ui-monospace, monospace;
+    margin-top: 5px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit,
+    minmax(122px, 1fr)); gap: 9px; flex: 1; min-width: 340px; }
+  .cell { background: #101a2e; border: 1px solid var(--line);
+    border-radius: 9px; padding: 7px 10px; }
+  .k { color: var(--muted); font-size: 9.5px; text-transform: uppercase;
+    letter-spacing: .09em; }
+  .v { font: 600 13.5px ui-monospace, monospace; margin-top: 2px;
+    word-break: break-all; }
+  canvas { display: block; width: 100%; background: #0a1322;
+    border: 1px solid var(--line); border-radius: 10px; margin-top: 8px;
+    cursor: crosshair; }
+  .vhead { display: flex; align-items: baseline; gap: 10px;
+    flex-wrap: wrap; }
+  .vhead h2 { font-size: 13.5px; color: #93c5fd; }
+  .vhead .q { color: var(--muted); font-size: 11.5px; font-style: italic; }
+  .readout { font: 11.5px ui-monospace, monospace; background: #0a1322;
+    border: 1px dashed #33415a; border-radius: 8px; padding: 7px 10px;
+    margin-top: 8px; color: #cbd5e1; min-height: 32px; }
+  .readout b { color: var(--gold); font-weight: 700; }
+  .readout .clr { float: right; color: var(--red); cursor: pointer;
+    font-weight: 700; }
+  .chips { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .chip { font: 11px ui-monospace, monospace; background: #101a2e;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 3px 10px; color: #cbd5e1; }
+  .chip b { color: var(--sky); }
+  .ctrl { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+    align-items: center; }
+  button, select, input { background: #1e293b; color: var(--ink);
+    border: 1px solid #334155; border-radius: 8px; padding: 7px 13px;
+    font: 12.5px ui-monospace, monospace; cursor: pointer; }
+  button:hover { background: #273449; }
+  button.primary { background: #b45309; border-color: #d97706;
+    color: #fff7ed; font-weight: 700; }
+  h2 { font-size: 13.5px; color: #93c5fd; margin-bottom: 7px; }
+  table { width: 100%; border-collapse: collapse; font: 12px
+    ui-monospace, monospace; }
+  th { text-align: left; color: var(--muted); font-weight: 600;
+    font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+    padding: 3px 8px 5px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 4px 8px 4px 0; vertical-align: top;
+    word-break: break-all; }
+  td.k { color: var(--muted); white-space: nowrap; }
+  .num { text-align: right; white-space: nowrap; }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 999px;
+    font-size: 10px; font-weight: 700; letter-spacing: .05em; }
+  .badge.bind { background: #164e63; color: #67e8f9; }
+  .badge.ok { background: #14532d; color: var(--green); }
+  .badge.bad { background: #7f1d1d; color: var(--red); }
+  .badge.up { background: #78350f; color: #fcd34d; }
+  .badge.lo { background: #1e3a8a; color: #93c5fd; }
+  .badge.frz { background: #78350f; color: #fcd34d; }
+  .note { color: var(--muted); font-size: 11.5px; margin-top: 7px; }
+  .mono { font: 11.5px ui-monospace, monospace; word-break: break-all; }
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tab { background: #1e293b; border: 1px solid #334155;
+    border-radius: 8px; padding: 5px 13px; font: 12px ui-monospace,
+    monospace; cursor: pointer; color: #94a3b8; }
+  .tab.on { background: #164e63; border-color: #0e7490; color: #e0f2fe;
+    font-weight: 700; }
+  .logtools { display: flex; gap: 8px; align-items: center;
+    flex-wrap: wrap; margin-top: 10px; }
+  .logtools select { padding: 5px 9px; font-size: 11.5px; }
+  .logtools button { padding: 5px 10px; font-size: 11.5px; }
+  .logwrap { margin-top: 10px; border: 1px solid var(--line);
+    border-radius: 10px; background: #0a1322; height: 260px;
+    overflow-y: auto; font: 11.5px ui-monospace, monospace; }
+  .logwrap table { font-size: 11.5px; }
+  .logwrap td, .logwrap th { padding: 3px 8px 3px 0; }
+  .logwrap tr { cursor: pointer; }
+  .logwrap tbody tr:hover { background: #16233c; }
+  .logwrap thead tr { cursor: default; }
+  .logwrap thead th { position: sticky; top: 0; background: #0a1322;
+    z-index: 2; }
+  .ev-OUTER_FLIP { color: #fcd34d; font-weight: 700; }
+  .ev-SPIN_FLIP { color: #f9a8d4; }
+  .ev-WARN_BALANCE { color: #f87171; font-weight: 700; }
+  .ev-WARN_CLEAR { color: #86efac; }
+  .ev-ORDER_ROLL { color: #7dd3fc; }
+  .ev-PRECISION_FOLD { color: #22d3ee; font-weight: 700; }
+  .empty { color: var(--muted); padding: 14px; text-align: center; }
+  footer { color: var(--muted); font-size: 11.5px; margin-top: 4px;
+    text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The Nested-Bif π-clock</h1>
+  <div class="sub">Two nested two-sheet environments converging on π — outer bif {B, i, f} (ordinal counting · Leibniz · apeirogon), inner bif {F} (the Farey layer: value bif + spinorial bif). π is the membrane between the sheets. The exact law 3π/I calibrates the balancer. Transfinite running, no epochs — the fold is the numerical precision boundary (2⁵²), not a lattice constant. Exact BigInt core, cross-checked tick-for-tick against the Python reference.</div>
+
+  <div class="card">
+    <div class="hero">
+      <div>
+        <div class="bigpi" id="bigPi">3.1</div>
+        <div class="biglaw" id="bigLaw">press play</div>
+      </div>
+      <div class="stats">
+        <div class="cell"><div class="k">tick B · Farey I</div>
+          <div class="v" id="vB">0 · 0</div></div>
+        <div class="cell"><div class="k">final bracket</div>
+          <div class="v" id="vFinal">–</div></div>
+        <div class="cell"><div class="k">final gap</div>
+          <div class="v" id="vGap">–</div></div>
+        <div class="cell"><div class="k">contains π</div>
+          <div class="v" id="vContains">–</div></div>
+        <div class="cell"><div class="k">outer phase</div>
+          <div class="v" id="vSheet">–</div></div>
+        <div class="cell"><div class="k">σ (spinorial)</div>
+          <div class="v" id="vSigma">+1</div></div>
+        <div class="cell"><div class="k">order · |Fₙ|</div>
+          <div class="v" id="vOrder">1 · 2</div></div>
+        <div class="cell"><div class="k">m · n (balancer)</div>
+          <div class="v" id="vMN">0 · 3</div></div>
+      </div>
+    </div>
+    <div class="ctrl">
+      <button class="primary" id="btnPlay">▶ play</button>
+      <button id="btnSpeed">×4</button>
+      <button id="btnStep">+100</button>
+      <button id="btnBurst">burst 5000</button>
+      <button id="btnReset">reset</button>
+      <span class="note" id="perfNote" style="margin:0"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="vhead"><h2>V1 · Bracket</h2>
+      <span class="q">what is π estimated as, right now?</span></div>
+    <canvas id="chartBracket" width="2040" height="430"></canvas>
+    <div class="readout" id="cursorReadout">shared cursor: hover any
+      chart to inspect a tick · click to anchor · click a log row to
+      jump — the cursor is shared by V1–V4</div>
+  </div>
+
+  <div class="card">
+    <div class="vhead"><h2>V2 · Gap-Rate</h2>
+      <span class="q">how fast is each scheme converging, and are they
+        balanced?</span></div>
+    <canvas id="chartGaps" width="2040" height="370"></canvas>
+    <div class="chips" id="rateChips"></div>
+  </div>
+
+  <div class="card">
+    <div class="vhead"><h2>V3 · Phase</h2>
+      <span class="q">which sheets are active, and how do the two bifs
+        relate? — σ (inner bif, spinorial) above, outer sheet below;
+        recent window</span></div>
+    <canvas id="chartPhase" width="2040" height="200"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="vhead"><h2>V4 · Trinumeral</h2>
+      <span class="q">are the schemes synchronized (α, β, γ), and what
+        is the flip history? — ghost + event lane below</span></div>
+    <canvas id="chartTri" width="2040" height="430"></canvas>
+  </div>
+
+  <div class="card">
+    <h2>Outer bif — the three schemes {B, i, f} and their combination</h2>
+    <table>
+      <thead><tr><th>scheme</th><th class="num">lower sheet</th>
+        <th class="num">upper sheet</th><th class="num">gap</th>
+        <th class="num">gap law</th><th>binds</th></tr></thead>
+      <tbody id="outerBody">
+        <tr><td class="k">B — ordinal counting</td>
+          <td class="num" id="oLB">–</td><td class="num" id="oUB">–</td>
+          <td class="num" id="oGB">–</td><td class="num">2/B</td>
+          <td id="oBindB"></td></tr>
+        <tr><td class="k">i — Leibniz (exact rational)</td>
+          <td class="num" id="oLI">–</td><td class="num" id="oUI">–</td>
+          <td class="num" id="oGI">–</td><td class="num">4/(4m+3)</td>
+          <td id="oBindI"></td></tr>
+        <tr><td class="k">f — apeirogon (trig)</td>
+          <td class="num" id="oLF">–</td><td class="num" id="oUF">–</td>
+          <td class="num" id="oGF">–</td><td class="num">~π³/2n²</td>
+          <td id="oBindF"></td></tr>
+        <tr style="border-top:1px solid var(--line)">
+          <td class="k"><b>outer bracket</b></td>
+          <td class="num" id="oLO">–</td><td class="num" id="oUO">–</td>
+          <td class="num" id="oGO">–</td><td class="num">max ∩ min</td>
+          <td></td></tr>
+      </tbody>
+    </table>
+    <div class="note">L_outer = max(L_B, L_i, L_f), U_outer = min(U_B,
+      U_i, U_f). The Leibniz sheets are exact rationals
+      (S_hi = <span id="noteShi">4</span>, S_lo =
+      <span id="noteSlo">8/3</span>) — doubles shown. π_est
+      (the B scheme's estimate) = <span id="notePiEst">4</span>,
+      the previous final-bracket midpoint.</div>
+  </div>
+
+  <div class="card">
+    <h2>Inner bif — the Farey layer {F}, nested inside the outer bif</h2>
+    <table>
+      <tbody>
+        <tr><td class="k">value bif — lower sheet L_F = 2F/I</td>
+          <td class="num" id="iLF">–</td>
+          <td class="k" style="width:auto">from the exact layer
+            F_exact = (π/2)(I−3) = <span id="iFex">0</span> — the
+            operational F = <span id="iF">0</span>
+            (wraps <span id="iWraps">0</span> at the 2⁵² boundary)</td></tr>
+        <tr><td class="k">value bif — upper sheet U_F</td>
+          <td class="num">π = 3.14159265…</td>
+          <td class="k">exact transcendental — the membrane</td></tr>
+        <tr><td class="k">value gap 3π/I (exact law)</td>
+          <td class="num" id="iGap">–</td>
+          <td class="k">the balancer's δ_target</td></tr>
+        <tr><td class="k">spinorial bif — σ</td>
+          <td class="num" id="iSigma">+1</td>
+          <td class="k" id="iSigmaSheet">even sheet (+1)</td></tr>
+        <tr><td class="k">this tick's Farey fraction</td>
+          <td class="num" id="iFrac">0/1</td>
+          <td class="k">the I-th fraction of the current order</td></tr>
+      </tbody>
+    </table>
+    <div class="note">The inner bif is self-contained: its value bracket
+      feeds the final intersection; its spinorial phase is recorded
+      independently. F accumulates π/2 per fraction after the fixed
+      prefix — 2F/I = π(1 − 3/I) exactly, so the value gap is exactly
+      3π/I. The value bif reads the exact layer, so a precision wrap
+      of the operational F never touches the bracket.</div>
+  </div>
+
+  <div class="card">
+    <h2>Final bracket — the intersection, and both phases</h2>
+    <div class="stats" style="min-width:0">
+      <div class="cell"><div class="k">L_final = max(L_outer, L_F)</div>
+        <div class="v" id="fL">–</div></div>
+      <div class="cell"><div class="k">U_final = min(U_outer, π)</div>
+        <div class="v" id="fU">–</div></div>
+      <div class="cell"><div class="k">width</div>
+        <div class="v" id="fW">–</div></div>
+      <div class="cell"><div class="k">π − U_final (gap to membrane)</div>
+        <div class="v" id="fToPi">–</div></div>
+    </div>
+    <div class="note" id="fNote">–</div>
+  </div>
+
+  <div class="card">
+    <h2>Balance — the Farey law as calibration</h2>
+    <table>
+      <tbody>
+        <tr><td class="k">δ_target = 3π/I</td>
+          <td class="num" id="bTarget">–</td>
+          <td class="k">Gap_B = 2/B</td>
+          <td class="num" id="bGB">–</td></tr>
+        <tr><td class="k">Gap_i = 4/(4m+3)</td>
+          <td class="num" id="bGI">–</td>
+          <td class="k">Gap_f = U_f − L_f</td>
+          <td class="num" id="bGF">–</td></tr>
+        <tr><td class="k">balance = max/min (outer three)</td>
+          <td class="num" id="bRatio">–</td>
+          <td class="k">status (threshold 10)</td>
+          <td class="num" id="bStatus">–</td></tr>
+      </tbody>
+    </table>
+    <div class="note">The balancer sets m ≈ I/(3π) and n ≈ √(π²I/6) so
+      the outer schemes run at the Farey rate. Farey is the slowest
+      scheme — the pacemaker; the B scheme's band (width 2/B) is
+      tighter, which is what makes the final bracket track just below
+      π once the estimate's lag exceeds 1/B (visible in V1; the
+      <i>contains π</i> badge reports it).</div>
+  </div>
+
+  <div class="card">
+    <h2>The Trinumeral recorder — sheets, discrepancies, ladder</h2>
+    <table class="mono">
+      <tbody>
+        <tr><td class="k">α = B − m</td><td id="tA">–</td></tr>
+        <tr><td class="k">β = m − n</td><td id="tB">–</td></tr>
+        <tr><td class="k">γ = n − B</td><td id="tG">–</td></tr>
+        <tr><td class="k">telescope α+β+γ</td><td id="tTel">–</td></tr>
+        <tr><td class="k">ledger (e1 · e2 · e3)</td><td id="tLed">–</td></tr>
+        <tr><td class="k">ghost disc (phase-flip ladder)</td>
+          <td id="tGhost">–</td></tr>
+        <tr><td class="k">σ · phase</td><td id="tSig">–</td></tr>
+        <tr><td class="k">F — the fourth core (area register)</td>
+          <td id="tF">–</td></tr>
+      </tbody>
+    </table>
+    <div class="note">The ledger accumulates α, β, γ per edge; when the
+      outer phase flips, the ladder annihilates the accumulated reading
+      and the ghost disc keeps the magnitude. All integers — exact
+      BigInt internally.</div>
+  </div>
+
+  <div class="card">
+    <h2>Analytical interface — it watches, it does not drive</h2>
+    <div class="ctrl" style="margin: 0 0 9px">
+      <button id="btnFranel">Franel–Landau audit at current order</button>
+      <span class="note" id="franelNote" style="margin:0">
+        d<sub>k,n</sub> = a<sub>k,n</sub> − k/mₙ; Franel (1924): RH ⟺
+        Σd² = O(n^r) ∀r&gt;−1; Landau (1924): RH ⟺ Σ|d| = O(n^r)
+        ∀r&gt;½. Exact BigInt, capped at order 120.</span>
+    </div>
+    <table class="mono"><tbody id="franelBody"></tbody></table>
+  </div>
+
+  <div class="card" id="liveLogCard">
+    <div class="vhead"><h2>Live log</h2>
+      <span class="q">the event stream is what a human watches; the
+        tick stream is for export and cursor jumps — the table freezes
+        while the pointer is over it</span></div>
+    <div class="logtools">
+      <div class="tabs" id="logTabs">
+        <div class="tab" data-tab="ticks">Ticks</div>
+        <div class="tab on" data-tab="events">Events</div>
+        <div class="tab" data-tab="orders">Orders</div>
+      </div>
+      <select id="selFilter"></select>
+      <span class="badge frz" id="frozenBadge" style="display:none">
+        ⏸ FROZEN — pointer over the log</span>
+      <span class="note" id="logStats" style="margin:0"></span>
+      <span style="flex:1"></span>
+      <button id="btnExportTicks">Export CSV</button>
+      <button id="btnExportEvents">Export JSONL</button>
+      <button id="btnExportSession">Export JSON</button>
+    </div>
+    <div class="logwrap" id="logWrap">
+      <table><thead id="logHead"></thead><tbody id="logBody"></tbody></table>
+    </div>
+    <div class="note">tick-log capacity:
+      <select id="selLogCap" style="padding:2px 6px; font-size:11px">
+        <option value="1024">1,024</option>
+        <option value="8192" selected>8,192</option>
+        <option value="65536">65,536</option>
+        <option value="200000">200,000</option>
+      </select> held in the ring (older ticks drop, exports carry the
+      ring as-is) · events: all flips, warnings, order rollovers and
+      precision folds, capped in memory</div>
+  </div>
+
+  <footer>piclock-browser · nested-bif engine · exact BigInt core,
+    tick-for-tick identical to the Python reference · zero dependencies</footer>
+</div>
+
+<script src="../core/rational.js"></script>
+<script src="../core/piclock.js"></script>
+<script src="../core/nestedbif.js"></script>
+<script src="bif.js"></script>
+</body>
+</html>
