@@ -1,0 +1,839 @@
+{
+ "project": "Tribit Face",
+ "generated": "2026-11-18",
+ "seed": 42,
+ "tolerance": 1e-09,
+ "checks": [
+  {
+   "id": "UC-1",
+   "name": "multiplication commutative",
+   "source": "Ch. IV, UC axioms",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "UC-2",
+   "name": "multiplication associative",
+   "source": "Ch. IV, UC axioms",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "UC-3",
+   "name": "distributivity",
+   "source": "Ch. IV, UC axioms",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "UC-4",
+   "name": "tau^2 = 0 (trace cannot be duplicated)",
+   "source": "Def. 4.2.1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "UC-5",
+   "name": "i*tau = tau*i",
+   "source": "Def. 4.2.1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "UC-6",
+   "name": "Leibniz trace rule = the Fare Principle",
+   "source": "Sec. 4.1 (Algebroid definition)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "UC-7",
+   "name": "dual arithmetic spot check (1+tau)(2+3tau) = 2+5tau",
+   "source": "UC = C[tau]/(tau^2)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C8-1",
+   "name": "O_j . O_k = O_(j+k mod 8): cyclic group law",
+   "source": "Claim 4.2.3.4",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C8-2",
+   "name": "O_0 = id and O_k^-1 = O_(8-k)",
+   "source": "Claim 4.2.3.4",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C8-3",
+   "name": "value plane strictly unchanged by every O_k",
+   "source": "Def. 4.2.3.3 / Sec. 4.5.2a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C8-4",
+   "name": "O_1 rotates the trace by pi/4",
+   "source": "Def. 4.2.3.3",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C8-5",
+   "name": "UC-scale 4x4 matrix matches O_k (value block = identity)",
+   "source": "Def. 4.2.3.3 (cf. Prop. 4.2.3.5 tension, README)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C8-6",
+   "name": "Prop. 4.2.3.5 two-block matrix = simultaneous value+trace rotation (the TFA-lifted grammar)",
+   "source": "Prop. 4.2.3.5 + Remark 4.2.3.3a",
+   "pass": true,
+   "detail": "the monograph's matrix disagrees with its own Def. 4.2.3.3 at UC scale; both readings are implemented and labelled"
+  },
+  {
+   "id": "G-1",
+   "name": "atlas 0/a kills the trace, preserves the value",
+   "source": "Sec. 4.5.2a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G-2",
+   "name": "overdrive w/0 lifts the value into the trace (v -> v + tau v)",
+   "source": "Sec. 4.5.2a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G-3",
+   "name": "one-way switch: 0/a (w/0 (v)) = v",
+   "source": "Sec. 4.5.2a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G-4",
+   "name": "the reverse composition loses the trace: w/0 (0/a (z)) != z",
+   "source": "Sec. 4.5.2a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G-5",
+   "name": "memory depth one: overdrive is idempotent",
+   "source": "Sec. 4.5.2a (tau^2 = 0)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-1",
+   "name": "normalisation lands on S3_FR",
+   "source": "Def. 4.2.4.1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-2",
+   "name": "value-fiber over v: fixed value, radius sqrt(1-|v|^2), on the sphere",
+   "source": "Sec. 4.2.4 explicit fibration",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-3",
+   "name": "the O_k orbit of a tribit lies on its value-fiber (rotations navigate the fiber)",
+   "source": "Sec. 4.5.2a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-4",
+   "name": "h(z) = tr/val is constant q on the classical Hopf fiber {(u, q u)}",
+   "source": "classical S3 -> S2 fibration",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-5",
+   "name": "fiber at infinity = pure trace (the nadir circle)",
+   "source": "Sec. 4.2.4 Prop. 4.2.4.3",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-6",
+   "name": "fiber over 0 = the pure value circle",
+   "source": "Sec. 4.2.4",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-7",
+   "name": "value-fibers and Hopf fibers are genuinely different fibrations (same value, different h)",
+   "source": "README honest limits",
+   "pass": true,
+   "detail": "Sec. 4.2.4 calls the value map a Hopf fibration while its explicit fibers fix the value; both are shown, distinct"
+  },
+  {
+   "id": "S-8",
+   "name": "nadir circle: pure transit states (val = 0, |tr| = 1)",
+   "source": "Def. 4.2.4.4",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-9",
+   "name": "intrinsic norm ||z||_tau <= sqrt(2) on the sphere",
+   "source": "Def. 4.2.4.6 / Prop. 4.2.4.7",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-10",
+   "name": "the balance torus attains the intrinsic radius sqrt(2)",
+   "source": "Prop. 4.2.4.7",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-11",
+   "name": "balance condition |val| = |tr| = 1/sqrt(2): the Clifford torus (our identification)",
+   "source": "AGS balance, s = 1/2",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-12",
+   "name": "off-balance points are strictly below the intrinsic radius (Cauchy-Schwarz equality case)",
+   "source": "our verification",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S-13",
+   "name": "stereographic projection round-trips (away from the pole)",
+   "source": "display layer",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-1",
+   "name": "tau_p^2 = 0 for the first primes",
+   "source": "Def. 4.1.1.1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-2",
+   "name": "tau_2 * tau_3 = tau_6 (coprime product)",
+   "source": "Def. 4.1.1.1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-3",
+   "name": "tau_2 * tau_6 = 0 (shared prime dies)",
+   "source": "Def. 4.1.1.1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-4",
+   "name": "coprimality product rule on random pairs",
+   "source": "Def. 4.1.1.1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-5",
+   "name": "collapse phi_UC : F -> UC is a linear surjection (addition preserved)",
+   "source": "Sec. 4.5.2a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-5b",
+   "name": "collapse is NOT multiplicative: phi(tau_2 tau_3) = tau but phi(tau_2) phi(tau_3) = 0 -- presence, not arithmetic",
+   "source": "our verification of Sec. 4.1.5 / 4.5.2a",
+   "pass": true,
+   "detail": "the monograph calls phi_UC a linear surjection; a ring homomorphism reading would be false"
+  },
+  {
+   "id": "F-6",
+   "name": "spectral involution is the identity at s = 1/2",
+   "source": "Claim 4.1.1.7 / Remark 4.2.4.1a",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-7",
+   "name": "iota_s . iota_(1-s) = id (zeta functional equation symmetry)",
+   "source": "Claim 4.1.1.5",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-8",
+   "name": "Z(s) = iota_s(Z(1-s)) on the truncated algebra",
+   "source": "Claim 4.1.1.6",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-9",
+   "name": "coprime multiplication is angle addition on the nadir circle (tau_m tau_n = tau_mn)",
+   "source": "Sec. 4.1.5",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-10",
+   "name": "square-free labels are injective under the logarithmic height (min separation 0.0056 rad)",
+   "source": "our instantiation of Sec. 4.1.5",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F-11",
+   "name": "all lattice points lie on the nadir circle of S3_FR",
+   "source": "Sec. 4.1.5 (placement is our instantiation)",
+   "pass": true,
+   "detail": ""
+  }
+ ],
+ "vectors": [
+  {
+   "op": "add",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    [
+     -0.7947262989860804,
+     -0.5534308866440187,
+     0.20206130477017314,
+     0.11311804384909485
+    ]
+   ],
+   "out": [
+    -1.5564865290581542,
+    -0.5483993761815176,
+    0.22570673031631516,
+    0.8331192191476458
+   ],
+   "note": ""
+  },
+  {
+   "op": "mul",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    [
+     -0.7947262989860804,
+     -0.5534308866440187,
+     0.20206130477017314,
+     0.11311804384909485
+    ]
+   ],
+   "out": [
+    0.608175481656385,
+    0.4175829658507662,
+    0.22518782666646128,
+    -0.6704421316744937
+   ],
+   "note": "Leibniz rule: value multiplies, trace cross-adds"
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    0
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    0.023645425546142018,
+    0.7200011752985509
+   ],
+   "note": ""
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    1
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    -0.49239787276817076,
+    0.5258375542636081
+   ],
+   "note": ""
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    2
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    -0.7200011752985509,
+    0.023645425546142063
+   ],
+   "note": ""
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    3
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    -0.5258375542636081,
+    -0.49239787276817076
+   ],
+   "note": ""
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    4
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    -0.023645425546142105,
+    -0.7200011752985509
+   ],
+   "note": ""
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    5
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    0.49239787276817076,
+    -0.5258375542636082
+   ],
+   "note": ""
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    6
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    0.7200011752985509,
+    -0.02364542554614215
+   ],
+   "note": ""
+  },
+  {
+   "op": "rotate",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ],
+    7
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    0.5258375542636082,
+    0.49239787276817065
+   ],
+   "note": ""
+  },
+  {
+   "op": "atlas",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ]
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    0.0,
+    0.0
+   ],
+   "note": "gate 0/a"
+  },
+  {
+   "op": "overdrive",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ]
+   ],
+   "out": [
+    -0.7617602300720738,
+    0.005031510462501165,
+    -0.7617602300720738,
+    0.005031510462501165
+   ],
+   "note": "gate w/0"
+  },
+  {
+   "op": "normTau",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ]
+   ],
+   "out": 1.4821661849239214,
+   "note": ""
+  },
+  {
+   "op": "normFr",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ]
+   ],
+   "out": 1.0484582789970929,
+   "note": ""
+  },
+  {
+   "op": "normalize",
+   "in": [
+    [
+     -0.7617602300720738,
+     0.005031510462501165,
+     0.023645425546142018,
+     0.7200011752985509
+    ]
+   ],
+   "out": [
+    -0.7265527349364237,
+    0.004798961068163893,
+    0.02255256696409527,
+    0.6867237254183075
+   ],
+   "note": ""
+  },
+  {
+   "op": "hopf",
+   "in": [
+    [
+     0.6219048976941802,
+     0.10492932567208105,
+     0.5059519960286677,
+     0.5884188240977686
+    ]
+   ],
+   "out": [
+    0.9462525198717464,
+    0.7865015810064362
+   ],
+   "note": ""
+  },
+  {
+   "op": "hopfNadir",
+   "in": [
+    [
+     0.0,
+     0.0,
+     0.5403023058681398,
+     0.8414709848078965
+    ]
+   ],
+   "out": null,
+   "note": "infinity encoded as null"
+  },
+  {
+   "op": "hopfFiberPoint",
+   "in": [
+    [
+     0.8,
+     -0.6
+    ],
+    1.1
+   ],
+   "out": [
+    0.3207408933799423,
+    0.630178767742802,
+    0.6346999753496352,
+    0.3116984781662763
+   ],
+   "note": ""
+  },
+  {
+   "op": "valueFiberPoint",
+   "in": [
+    [
+     0.3,
+     0.2
+    ],
+    2.0
+   ],
+   "out": [
+    0.3,
+    0.2,
+    -0.38815592862189907,
+    0.8481361772001422
+   ],
+   "note": ""
+  },
+  {
+   "op": "balancePoint",
+   "in": [
+    0.7,
+    2.1
+   ],
+   "out": [
+    0.5408250971664131,
+    0.45553069520608563,
+    -0.3569801040181723,
+    0.6103811967411633
+   ],
+   "note": ""
+  },
+  {
+   "op": "nadirPoint",
+   "in": [
+    2.5
+   ],
+   "out": [
+    0.0,
+    0.0,
+    -0.8011436155469337,
+    0.5984721441039565
+   ],
+   "note": ""
+  },
+  {
+   "op": "pureValuePoint",
+   "in": [
+    1.3
+   ],
+   "out": [
+    0.26749882862458735,
+    0.963558185417193,
+    0.0,
+    0.0
+   ],
+   "note": ""
+  },
+  {
+   "op": "stereographic",
+   "in": [
+    [
+     0.6512884747458619,
+     0.27536035056487096,
+     -0.0911068156349169,
+     0.7012129121350128
+    ]
+   ],
+   "out": [
+    0.7896508449618653,
+    -0.26126700449180457,
+    2.010868185741709
+   ],
+   "note": ""
+  },
+  {
+   "op": "invStereographic",
+   "in": [
+    [
+     0.7896508449618653,
+     -0.26126700449180457,
+     2.010868185741709
+    ]
+   ],
+   "out": [
+    0.6512884747458617,
+    0.27536035056487107,
+    -0.09110681563491696,
+    0.7012129121350131
+   ],
+   "note": ""
+  },
+  {
+   "op": "labelAngle",
+   "in": [
+    1
+   ],
+   "out": 0.0,
+   "note": ""
+  },
+  {
+   "op": "labelAngle",
+   "in": [
+    2
+   ],
+   "out": 0.8137682412329738,
+   "note": ""
+  },
+  {
+   "op": "labelAngle",
+   "in": [
+    3
+   ],
+   "out": 1.2897921466320712,
+   "note": ""
+  },
+  {
+   "op": "labelAngle",
+   "in": [
+    6
+   ],
+   "out": 2.103560387865045,
+   "note": ""
+  },
+  {
+   "op": "labelAngle",
+   "in": [
+    30
+   ],
+   "out": 3.9930717299109624,
+   "note": ""
+  },
+  {
+   "op": "labelAngle",
+   "in": [
+    210
+   ],
+   "out": 6.27760800735051,
+   "note": ""
+  },
+  {
+   "op": "fareMul",
+   "in": [
+    2,
+    3
+   ],
+   "out": 6,
+   "note": "tau_2 tau_3 = tau_6"
+  },
+  {
+   "op": "fareMul",
+   "in": [
+    6,
+    10
+   ],
+   "out": 0,
+   "note": "shared prime dies"
+  },
+  {
+   "op": "fareMul",
+   "in": [
+    1,
+    30
+   ],
+   "out": 30,
+   "note": "tau_1 is the unit"
+  },
+  {
+   "op": "involutionFactor",
+   "in": [
+    6,
+    [
+     0.3,
+     0.2
+    ]
+   ],
+   "out": [
+    1.5438941127032861,
+    -1.3451221808406881
+   ],
+   "note": ""
+  },
+  {
+   "op": "collapse",
+   "in": [
+    [
+     0.7,
+     -0.2
+    ],
+    6,
+    [
+     0.4,
+     0.9
+    ]
+   ],
+   "out": [
+    0.7,
+    -0.2,
+    0.4,
+    0.9
+   ],
+   "note": "tau_1 -> value, tau_n (n>1) -> trace"
+  }
+ ]
+}

@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BCT-2 · Colors that remember — learn it, play it, then open the machine</title>
+<style>
+  :root{
+    --bg:#0a0e16; --panel:#111726; --panel2:#0c1220; --line:#1f2a40;
+    --text:#dbe3f0; --dim:#8fa0bd; --faint:#5c6c88;
+    --gold:#e8b34b; --bright:#ff9d5c; --darkc:#5c8aff; --eq:#c9d2e4;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--gold)}
+  h1{font-size:clamp(1.7rem,5vw,2.9rem);line-height:1.15;margin:.2em 0;
+     letter-spacing:.01em}
+  h2{font-size:clamp(1.25rem,3.4vw,1.7rem);margin:0 0 .35em}
+  h3{font-size:1.02rem;margin:1.2em 0 .4em;color:var(--gold)}
+  p{margin:.5em 0;max-width:74ch}
+  .lede{color:var(--dim);font-size:clamp(.95rem,2.5vw,1.08rem);max-width:70ch}
+  section{margin-top:56px;padding-top:8px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;margin-top:14px}
+  .sub{color:var(--dim);font-size:.9rem}
+  .tiny{color:var(--faint);font-size:.8rem}
+  .mono{font-family:var(--mono)}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+    padding:2px 12px;font-size:.8rem;color:var(--dim);margin:2px 4px 2px 0;
+    background:var(--panel2)}
+  .chip b{color:var(--text);font-weight:600}
+  .law{font-family:var(--mono);color:var(--eq);background:var(--panel2);
+    border:1px solid var(--line);border-radius:8px;padding:6px 12px;
+    display:inline-block;font-size:.92rem}
+  /* ---------- BCT-2 header + nav ---------- */
+  .b2-hero{padding:52px 0 6px;
+    background:
+      radial-gradient(1200px 420px at 78% -10%,rgba(232,179,75,.10),transparent 62%),
+      radial-gradient(900px 380px at 12% -6%,rgba(92,138,255,.10),transparent 60%)}
+  .b2-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .b2-nav a{text-decoration:none;border:1px solid var(--line);color:var(--dim);
+    background:var(--panel2);border-radius:999px;padding:5px 16px;font-size:.88rem}
+  .b2-nav a:hover{color:var(--gold);border-color:var(--gold)}
+  .b2-claim{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  /* ---------- buttons ---------- */
+  .btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);
+    font:inherit;border-radius:8px;padding:6px 14px;font-size:.85rem;
+    cursor:pointer}
+  .btn:hover{border-color:var(--gold)}
+  .btn:focus-visible{outline:2px solid var(--gold)}
+  .btn.primary{background:var(--gold);color:#141005;border-color:var(--gold);font-weight:600}
+  .btn.big{padding:12px 22px;font-size:1rem}
+  /* ---------- fact widgets ---------- */
+  .fact h3{margin-top:2px}
+  .fw-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .fw-toggle{border:1px solid var(--line);background:var(--panel2);color:var(--text);
+    font:inherit;border-radius:9px;padding:7px 12px;font-size:.85rem;cursor:pointer;
+    display:flex;align-items:center;gap:8px}
+  .fw-toggle:focus-visible{outline:2px solid var(--gold)}
+  .fw-toggle .dot{width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,.25)}
+  .fw-toggle.on{border-color:var(--gold)}
+  .fw-main{display:grid;grid-template-columns:minmax(180px,1fr) minmax(200px,1.3fr);
+    gap:16px;margin-top:10px;align-items:start}
+  .fw-main>div,.gm-board>div{min-width:0}
+  .fw-swatch{height:110px;border-radius:10px;border:1px solid var(--line);
+    display:flex;align-items:flex-end;padding:8px 12px;justify-content:space-between}
+  .fw-wheel{display:flex;justify-content:center}
+  .fw-kv{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:.88rem;margin-top:8px}
+  .fw-kv dt{color:var(--dim)} .fw-kv dd{margin:0;font-family:var(--mono)}
+  .fw-stamp{display:inline-block;border-radius:8px;padding:3px 12px;font-weight:700;
+    font-size:.82rem;letter-spacing:.04em}
+  .st-same{background:rgba(232,179,75,.14);color:var(--gold);border:1px solid rgba(232,179,75,.45)}
+  .st-diff{background:rgba(92,138,255,.14);color:var(--darkc);border:1px solid rgba(92,138,255,.4)}
+  .fw-ladder{position:relative;height:16px;border-radius:8px;border:1px solid var(--line);
+    background:linear-gradient(90deg,#000,#808080 50%,#fff);margin-top:8px}
+  .fw-ladder .mark{position:absolute;top:-5px;width:4px;height:26px;border-radius:2px;
+    background:var(--gold);transform:translateX(-2px);box-shadow:0 0 0 1px #0a0e16}
+  .fw-cols{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  input[type=range]{width:100%;accent-color:var(--gold)}
+  .fw-note{border-radius:8px;padding:8px 12px;margin-top:8px;font-size:.9rem;
+    background:var(--panel2);border:1px dashed var(--line)}
+  .fw-note.flash{border-color:var(--gold);color:var(--gold)}
+  .tblwrap{overflow-x:auto;margin-top:12px}
+  table{border-collapse:collapse;min-width:520px;width:100%}
+  th,td{border:1px solid var(--line);padding:8px 10px;font-size:.85rem;
+    text-align:left;vertical-align:top}
+  th{color:var(--gold);background:var(--panel2);font-weight:600}
+  /* ---------- game ---------- */
+  .gm-setup{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px}
+  .gm-goal{flex:1;min-width:220px;border:1px solid var(--line);border-radius:12px;
+    background:var(--panel2);padding:16px;cursor:pointer;text-align:left;
+    color:var(--text);font:inherit}
+  .gm-goal:focus-visible{outline:2px solid var(--gold)}
+  .gm-goal .ball{height:54px;border-radius:9px;border:1px solid var(--line);margin-bottom:10px}
+  .gm-goal h4{margin:0 0 4px;font-size:1.02rem}
+  .gm-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    justify-content:space-between;margin-bottom:10px}
+  .gm-stats{display:flex;gap:8px;flex-wrap:wrap}
+  .gm-board{display:grid;grid-template-columns:minmax(200px,.9fr) minmax(280px,1.4fr);
+    gap:16px;align-items:start}
+  .gm-swatch{height:150px;border-radius:12px;border:1px solid var(--line);
+    display:flex;align-items:flex-end;justify-content:space-between;padding:10px 14px}
+  .gm-balance{margin-top:12px}
+  .gm-bbar{position:relative;height:14px;border-radius:7px;border:1px solid var(--line);
+    background:linear-gradient(90deg,#20262e,#3a4150 50%,#f0e9d8)}
+  .gm-bbar .mark{position:absolute;top:-5px;width:4px;height:24px;border-radius:2px;
+    background:var(--gold);transform:translateX(-2px);box-shadow:0 0 0 1px #0a0e16}
+  .gm-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .gm-col{border:1px solid var(--line);border-radius:10px;background:var(--panel2);
+    padding:8px 8px 7px;text-align:center;min-width:0}
+  .gm-col .nm{font-size:.82rem;font-weight:600}
+  .gm-col .wt{font-size:.68rem;color:var(--faint);font-family:var(--mono)}
+  .gm-col .st{font-size:.72rem;margin-top:4px;border-radius:6px;padding:2px 4px;
+    font-weight:700;letter-spacing:.03em}
+  .st-with{background:rgba(232,179,75,.16);color:var(--gold)}
+  .st-half{background:rgba(143,160,189,.14);color:var(--dim)}
+  .st-against{background:rgba(255,107,107,.13);color:#ff8f8f}
+  .st-seal{background:rgba(201,210,228,.14);color:var(--eq)}
+  .gm-hand{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .gm-card{border:1px solid var(--line);border-radius:12px;background:var(--panel2);
+    color:var(--text);font:inherit;text-align:left;padding:12px;cursor:pointer;
+    display:flex;flex-direction:column;gap:6px;min-width:0}
+  .gm-card:hover{border-color:var(--gold)}
+  .gm-card:focus-visible{outline:2px solid var(--gold)}
+  .gm-card .cn{font-weight:700;color:var(--gold)}
+  .gm-card .cd{font-size:.8rem;color:var(--dim);line-height:1.45}
+  .gm-log{margin-top:14px;border:1px solid var(--line);border-radius:10px;
+    background:var(--panel2);padding:10px 14px;max-height:230px;overflow-y:auto;
+    font-family:var(--mono);font-size:.76rem;line-height:1.7;color:var(--dim)}
+  .gm-log .gain-pos{color:var(--bright)} .gm-log .gain-neg{color:#ff8f8f}
+  .gm-log .gain-zero{color:var(--faint)} .gm-log .seal{color:var(--gold);font-weight:700}
+  .gm-won{border:1px solid var(--gold);border-radius:14px;background:var(--panel2);
+    padding:20px;margin-top:14px}
+  details{margin-top:14px;border:1px solid var(--line);border-radius:10px;
+    background:var(--panel2);padding:10px 16px}
+  summary{cursor:pointer;color:var(--dim);font-size:.92rem}
+  details[open] summary{color:var(--text);margin-bottom:6px}
+  /* ---------- limits ---------- */
+  .lm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+    gap:12px;margin-top:14px}
+  .lm-card{border:1px solid var(--line);border-radius:12px;background:var(--panel2);
+    padding:14px}
+  .lm-card h4{margin:0 0 6px;font-size:.95rem;color:var(--bright)}
+  .lm-card p{margin:.35em 0;font-size:.88rem}
+  .lm-card .fix{color:var(--dim);font-size:.82rem}
+  .lm-card .fix b{color:var(--dim)}
+  .lm-computer h4{color:var(--darkc)}
+  footer{margin-top:70px;border-top:1px solid var(--line);padding-top:18px;
+    color:var(--faint);font-size:.82rem}
+
+  /* ================= BCT-1 instrument styles (embedded) ============== */
+  .claim{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+  .mx-head{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+  .mx-head div{text-align:center;font-size:.78rem;color:var(--dim);line-height:1.35}
+  .mx-head b{color:var(--text);display:block;font-size:.86rem}
+  .cell{border:1px solid var(--line);border-radius:10px;background:var(--panel2);
+    padding:0;cursor:pointer;text-align:center;overflow:hidden;
+    color:var(--text);font:inherit;
+    transition:transform .08s ease, box-shadow .08s ease;position:relative}
+  .cell:hover{transform:translateY(-1px)}
+  .cell:focus-visible{outline:2px solid var(--gold)}
+  .cell.sel{box-shadow:0 0 0 2px var(--gold)}
+  .swatch{height:44px;display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--line);font-weight:700;font-size:1.02rem;
+    letter-spacing:.03em}
+  .swatch.on-dark{color:#0a0e16}
+  .cname{padding:5px 4px 2px;font-weight:600}
+  .cvals{padding:0 4px 7px;font-family:var(--mono);font-size:.74rem;color:var(--dim)}
+  .rowlab{display:flex;gap:10px;align-items:baseline;margin-top:16px;flex-wrap:wrap}
+  .mag{position:absolute;top:4px;right:6px;font-family:var(--mono);font-size:.68rem;
+    color:#0a0e16;background:rgba(255,255,255,.72);border-radius:6px;padding:0 5px;
+    display:none}
+  body.ledger .mx-mixed .mag{display:block}
+  .readout{display:grid;grid-template-columns:minmax(240px,1.1fr) minmax(260px,1fr);
+    gap:18px}
+  .bigswatch{height:120px;border-radius:10px;border:1px solid var(--line);
+    display:flex;align-items:flex-end;justify-content:space-between;padding:8px 12px}
+  .badge{display:inline-block;border-radius:8px;padding:3px 12px;font-weight:700;
+    font-size:.82rem;letter-spacing:.06em}
+  .b-bright{background:rgba(255,157,92,.16);color:var(--bright);border:1px solid rgba(255,157,92,.4)}
+  .b-dark{background:rgba(92,138,255,.16);color:var(--darkc);border:1px solid rgba(92,138,255,.4)}
+  .b-eq{background:rgba(232,179,75,.14);color:var(--gold);border:1px solid rgba(232,179,75,.45)}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;margin:10px 0;
+    font-size:.94rem}
+  .kv dt{color:var(--dim)}
+  .kv dd{margin:0;font-family:var(--mono)}
+  .cols41{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+  .colpick{display:flex;flex-direction:column;gap:4px}
+  .colpick .lab{font-size:.72rem;color:var(--dim);text-align:center;line-height:1.3}
+  .rbtn{border:1px solid var(--line);background:var(--panel2);color:var(--text);
+    font:inherit;border-radius:8px;padding:5px 2px;font-size:.8rem;
+    cursor:pointer;font-weight:600}
+  .rbtn:focus-visible{outline:2px solid var(--gold)}
+  .rbtn.on{background:var(--gold);color:#141005;border-color:var(--gold)}
+  .ladder{margin-top:14px}
+  .ladderbar{position:relative;height:16px;border-radius:8px;border:1px solid var(--line);
+    background:linear-gradient(90deg,#000,#808080 50%,#fff)}
+  .laddermark{position:absolute;top:-5px;width:4px;height:26px;border-radius:2px;
+    background:var(--gold);transform:translateX(-2px);box-shadow:0 0 0 1px #0a0e16}
+  .btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .grid81wrap{overflow-x:auto;padding-bottom:4px}
+  .grid81{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;min-width:430px}
+  .g81{aspect-ratio:1;border-radius:5px;border:1px solid rgba(255,255,255,.09);
+    cursor:pointer;padding:0;min-width:0;font:inherit;color:var(--text)}
+  .g81:hover{border-color:#fff}
+  .g81:focus-visible{outline:2px solid var(--gold)}
+  .g81.here{box-shadow:0 0 0 2px #fff}
+  .g81.wit{box-shadow:0 0 0 2px var(--gold)}
+  .g81.wit::after{content:"Ω";color:var(--gold);font-weight:700;font-size:.8rem}
+  .gxlab{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;min-width:430px;
+    margin-top:4px}
+  .gxlab span{text-align:center;font-family:var(--mono);font-size:.62rem;color:var(--faint)}
+  .hist{display:flex;align-items:flex-end;gap:2px;height:110px;margin-top:12px;
+    border-bottom:1px solid var(--line);padding:0 2px}
+  .hbar{flex:1;border-radius:2px 2px 0 0;min-width:5px;position:relative}
+  .hbar.zero{background:var(--gold)}
+  .hbar.pos{background:linear-gradient(180deg,var(--bright),#b06a35)}
+  .hbar.neg{background:linear-gradient(180deg,#4066bb,var(--darkc))}
+  .hbar .hc{position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:.6rem;color:var(--dim)}
+  .hlab{display:flex;justify-content:space-between;font-family:var(--mono);
+    font-size:.68rem;color:var(--faint);margin-top:4px}
+  .statline{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .conv{display:grid;grid-template-columns:minmax(230px,1fr) minmax(300px,1.4fr);gap:18px}
+  .pickerbox{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  input[type=color]{width:64px;height:44px;border:1px solid var(--line);
+    border-radius:8px;background:var(--panel2);padding:2px;cursor:pointer}
+  input[type=text]{background:var(--panel2);border:1px solid var(--line);
+    color:var(--text);border-radius:8px;padding:8px 10px;font-family:var(--mono);
+    font-size:.95rem;width:9.5ch}
+  .presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .psw{width:30px;height:30px;border-radius:7px;border:1px solid var(--line);
+    cursor:pointer;padding:0}
+  .axis{margin:8px 0}
+  .axis .alab{display:flex;justify-content:space-between;font-size:.76rem;
+    color:var(--dim);font-family:var(--mono)}
+  .axisbar{position:relative;height:12px;background:var(--panel2);
+    border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .axisbar::before{content:"";position:absolute;left:50%;top:0;bottom:0;
+    width:1px;background:var(--faint)}
+  .axfill{position:absolute;top:0;bottom:0}
+  .axfill.pos{left:50%;background:var(--bright)}
+  .axfill.neg{right:50%;background:var(--darkc)}
+  .calcrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  select{background:var(--panel2);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:8px 10px;font-size:.92rem;font-family:var(--mono)}
+  .calcresult{margin-top:14px;padding:12px;border:1px dashed var(--line);
+    border-radius:10px;background:var(--panel2)}
+  .tau{color:var(--gold);font-family:var(--mono);font-size:.85rem;margin-top:8px}
+
+  @media (max-width:720px){
+    .readout,.conv,.fw-main,.gm-board{grid-template-columns:1fr}
+    .matrix,.mx-head,.cols41{grid-template-columns:repeat(4,1fr)}
+    .swatch{height:34px;font-size:.86rem}
+    .cvals{font-size:.64rem}
+    .card{padding:14px 12px}
+    section{margin-top:42px}
+    .gm-cols{grid-template-columns:repeat(2,1fr)}
+    .gm-hand{grid-template-columns:1fr}
+  }
+  @media (max-width:420px){
+    .cname{font-size:.78rem}
+    .mx-head div{font-size:.68rem}
+  }
+</style>
+</head>
+<body>
+
+<header class="b2-hero">
+  <div class="wrap">
+    <h1>BCT-2 · Colors that remember</h1>
+    <p class="lede">Every color on every screen you have ever seen is three
+      numbers: how much red, green and blue light. That is enough to
+      <em>look at</em> colors. It is not enough to ask <em>how a color was
+      made</em>. This page is a working demonstration of a different idea —
+      a color that carries its own history: what light went in, what ink
+      bit it, and how the books balance.</p>
+    <div class="b2-claim">
+      <span class="chip">learn: <b>6 facts you can poke</b></span>
+      <span class="chip">play: <b>the Fruition game</b></span>
+      <span class="chip">open the machine: <b>the full instrument</b></span>
+      <span class="chip">and honestly: <b>where it breaks</b></span>
+    </div>
+    <nav class="b2-nav" aria-label="parts">
+      <a href="#facts">1 · Learn</a>
+      <a href="#game">2 · Play</a>
+      <a href="#machine">3 · The machine</a>
+      <a href="#limits">4 · Where it breaks</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ================= PART 1: FACTS ==================================== -->
+<section id="facts">
+  <h2>1 · Six facts you can poke</h2>
+  <p class="lede">No jargon below — just colors, lights, inks and books.
+    Each fact states something true about the model, explains it in plain
+    words, and then lets you make it happen with buttons. Watch the
+    color, the numbers, and the position shift.</p>
+
+  <div class="card fact">
+    <h3>Fact 1 — Three lights, three inks</h3>
+    <p>Every color here is built from six controls: three lights
+      (red, blue, green) and three inks (cyan, yellow, magenta). Lights
+      <b>add</b> — pile them up and you get white. Inks <b>subtract</b> —
+      and an ink only does something when there is light for it to eat:
+      cyan ink eats exactly red light, yellow eats blue, magenta eats
+      green.</p>
+    <div class="fw-main">
+      <div>
+        <div class="fw-swatch" id="f1Swatch"></div>
+        <dl class="fw-kv" id="f1KV"></dl>
+      </div>
+      <div>
+        <div class="fw-row" id="f1Toggles"></div>
+        <div class="fw-wheel">
+          <svg id="f1Wheel" width="170" height="170" viewBox="0 0 170 170"
+               role="img" aria-label="color wheel position"></svg>
+        </div>
+      </div>
+    </div>
+    <p class="tiny">Try: turn on all three lights (white!). Now add cyan
+      ink — watch it eat exactly the red. Then turn the red light off:
+      with no red to eat, the cyan ink does nothing at all.</p>
+  </div>
+
+  <div class="card fact">
+    <h3>Fact 2 — The same grey, three ways</h3>
+    <p>Pair each light with the ink that eats it, and the books balance:
+      as much flowing as bitten. Three different pairs — red+cyan,
+      blue+yellow, green+magenta — and all three land on the
+      <b>same grey</b>. Same to the eye. Different in the books.</p>
+    <div class="fw-row" id="f2Recipes"></div>
+    <div class="fw-main">
+      <div>
+        <div class="fw-swatch" id="f2Swatch"></div>
+        <div id="f2Stamp" style="margin-top:8px"></div>
+      </div>
+      <div>
+        <div class="tblwrap"><table id="f2Books"></table></div>
+      </div>
+    </div>
+    <p class="tiny">Try: click through the three pairs — the swatch never
+      changes, the books always do. Then press “all three lights”:
+      that white is <em>not</em> the same grey — it is a genuinely
+      different color, with no ink in it at all.</p>
+  </div>
+
+  <div class="card fact">
+    <h3>Fact 3 — Every color has a mirror</h3>
+    <p>Swap every light for ink and every ink for light, and you get the
+      color’s mirror: whatever flowed is now absorbed, whatever was
+      bright is now dark, and the books flip sign. Screens and printing
+      presses are the same machine run in opposite directions.</p>
+    <div class="fw-main" style="grid-template-columns:1fr 1fr">
+      <div>
+        <div class="sub" style="text-align:center">the color</div>
+        <div class="fw-swatch" id="f3A"></div>
+        <dl class="fw-kv" id="f3KVA"></dl>
+      </div>
+      <div>
+        <div class="sub" style="text-align:center">its mirror</div>
+        <div class="fw-swatch" id="f3B"></div>
+        <dl class="fw-kv" id="f3KVB"></dl>
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="btn" id="f3New">Another color</button>
+    </div>
+    <p class="tiny">Watch the totals: light and ink trade places, the
+      balance number flips from + to − (or − to +). Forty colors live on
+      each side of the mirror; exactly one — the perfect grey — is its
+      own mirror.</p>
+  </div>
+
+  <div class="card fact">
+    <h3>Fact 4 — Grey is a balance, not a color</h3>
+    <p>Ask “how grey is this color?” and you get a number: how far the
+      books are from balancing. Slide from all-light to all-ink and you
+      walk the whole ladder — through every degree of one-sidedness,
+      passing through grey, the one point where everything cancels. In
+      all 81 color-states of this model, <b>exactly one</b> balances
+      perfectly: every column half light, half ink.</p>
+    <div class="fw-main">
+      <div>
+        <div class="fw-swatch" id="f4Swatch"></div>
+        <div class="fw-ladder"><div class="mark" id="f4Mark"></div></div>
+        <dl class="fw-kv" id="f4KV"></dl>
+      </div>
+      <div>
+        <div class="sub" style="font-size:.8rem">balance (all-light
+          +15 … grey 0 … all-ink −15): <span class="num"
+          id="f4Val">0</span></div>
+        <input type="range" id="f4Slider" min="-15" max="15" step="1"
+               value="0" aria-label="balance">
+        <div class="btnrow">
+          <button class="btn" id="f4Next">Another state at this balance</button>
+        </div>
+        <div class="fw-note" id="f4Note"></div>
+      </div>
+    </div>
+    <p class="tiny">Try: park the slider on 0. One state. Now nudge to
+      +1 or −3 — suddenly several different color-states share the same
+      balance number. Which brings us to Fact 5.</p>
+  </div>
+
+  <div class="card fact">
+    <h3>Fact 5 — One number, many colors</h3>
+    <p>The balance number collides. Five different color-states all
+      balance to <b>+3</b> — the number cannot tell them apart. Any tool
+      that only counts balance is blind to how the color was made. This
+      is the model’s own limit, stated plainly — and it is exactly where
+      the interesting mathematics lives.</p>
+    <div class="fw-main">
+      <div>
+        <div class="fw-swatch" id="f5Swatch"></div>
+      </div>
+      <div>
+        <div style="font-size:2.4rem;font-weight:800" class="num"
+             id="f5Big">+3</div>
+        <div class="fw-cols" id="f5Chips"></div>
+        <div class="btnrow">
+          <button class="btn" id="f5Next">Next color-state →</button>
+        </div>
+        <div class="fw-note" id="f5Note"></div>
+      </div>
+    </div>
+    <p class="tiny">Five states, five different colors and histories, one
+      shared number. A color-picker that stores “+3” has already
+      forgotten which of these five you meant.</p>
+  </div>
+
+  <div class="card fact">
+    <h3>Fact 6 — The notebook will not write the same memory twice</h3>
+    <p>The ink side of the books is a strange notebook. Write
+      “cyan was absorbed” — fine, it is recorded. Write it again — the
+      note <b>annihilates itself</b>: the same memory, recorded twice,
+      erases. Light, by contrast, just piles up. That asymmetry is the
+      deepest rule in the model (its full name is
+      <span class="mono">τ² = 0</span> — you will meet it in the
+      machine).</p>
+    <div class="fw-row">
+      <button class="btn" id="f6Ink">Write: cyan ink was absorbed</button>
+      <button class="btn" id="f6Light">Write: red light was given</button>
+    </div>
+    <div class="fw-note" id="f6Note">The notebook is empty.</div>
+    <div class="tblwrap"><table id="f6Books"></table></div>
+    <p class="tiny">Try: press the ink button twice in a row. Then press
+      the light button three times — light accumulates (1, 2, 3…),
+      memory does not. Multiply two ink-notes together and you get
+      exactly nothing: <span class="mono">(cyan) × (cyan) = 0</span>.</p>
+  </div>
+</section>
+
+<!-- ================= PART 2: GAME ===================================== -->
+<section id="game">
+  <h2>2 · The Fruition game</h2>
+  <p class="lede">A small roguelike built on the six facts. You are given
+    a broken color: three columns, all leaning away from your goal. Play
+    cards to bring them over. When all three are fully with you, the
+    fourth column — the Spectrum, the recorder that has been watching
+    the whole game — seals your color: pure White, or pure Black. Every
+    play is one click. <b>Par is 10.</b></p>
+  <div class="card">
+    <div id="gmSetup">
+      <p class="sub" style="margin-top:0">Choose your fruition. The two
+        runs are mirror images of each other (Fact 3) — the math is the
+        same, the journey is opposite.</p>
+      <div class="gm-setup">
+        <button class="gm-goal" id="gmPickWhite">
+          <div class="ball" style="background:#ffffff"></div>
+          <h4>Seal pure White</h4>
+          <div class="sub">carry the color from dark to light</div>
+          <div class="tiny" id="gmBestWhite"></div>
+        </button>
+        <button class="gm-goal" id="gmPickBlack">
+          <div class="ball" style="background:#000000"></div>
+          <h4>Seal pure Black</h4>
+          <div class="sub">carry the color from light to dark</div>
+          <div class="tiny" id="gmBestBlack"></div>
+        </button>
+      </div>
+    </div>
+    <div id="gmPlay" hidden>
+      <div class="gm-top">
+        <div class="gm-stats">
+          <span class="chip">clicks <b class="num" id="gmClicks">0</b></span>
+          <span class="chip">par <b>10</b></span>
+          <span class="chip">best <b class="num" id="gmBest">—</b></span>
+        </div>
+        <div class="btnrow" style="margin:0">
+          <button class="btn" id="gmRestart">Restart</button>
+          <button class="btn" id="gmQuit">Pick the other fruition</button>
+        </div>
+      </div>
+      <div class="gm-board">
+        <div>
+          <div class="gm-swatch" id="gmSwatch"></div>
+          <div class="gm-balance">
+            <div class="sub" style="font-size:.78rem">balance — starts at
+              −7, seals at +7</div>
+            <div class="gm-bbar"><div class="mark" id="gmBMark"></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="gm-cols" id="gmCols"></div>
+          <p class="tiny" style="margin-top:8px">Columns fully with you
+            are safe — only half-done work can slip back (Fact 2’s grey
+            is a fragile place). The Spectrum column never moves: it is
+            the ledger. It seals at the end.</p>
+        </div>
+      </div>
+      <div class="gm-hand" id="gmHand"></div>
+      <div class="gm-log" id="gmLog" aria-live="polite"></div>
+    </div>
+    <div id="gmWon" class="gm-won" hidden></div>
+    <details>
+      <summary>Balance notes — how this game was tuned (the math)</summary>
+      <p class="sub">The deck was tuned by simulating 20,000 games of
+        perfect play. Result: <b>median 10 clicks</b> (mean 10.6), the
+        middle 80% of runs between 6 and 16 clicks, and
+        <b>zero unwinnable games</b>. The random part of each play is
+        worth between 0.75 and 1.5 clicks toward the target — never more
+        than 2 — so skill, not luck, carries a run. Card odds:
+        Coin 3-in-10, Sift 2, Flood 2, Slip 2, Stir 1. Column weights
+        1, 2, 4 are the model’s own; par 10 is the simulated median
+        under perfect play — beating it means outplaying the deck, not
+        the house.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ================= PART 3: THE MACHINE =============================== -->
+<section id="machine">
+  <h2>3 · The machine (BCT-1, the full instrument)</h2>
+  <p class="lede">You have now felt everything the model does. Time to
+    open the machine: the same facts and the same game, with their real
+    names, their exact numbers, and every weight and parameter on the
+    table. Nothing is hidden — the instrument verifies its central
+    claim live, in your browser, every time it loads.</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">3.1 · Plain words → machine names</h3>
+    <div class="tblwrap">
+      <table>
+        <tr><th>you just used…</th><th>the machine calls it…</th></tr>
+        <tr><td>a light / an ink</td><td>an <b>operator</b> in the ring
+          ℭ = ℝ[τ]/(τ² = 0)</td></tr>
+        <tr><td>light given / ink bite</td><td>the <b>flow pool</b>
+          val(X) / the <b>absorption pool</b> tr(X)</td></tr>
+        <tr><td>the books</td><td>the ledger <span class="mono">
+          X = val(X) + τ·tr(X)</span></td></tr>
+        <tr><td>balance</td><td>the <b>imbalance</b> Δ = V − T</td></tr>
+        <tr><td>the notebook’s rule</td><td><b>nilpotency</b>: τ² = 0
+          (duplicate records annihilate)</td></tr>
+        <tr><td>the perfect grey</td><td>the <b>equilibrium</b> —
+          W₁+W₂+W₃+Ω, “the witness”, the 81st point</td></tr>
+        <tr><td>column weights 1, 2, 4, 8</td><td>the <b>spectral
+          magnitudes</b>, powers of two</td></tr>
+        <tr><td>the recorder</td><td>the <b>reflex column</b>
+          (W₄ white reflex / K black reflex / Ω)</td></tr>
+        <tr><td>the 81 color-states</td><td><b>assignments</b>:
+          3 regimes × 4 channels = 3⁴ = 81</td></tr>
+        <tr><td>40 bright · 40 dark · 1 grey</td><td>the <b>partition</b>
+          40 / 40 / 1 — verified live below</td></tr>
+      </table>
+    </div>
+
+    <h3>3.2 · What the weights and parameters do, and why</h3>
+    <p><b>Why 1, 2, 4, 8.</b> The four columns carry the powers of two.
+      This is not decoration: with distinct powers of two, no subset can
+      split evenly (1+2+4 ≠ 8 on either side), so the perfect balance
+      Δ = 0 has <b>exactly one owner</b> — the all-mixed state. No
+      accidental forgeries of grey are possible; every signed sum is a
+      checkable fingerprint of its choices. Where fingerprints do collide
+      (Fact 5), the histogram below shows it openly.</p>
+    <p><b>The gate ε.</b> When a real color enters the machine, each of
+      its four channel signals must be judged: loaded toward light,
+      loaded toward ink, or balanced? The gate ε is how far from neutral
+      a signal must sit before it counts as loaded. Small ε: fine
+      judgments, few colors counted as balanced. Large ε: more colors
+      collapse into the balanced family. There is no “correct” ε — it is
+      the price you pay for a legible answer, and the slider in §3.7
+      lets you pay it yourself.</p>
+    <p><b>The picture.</b> A ledger has no look — someone must draw it.
+      The instrument draws with one stated rule (§3.7’s conventions
+      note): ladder lightness <span class="mono">l = ½ + Δ/30</span>,
+      opponent chroma from the three chromatic columns with the
+      achromatic leak projected out, saturation gain
+      <span class="mono">2·min(l, 1−l)/3</span>, then clamp. Other
+      honest observers could draw other pictures; the ledger does not
+      force the picture.</p>
+  </div>
+
+  <h3>3.3 · The twelve operators</h3>
+  <p>Each color operator <span class="mono">X</span> lives in a
+    commutative ring ℭ over ℝ with a nilpotent generator
+    <span class="mono">τ² = 0</span>. It decomposes into two pools:
+    <span class="mono">X = val(X) + τ·tr(X)</span>, where <b>val</b> is
+    the <b>flow pool</b> (light contributed) and <b>tr</b> is the
+    <b>absorption pool</b> (the nilpotent record of wavelengths
+    absorbed — recording the same absorption twice annihilates the
+    record). The operators stand in a 3 × 4 matrix: three mixing
+    regimes over four spectral channels, magnitudes the powers of two,
+    so every assignment leaves a unique imbalance signature.</p>
+  <div class="mx-head">
+    <div><b>Red / Cyan</b>M = 1</div>
+    <div><b>Blue / Yellow</b>M = 2</div>
+    <div><b>Green / Magenta</b>M = 4</div>
+    <div><b>Reflex / Spectrum</b>M = 8</div>
+  </div>
+  <div class="matrix" id="matrixGrid"></div>
+  <div class="rowlab">
+    <span class="chip">Row I — <b>additive</b>: v = M, t = 0 (light, no history)</span>
+    <span class="chip">Row II — <b>subtractive</b>: v = 0, t = M (absorption only)</span>
+    <span class="chip">Row III — <b>mixed</b>: v = t = M (both, equal)</span>
+    <button class="btn" id="ledgerBtn">Reveal the ledger (metamerism)</button>
+  </div>
+  <p class="tiny" id="matrixNote">Click a cell to choose that regime for its
+    channel — the assignment below updates. W₁, W₂, W₃ and Ω render the
+    <em>same</em> equilibrium grey: identical to the observer, different in
+    the ledger. That is metamerism, by construction.</p>
+  <div class="card">
+    <p class="sub" style="margin:0">The named roles. R, B, G — the additive
+      primaries. C, Y, M — the subtractive primaries. W₁ = R + C,
+      W₂ = B + Y, W₃ = G + M — the <b>metameric whites</b>, each holding a
+      different spectral string. W₄ — the <b>additive white reflex</b>:
+      appears pure white; its zero trace records its additive origin.
+      K — the <b>subtractive black reflex</b>: appears pure black; its zero
+      value records its subtractive origin. Ω — the <b>equilibrium
+      operator</b>: flow and absorption balanced at full magnitude, the
+      full potential spectrum.</p>
+  </div>
+
+  <h3>3.4 · The assignment under analysis</h3>
+  <p>An assignment selects one operator from each column — one regime per
+    channel — giving 3⁴ = 81 possibilities. Operators combine by
+    component-wise addition; the total <span class="mono">X = V + τ·T</span>
+    carries the flow V, the absorption T, and the imbalance
+    <span class="mono">Δ = V − T</span>. Row I contributes
+    <span class="mono">+M</span> to Δ, Row II <span class="mono">−M</span>,
+    Row III <span class="mono">0</span>.</p>
+  <div class="card">
+    <div class="cols41" id="colPickers"></div>
+    <div class="readout" style="margin-top:16px">
+      <div>
+        <div class="bigswatch" id="bigSwatch"></div>
+        <div class="btnrow">
+          <button class="btn primary" id="btnWitness">The witness</button>
+          <button class="btn" id="btnAdditive">All additive</button>
+          <button class="btn" id="btnSubtractive">All subtractive</button>
+          <button class="btn" id="btnRandom">Random</button>
+        </div>
+        <div class="ladder">
+          <div class="sub" style="font-size:.78rem">position on the grey
+            ladder (the neutral axis — the monochrome era inside color)</div>
+          <div class="ladderbar"><div class="laddermark" id="ladderMark"></div></div>
+        </div>
+      </div>
+      <div>
+        <div id="classBadge"></div>
+        <dl class="kv" id="assignKV"></dl>
+        <div id="assignChips" class="statline"></div>
+        <p class="tiny" id="witnessNote" style="display:none"></p>
+      </div>
+    </div>
+  </div>
+
+  <h3>3.5 · The 81-point space</h3>
+  <p>The whole grammar at a glance. Rows index the choices on channels 1–2
+    (Red/Cyan · Blue/Yellow), columns the choices on channels 3–4
+    (Green/Magenta · Reflex). Each cell is one assignment, rendered by the
+    observer’s projection; the gold cell is the witness —
+    <span class="mono">W₁+W₂+W₃+Ω</span>, the unique equilibrium, Δ = 0.
+    Click any cell to analyze it above.</p>
+  <div class="card">
+    <div class="grid81wrap">
+      <div class="grid81" id="grid81"></div>
+      <div class="gxlab" id="gxlab"></div>
+    </div>
+    <p class="tiny" style="margin-bottom:0">y-axis, top to bottom:
+      <span class="mono">I·I, I·II, I·III, II·I, … III·III</span> on
+      channels 1·2 — x-axis, left to right, the same order on channels 3·4.
+      White outline: the assignment currently under analysis.</p>
+  </div>
+  <div class="card">
+    <p style="margin-top:0"><b>The imbalance Δ across all 81 assignments</b></p>
+    <div class="hist" id="hist"></div>
+    <div class="hlab"><span>Δ = −15</span><span>Δ = 0</span><span>Δ = +15</span></div>
+    <div class="statline" id="partStats"></div>
+    <p class="tiny" id="collisionNote"></p>
+  </div>
+
+  <h3>3.6 · Color ⇄ tensor: the observer’s gate</h3>
+  <p>Give the instrument a color. It decomposes the color into the four
+    channel signals — red–cyan, blue–yellow, green–magenta (the chromatic
+    columns) and the reflex (luminance) — then quantizes each onto its
+    regime: <b>Row I</b> if the signal exceeds the gate, <b>Row II</b> if
+    it falls below −ε, <b>Row III</b> (the mixed regime) inside the gate.
+    The gate ε is the spectator’s fare: the compression that trades the
+    continuum for the legible 40&thinsp;/&thinsp;40&thinsp;/&thinsp;1 split
+    (Ch. IX: “the perfect split is purchased by a decision”).</p>
+  <div class="card">
+    <div class="conv">
+      <div>
+        <div class="pickerbox">
+          <input type="color" id="colorIn" value="#d94f3d" aria-label="pick a color">
+          <input type="text" id="hexIn" value="#d94f3d" maxlength="7"
+                 aria-label="hex color" spellcheck="false">
+        </div>
+        <div class="presets" id="presets"></div>
+        <p class="tiny">Presets include the equilibrium grey (→ the witness)
+          and pure white — watch how white enters the <em>reflex</em> column
+          while its channels stay neutral: the tensor distinguishes two
+          whites, reflex and additive, that no observer can tell apart.</p>
+        <div style="margin-top:14px">
+          <div class="sub" style="font-size:.8rem">the spectator’s gate
+            ε = <span class="num" id="epsVal">0.15</span></div>
+          <input type="range" id="epsIn" min="2" max="50" value="15"
+                 aria-label="gate threshold">
+        </div>
+      </div>
+      <div>
+        <div id="axes"></div>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <div style="flex:1;border:1px solid var(--line);border-radius:10px;overflow:hidden">
+            <div style="height:64px" id="vsYou"></div>
+            <div class="tiny" style="text-align:center;padding:4px">your color</div>
+          </div>
+          <div style="flex:1;border:1px solid var(--line);border-radius:10px;overflow:hidden">
+            <div style="height:64px" id="vsTensor"></div>
+            <div class="tiny" style="text-align:center;padding:4px">the tensor’s rendering</div>
+          </div>
+        </div>
+        <div class="mono" style="font-size:.76rem;color:var(--dim);line-height:1.7;
+             margin-top:8px;white-space:pre-line" id="gateReasons"></div>
+        <p class="tiny" id="nearestLine"></p>
+      </div>
+    </div>
+  </div>
+
+  <h3>3.7 · The ring calculator: addition and τ² = 0</h3>
+  <p>Operators add pool-wise and multiply as
+    <span class="mono">(v₁ + τt₁)(v₂ + τt₂) = v₁v₂ + τ(v₁t₂ + t₁v₂)</span>
+    — the τ² term is annihilated. Multiply two pure absorptions and the
+    product is <b>zero</b>: recording the same kind of history twice
+    destroys the record. That nilpotency is the ledger’s law — Fact 6 of
+    part 1, in symbols.</p>
+  <div class="card">
+    <div class="calcrow">
+      <select id="calcA" aria-label="operand A"></select>
+      <select id="calcOp" aria-label="operation">
+        <option value="add">+ &nbsp;(pool-wise addition)</option>
+        <option value="mul">× &nbsp;(ring multiplication)</option>
+      </select>
+      <select id="calcB" aria-label="operand B"></select>
+      <button class="btn primary" id="calcGo">Compute</button>
+    </div>
+    <div class="btnrow">
+      <button class="btn" data-preset="rc">R + C = W₁ (the metameric white)</button>
+      <button class="btn" data-preset="cc">C × C = 0 (duplicate absorption annihilates)</button>
+      <button class="btn" data-preset="ww">W₁ × W₁ (the mixed white squared)</button>
+      <button class="btn" data-preset="wit">W₁ + W₂ + W₃ + Ω (the witness)</button>
+    </div>
+    <div class="calcresult" id="calcOut"></div>
+  </div>
+
+  <h3>3.8 · What the instrument demonstrates</h3>
+  <div class="card">
+    <p style="margin-top:0"><b>The threefold verification of the 81-point
+      grammar</b></p>
+    <div class="tblwrap">
+      <table>
+        <tr><th></th><th>Fortress arithmetic</th><th>Semantic tensor</th>
+          <th>Color tensor</th></tr>
+        <tr><th>domain</th><td>principles (arithmetic)</td>
+          <td>Chinese poetic phrases (language)</td>
+          <td>spectral operators (algebra)</td></tr>
+        <tr><th>gate</th><td>territory counting</td>
+          <td>dual semantic gates, a human spectator</td>
+          <td>the imbalance Δ — the spectator externalized into a formula</td></tr>
+        <tr><th>partition</th><td>80 territory + the 81st vantage</td>
+          <td>40 / 40 / 1</td><td>40 / 40 / 1</td></tr>
+        <tr><th>witness</th><td>the unfathomable 81st point</td>
+          <td>日升海底 — the sun rising from the sea floor</td>
+          <td>W₁+W₂+W₃+Ω — the equilibrium grey, the neutral ledger</td></tr>
+      </table>
+    </div>
+    <p><b>Metamerism.</b> W₁, W₂, W₃ and Ω render the identical equilibrium
+      grey yet carry different spectral histories — “different spectral
+      distributions appear as the same color because the observer samples
+      only a finite projection of the continuum.” The projection here is
+      lossless at the level of the 81 assignments (all render distinctly)
+      and lossy exactly where the monograph says it must be: at the cells,
+      and in the shared Δ values (the histogram’s collisions — the price
+      of the powers of two).</p>
+    <p><b>Additive–subtractive duality.</b> The all-additive assignment
+      (R+B+G+W₄) renders pure white; the all-subtractive (C+Y+M+K) pure
+      black; and the map that swaps Row I ↔ Row II in every column negates
+      Δ, pairing the 80 non-equilibrium assignments into 40 bright/dark
+      pairs. The duality is an involution of the grammar — Fact 3.</p>
+    <p><b>The neutral axis as equilibrium.</b> The witness is not a grey
+      among greys: it is the state where every channel’s flow and
+      absorption cancel exactly — “the grey that underlies every graphic
+      program’s color picker… the ladder is the carry that makes ascent
+      possible; the grey is the carry that makes color possible.” The
+      assignment panel above places every assignment on that ladder —
+      Fact 4.</p>
+    <details>
+      <summary>The instrument’s conventions (how colors are rendered and
+        quantized)</summary>
+      <p class="sub">The monograph defines the algebra — the ring, the twelve
+        operators, the mixing rule, Δ, the partition. To make it executable,
+        this instrument fixes three documented conventions:</p>
+      <p class="sub"><b>Cell identity colors.</b> Row I/II cells render their
+        exact primaries (R, B, G, W₄; C, Y, M, K). All four Row III cells
+        render the same equilibrium grey — metamerism by construction.</p>
+      <p class="sub"><b>Assignment rendering (the observer’s projection).</b>
+        With row signs <span class="mono">sⱼ ∈ {+1,−1,0}</span> and
+        <span class="mono">Δ = Σ sⱼ·Mⱼ</span>: the ladder luminance
+        <span class="mono">l = ½ + Δ/30</span>; the opponent chroma
+        <span class="mono">(a−b−g, −a−b+g, −a+b−g)</span> from the three
+        chromatic columns, projected to zero achromatic leakage; saturation
+        gain <span class="mono">2·min(l,1−l)/3</span> — chroma vanishes at
+        the ladder’s black and white ends; then clamp. All 81 assignments
+        render distinctly under this rule.</p>
+      <p class="sub"><b>The gate.</b> A color decomposes as
+        <span class="mono">a = r − (g+b)/2</span>,
+        <span class="mono">b = bl − (r+g)/2</span>,
+        <span class="mono">g = gr − (r+bl)/2</span>,
+        <span class="mono">l = (r+g+bl)/3</span>; each chromatic axis
+        quantizes to Row I / III / II against ±ε; the reflex column takes
+        the luminance residual, normalized, against the same ε. The nearest
+        rendered assignment (exact search over all 81) is reported alongside
+        — when gate and projection disagree, your color sits between two
+        ledgers.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ================= PART 4: LIMITS ==================================== -->
+<section id="limits">
+  <h2>4 · Where it breaks</h2>
+  <p class="lede">A model earns trust not by its claims but by its
+    failures. The model built here does not compete with real
+    colorimetry — not yet; that is development room, not a verdict. Two
+    different kinds of failure live on this page: the <b>model’s own</b>
+    (a research map), and the <b>computer representation’s</b> (open
+    questions about the gaps in our ordinary understanding of color —
+    the gaps that make metamerism so hard to think about).</p>
+
+  <h3>4.1 · Where the model fails — the research map</h3>
+  <div class="lm-grid">
+    <div class="lm-card">
+      <h4>The balance is not brightness</h4>
+      <p>Δ counts bookkeeping weight, not lightness. Green’s column
+        weighs four times red’s for a grammatical reason (the powers of
+        two), not a perceptual one.</p>
+      <p class="fix"><b>Fixing it needs:</b> magnitudes re-derived from
+        measured perception — a fitted model, not an axiom.</p>
+    </div>
+    <div class="lm-card">
+      <h4>The fourth column has no receiver</h4>
+      <p>Human vision delivers three cone signals. The model’s recorder
+        column is bookkeeping, not biology — no eye reports it.</p>
+      <p class="fix"><b>Fixing it needs:</b> a physical or physiological
+        candidate for a fourth channel, or an honest demotion of the
+        recorder to pure convention.</p>
+    </div>
+    <div class="lm-card">
+      <h4>The number collides</h4>
+      <p>Five states share the balance +3 (Fact 5). Any tool that gates
+        on balance alone is blind to how the color was made.</p>
+      <p class="fix"><b>Fixing it needs:</b> finer invariants than a
+        single signed sum — the collision fibers are exactly the
+        unstudied structure.</p>
+    </div>
+    <div class="lm-card">
+      <h4>Mixing is straight-line</h4>
+      <p>Operators add component-wise. Real inks and lights do not:
+        saturation, adaptation, pigment interactions — all absent.</p>
+      <p class="fix"><b>Fixing it needs:</b> the ledger sums separated
+        explicitly from physical mixing models.</p>
+    </div>
+    <div class="lm-card">
+      <h4>Eighty-one states cannot name every color</h4>
+      <p>The grid is deliberately discrete. Most real colors have no
+        home in it — only their quantized shadows do.</p>
+      <p class="fix"><b>Fixing it needs:</b> the continuous ring — the
+        monograph itself calls the discrete split “the fare that
+        discreteness pays to the continuum.”</p>
+    </div>
+    <div class="lm-card">
+      <h4>No wavelengths anywhere</h4>
+      <p>The columns are opponent directions (red-vs-cyan…), not
+        spectral bands. Nothing here touches an actual spectrum.</p>
+      <p class="fix"><b>Fixing it needs:</b> a spectral version — real
+        reflectance curves per operator, the columns rebuilt from
+        physics.</p>
+    </div>
+    <div class="lm-card">
+      <h4>The picture is a convention</h4>
+      <p>Everything you see drawn is one stated observer rule (§3.2).
+        Another honest observer could draw the same ledgers
+        differently.</p>
+      <p class="fix"><b>Fixing it needs:</b> either a canonical observer
+        derived from the algebra, or the honesty kept loud — the
+        instrument states its rule, and so should any successor.</p>
+    </div>
+  </div>
+
+  <h3>4.2 · Where the computer representation fails — open questions</h3>
+  <div class="lm-grid lm-computer">
+    <div class="lm-card">
+      <h4>The pixel erases history</h4>
+      <p>An RGB triplet stores appearance. At the moment of storage,
+        <em>how</em> the color was made is gone — irreversibly. Every
+        metamer collapses into one number, and the difference dies
+        there.</p>
+    </div>
+    <div class="lm-card">
+      <h4>Pickers teach the wrong grey</h4>
+      <p>Every color tool shows grey as one swatch. But balance is a
+        family (Facts 4 and 5) — the UI flattens it, and we inherit the
+        flattening as intuition.</p>
+    </div>
+    <div class="lm-card">
+      <h4>Screens live inside metamerism</h4>
+      <p>RGB white is a legal forgery of sunlight: three phosphors
+        faking a continuum. The gap between the discrete sum and the
+        spectrum is where all the trouble lives — for this model and
+        for your display alike.</p>
+    </div>
+    <div class="lm-card">
+      <h4>Files keep no provenance</h4>
+      <p>No mainstream color format carries <em>how</em>, only
+        <em>what</em>. A paint program cannot tell you which of the five
+        +3-states you painted — it never wrote it down.</p>
+    </div>
+    <div class="lm-card">
+      <h4>The language gap</h4>
+      <p>We say “same color” for <em>same-looking</em> and
+        <em>same-made</em>. The difference is unspeakable in ordinary
+        words — so it is hard to think, so metamerism keeps surprising
+        us. The understanding gap is baked into the vocabulary.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p style="margin-top:0"><b>The open question.</b> What would a color
+      representation look like that ordinary intuition reads as
+      <em>made-of</em> rather than <em>looks-like</em>? Carrying the
+      books — a color that remembers — is one answer, and this page is
+      its proof of concept. Where that answer breaks is the list above;
+      that list is the research map. The gaps in our ordinary
+      understanding of color are not embarrassments. They are the
+      subject.</p>
+  </div>
+</section>
+
+<footer>
+  BCT-2 · colors that remember · learn it, play it, then open the machine ·
+  after <em>Poetica Mathematica</em> Ch. IX §9.4.2 (the color tensor) ·
+  single self-contained file, no dependencies, all computation local ·
+  includes the BCT-1 instrument as part 3 · 2026
+</footer>
+
+</div>
+<script>"use strict";
+/* BCT core: the monograph's constants and mathematics, shared by the
+   fact widgets, the game, and the embedded instrument. */
+window.BCT = (function(){
+  const CHANNELS = [
+    {m:1, name:"Red / Cyan",        add:"R",  sub:"C", mix:"W₁",
+     addCol:[255,0,0],     subCol:[0,255,255]},
+    {m:2, name:"Blue / Yellow",     add:"B",  sub:"Y", mix:"W₂",
+     addCol:[0,0,255],     subCol:[255,255,0]},
+    {m:4, name:"Green / Magenta",   add:"G",  sub:"M", mix:"W₃",
+     addCol:[0,255,0],     subCol:[255,0,255]},
+    {m:8, name:"Reflex / Spectrum", add:"W₄", sub:"K", mix:"Ω",
+     addCol:[255,255,255], subCol:[0,0,0]},
+  ];
+  const ROWS = [
+    {key:"I",  name:"additive",    sign:+1, vt:m=>[m,0]},
+    {key:"II", name:"subtractive", sign:-1, vt:m=>[0,m]},
+    {key:"III",name:"mixed",       sign: 0, vt:m=>[m,m]},
+  ];
+  const MIX_GREY = [128,128,128];
+  function cellName(j,r){
+    return [CHANNELS[j].add, CHANNELS[j].sub, CHANNELS[j].mix][r];
+  }
+  function cellColor(j,r){
+    return r===0 ? CHANNELS[j].addCol : r===1 ? CHANNELS[j].subCol : MIX_GREY;
+  }
+  function cellVT(j,r){ return ROWS[r].vt(CHANNELS[j].m); }
+  const SIGN = ROWS.map(r=>r.sign);
+  function delta(sel){
+    return sel.reduce((s,r,j)=>s+SIGN[r]*CHANNELS[j].m,0);
+  }
+  function pools(sel){
+    let V=0,T=0;
+    sel.forEach((r,j)=>{const [v,t]=cellVT(j,r); V+=v; T+=t;});
+    return {V,T};
+  }
+  function renderColor(sel){
+    const d = delta(sel);
+    const l = 0.5 + d/30;
+    const s = sel.slice(0,3).map(r=>SIGN[r]);
+    const c = [s[0]-s[1]-s[2], -s[0]-s[1]+s[2], -s[0]+s[1]-s[2]];
+    const mean = (c[0]+c[1]+c[2])/3;
+    const gain = 2*Math.min(l,1-l)/3;
+    return c.map(x=>Math.max(0,Math.min(1,l+gain*(x-mean))));
+  }
+  function rgbCss(c){
+    return "rgb("+c.map(x=>Math.round(Math.max(0,Math.min(1,x))*255))
+      .join(",")+")";
+  }
+  function hexOf(c){
+    return "#"+c.map(x=>Math.round(Math.max(0,Math.min(1,x))*255)
+      .toString(16).padStart(2,"0")).join("");
+  }
+  function assignIndex(sel){
+    return sel[0]*27+sel[1]*9+sel[2]*3+sel[3]+1;
+  }
+  const ALL = [];
+  for(let i=0;i<81;i++)
+    ALL.push([(i/27|0)%3,(i/9|0)%3,(i/3|0)%3,i%3]);
+  function decompose(rgb){
+    const [r,g,b] = rgb;
+    return { a:r-(g+b)/2, b:b-(r+g)/2, g:g-(r+b)/2, l:(r+g+b)/3 };
+  }
+  function hexToRgb01(hex){
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+    if(!m) return null;
+    const n = parseInt(m[1],16);
+    return [(n>>16&255)/255,(n>>8&255)/255,(n&255)/255];
+  }
+  function opAdd(a,b){ return {v:a.v+b.v, t:a.t+b.t}; }
+  function opMul(a,b){ return {v:a.v*b.v, t:a.v*b.t+a.t*b.v}; }
+  return {CHANNELS, ROWS, SIGN, cellName, cellColor, cellVT, delta,
+          pools, renderColor, rgbCss, hexOf, assignIndex, ALL,
+          decompose, hexToRgb01, opAdd, opMul};
+})();</script>
+<script>"use strict";
+/* Part 1: six plain-language fact widgets. No monograph jargon. */
+(function(){
+  const $ = id=>document.getElementById(id);
+  const C = window.BCT;
+
+  /* ---------- F1: three lights, three inks ---------- */
+  const F1L = [["Red light",[255,64,64]],["Blue light",[64,64,255]],
+               ["Green light",[64,255,64]]];
+  const F1I = [["Cyan ink",[0,255,255]],["Yellow ink",[255,255,0]],
+               ["Magenta ink",[255,0,255]]];
+  const LIGHT_RGB = [[1,0,0],[0,0,1],[0,1,0]];   // per column: R, B, G
+  const INK_FILTER = [[0,1,1],[1,1,0],[1,0,1]];  // per column: C, Y, M
+  const f1 = {lights:[false,false,false], inks:[false,false,false]};
+
+  function f1Color(){
+    let rgb=[0,0,0];
+    f1.lights.forEach((on,i)=>{
+      if(on) rgb = rgb.map((x,k)=>x+LIGHT_RGB[i][k]); });
+    f1.inks.forEach((on,i)=>{
+      if(on) rgb = rgb.map((x,k)=>x*INK_FILTER[i][k]); });
+    return rgb.map(x=>Math.max(0,Math.min(1,x)));
+  }
+  // wheel: primaries at angles; dot = mean of active unit vectors
+  const ANG = {R:90, Y:30, G:-30, C:-90, B:-150, M:150};
+  const KEY_OF = [["R","C"],["B","Y"],["G","M"]];   // [lights, inks] per col
+  function wheelPos(keys){
+    let x=0,y=0,n=0;
+    keys.forEach(k=>{ const a=ANG[k]*Math.PI/180;
+      x+=Math.cos(a); y+=Math.sin(a); n++; });
+    return n? [85+55*x/n, 85-55*y/n] : [85,85];
+  }
+  function buildWheel(){
+    const svg = $("f1Wheel");
+    let s = '<circle cx="85" cy="85" r="62" fill="#0c1220" stroke="#1f2a40"/>'+
+            '<line x1="23" y1="85" x2="147" y2="85" stroke="#1f2a40"/>'+
+            '<line x1="85" y1="23" x2="85" y2="147" stroke="#1f2a40"/>';
+    const colors = {R:"#ff4040",Y:"#ffff40",G:"#40ff40",C:"#40ffff",
+                    B:"#4040ff",M:"#ff40ff"};
+    for(const k in ANG){
+      const a = ANG[k]*Math.PI/180;
+      const x = 85+55*Math.cos(a), y = 85-55*Math.sin(a);
+      s += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+
+           '" r="6" fill="'+colors[k]+'" stroke="#0a0e16"/>'+
+           '<text x="'+(85+74*Math.cos(a)).toFixed(1)+
+           '" y="'+(85-74*Math.sin(a)+3).toFixed(1)+
+           '" font-size="10" fill="#5c6c88" text-anchor="middle">'+k+'</text>';
+    }
+    s += '<circle id="f1Dot" cx="85" cy="85" r="8" fill="#e8b34b" '+
+         'stroke="#0a0e16" stroke-width="2"/>';
+    svg.innerHTML = s;
+  }
+  function f1Render(){
+    const rgb = f1Color();
+    const l = (rgb[0]+rgb[1]+rgb[2])/3;
+    $("f1Swatch").style.background = C.rgbCss(rgb);
+    $("f1Swatch").innerHTML =
+      '<span class="mono" style="color:'+(l>0.6?"#0a0e16":"#dbe3f0")+
+      '">'+C.hexOf(rgb)+'</span>';
+    const nl = f1.lights.filter(Boolean).length;
+    const ni = f1.inks.filter(Boolean).length;
+    $("f1KV").innerHTML =
+      "<dt>lights on</dt><dd>"+nl+" of 3</dd>"+
+      "<dt>inks on</dt><dd>"+ni+" of 3</dd>"+
+      "<dt>what happens</dt><dd>"+
+      (nl===0 ? "no light — ink has nothing to eat (black)"
+       : ni===0 ? "pure light, adding up"
+       : "light, filtered by ink")+"</dd>";
+    const keys = [];
+    f1.lights.forEach((on,i)=>{ if(on) keys.push(KEY_OF[i][0]); });
+    f1.inks.forEach((on,i)=>{ if(on) keys.push(KEY_OF[i][1]); });
+    const [dx,dy] = wheelPos(keys);
+    const dot = $("f1Dot");
+    dot.setAttribute("cx",dx.toFixed(1)); dot.setAttribute("cy",dy.toFixed(1));
+    dot.style.opacity = keys.length ? 1 : .35;
+    document.querySelectorAll("#f1Toggles .fw-toggle").forEach((b,i)=>{
+      const isLight = i<3, idx = isLight? i : i-3;
+      b.classList.toggle("on",
+        isLight ? f1.lights[idx] : f1.inks[idx]);
+    });
+  }
+  function buildF1(){
+    const g = $("f1Toggles");
+    F1L.concat(F1I).forEach(([label,col],i)=>{
+      const isLight = i<3, idx = isLight? i : i-3;
+      const b = document.createElement("button");
+      b.className = "fw-toggle";
+      b.innerHTML = '<span class="dot" style="background:'+
+        'rgb('+col.join(",")+')"></span>'+label;
+      b.addEventListener("click",()=>{
+        if(isLight) f1.lights[idx]=!f1.lights[idx];
+        else f1.inks[idx]=!f1.inks[idx];
+        f1Render();
+      });
+      g.appendChild(b);
+    });
+    buildWheel(); f1Render();
+  }
+
+  /* ---------- F2: the same grey, three ways ---------- */
+  const RECIPES = [
+    {label:"Red light + Cyan ink", kind:"pair", col:0},
+    {label:"Blue light + Yellow ink", kind:"pair", col:1},
+    {label:"Green light + Magenta ink", kind:"pair", col:2},
+    {label:"All three lights", kind:"lights"},
+  ];
+  let f2cur = null, f2prev = null;
+  function f2Render(){
+    const r = f2cur;
+    if(!r) return;
+    const grey = r.kind==="pair";
+    $("f2Swatch").style.background = grey ? "#808080" : "#ffffff";
+    $("f2Swatch").innerHTML =
+      '<span class="mono" style="color:'+(grey?"#dbe3f0":"#0a0e16")+
+      '">'+(grey?"#808080":"#ffffff")+'</span>';
+    const books = [[0,0],[0,0],[0,0],[0,0]];   // [v,t] per column
+    if(r.kind==="pair"){
+      const m = C.CHANNELS[r.col].m;
+      books[r.col] = [m,m];
+    } else {
+      books[0][0]=1; books[1][0]=2; books[2][0]=4;
+    }
+    let html = "<tr><th>the books</th><th>Red / Cyan</th>"+
+      "<th>Blue / Yellow</th><th>Green / Magenta</th><th>Spectrum</th></tr>"+
+      "<tr><th>light units</th>"+books.map(b=>"<td>"+b[0]+"</td>").join("")+
+      "</tr><tr><th>ink units</th>"+
+      books.map(b=>"<td>"+b[1]+"</td>").join("")+"</tr>";
+    $("f2Books").innerHTML = html;
+    const st = $("f2Stamp");
+    if(f2prev && f2prev.kind==="pair" && r.kind==="pair")
+      st.innerHTML = '<span class="fw-stamp st-same">IDENTICAL TO THE EYE '+
+        '✓</span> <span class="tiny">— different in the books</span>';
+    else if(r.kind==="lights")
+      st.innerHTML = '<span class="fw-stamp st-diff">GENUINELY DIFFERENT'+
+        '</span> <span class="tiny">— pure white, no ink in it at all</span>';
+    else
+      st.innerHTML = '<span class="fw-stamp st-same">SAME GREY'+
+        '</span> <span class="tiny">— as were the other pairs; the '+
+        'books above are what changed</span>';
+  }
+  function buildF2(){
+    const g = $("f2Recipes");
+    RECIPES.forEach(r=>{
+      const b = document.createElement("button");
+      b.className = "btn";
+      b.textContent = r.label;
+      b.addEventListener("click",()=>{ f2prev = f2cur; f2cur = r; f2Render(); });
+      g.appendChild(b);
+    });
+    f2cur = RECIPES[0]; f2Render();
+  }
+
+  /* ---------- F3: every color has a mirror ---------- */
+  let f3sel = null;
+  function invertSel(s){ return s.map(r=> r===0?1:(r===1?0:2)); }
+  function f3Panel(swatchId, kvId, s){
+    const rgb = C.renderColor(s);
+    const {V,T} = C.pools(s);
+    const d = C.delta(s);
+    const l = (rgb[0]+rgb[1]+rgb[2])/3;
+    $(swatchId).style.background = C.rgbCss(rgb);
+    $(swatchId).innerHTML =
+      '<span class="mono" style="color:'+(l>0.62?"#0a0e16":"#dbe3f0")+
+      '">'+C.hexOf(rgb)+'</span>';
+    $(kvId).innerHTML =
+      "<dt>light given V</dt><dd>"+V+"</dd>"+
+      "<dt>ink bite T</dt><dd>"+T+"</dd>"+
+      "<dt>balance</dt><dd>"+(d>0?"+":"")+d+"</dd>"+
+      "<dt>columns</dt><dd>"+s.map((r,j)=>C.cellName(j,r)).join(" · ")+
+      "</dd>";
+  }
+  function f3Render(){
+    f3Panel("f3A","f3KVA",f3sel);
+    f3Panel("f3B","f3KVB",invertSel(f3sel));
+  }
+  function buildF3(){
+    f3sel = C.ALL[Math.floor(Math.random()*81)];
+    f3Render();
+    $("f3New").addEventListener("click",()=>{
+      f3sel = C.ALL[Math.floor(Math.random()*81)]; f3Render();
+    });
+  }
+
+  /* ---------- F4: grey is a balance ---------- */
+  const dmap = new Map();
+  C.ALL.forEach(s=>{
+    const d = C.delta(s);
+    if(!dmap.has(d)) dmap.set(d,[]);
+    dmap.get(d).push(s);
+  });
+  let f4d = 0, f4i = 0;
+  function f4Render(){
+    const list = dmap.get(f4d);
+    const s = list[f4i % list.length];
+    const rgb = C.renderColor(s);
+    const l = (rgb[0]+rgb[1]+rgb[2])/3;
+    $("f4Swatch").style.background = C.rgbCss(rgb);
+    $("f4Swatch").innerHTML =
+      '<span class="mono" style="color:'+(l>0.62?"#0a0e16":"#dbe3f0")+
+      '">'+C.hexOf(rgb)+'</span>';
+    $("f4Mark").style.left = ((f4d+15)/30*100)+"%";
+    $("f4Val").textContent = (f4d>0?"+":"")+f4d;
+    $("f4KV").innerHTML =
+      "<dt>columns</dt><dd>"+s.map((r,j)=>C.cellName(j,r)).join(" · ")+
+      "</dd><dt>states at this balance</dt><dd>"+list.length+"</dd>";
+    $("f4Note").innerHTML = f4d===0
+      ? "<b>Exactly one state in all 81 balances perfectly</b> — every "+
+        "column half light, half ink (W₁·W₂·W₃·Ω). That state is the "+
+        "grey at the middle of every color picker."
+      : list.length+" different color-states share the balance "+
+        (f4d>0?"+":"")+f4d+" — the number alone cannot tell them apart. "+
+        "Cycle through them; the swatch changes, the number does not.";
+    $("f4Next").disabled = list.length<2;
+  }
+  function buildF4(){
+    $("f4Slider").addEventListener("input",e=>{
+      f4d = +e.target.value; f4i = 0; f4Render();
+    });
+    $("f4Next").addEventListener("click",()=>{ f4i++; f4Render(); });
+    f4Render();
+  }
+
+  /* ---------- F5: one number, many colors ---------- */
+  const f5list = dmap.get(3);
+  let f5i = 0;
+  function f5Render(){
+    const s = f5list[f5i % f5list.length];
+    const rgb = C.renderColor(s);
+    const l = (rgb[0]+rgb[1]+rgb[2])/3;
+    $("f5Swatch").style.background = C.rgbCss(rgb);
+    $("f5Swatch").innerHTML =
+      '<span class="mono" style="color:'+(l>0.62?"#0a0e16":"#dbe3f0")+
+      '">'+C.hexOf(rgb)+'</span>';
+    $("f5Chips").innerHTML = s.map((r,j)=>
+      '<span class="chip">'+C.cellName(j,r)+'</span>').join("");
+    $("f5Note").textContent = "state "+((f5i%f5list.length)+1)+" of "+
+      f5list.length+" sharing balance +3 — the swatch and the books "+
+      "change, the number never does";
+  }
+  function buildF5(){
+    $("f5Next").addEventListener("click",()=>{ f5i++; f5Render(); });
+    f5Render();
+  }
+
+  /* ---------- F6: the notebook rule ---------- */
+  const f6 = {ink:0, light:0, msg:"empty"};
+  function f6Render(flash){
+    const note = $("f6Note");
+    note.classList.toggle("flash", !!flash);
+    note.innerHTML =
+      f6.msg==="recorded"
+      ? "The notebook reads: <b>cyan — 1 ink unit</b>. Write it again and watch."
+      : f6.msg==="annihilated"
+      ? "The cyan note is <b>gone — annihilated</b>. The notebook will "+
+        "not write the same memory twice."
+      : f6.msg==="light"
+      ? "The notebook reads: <b>red — "+f6.light+" light unit"+
+        (f6.light===1?"":"s")+"</b>. Light just piles up — no annihilation."
+      : "The notebook is empty.";
+    $("f6Books").innerHTML =
+      "<tr><th>note</th><th>written</th><th>rule</th></tr>"+
+      "<tr><td>cyan ink was absorbed</td><td>"+f6.ink+
+      " unit"+(f6.ink===1?"":"s")+"</td>"+
+      "<td>second write annihilates <span class='mono'>(τ²=0)</span></td></tr>"+
+      "<tr><td>red light was given</td><td>"+f6.light+
+      " unit"+(f6.light===1?"":"s")+"</td>"+
+      "<td>light just piles up — no annihilation</td></tr>";
+  }
+  function buildF6(){
+    $("f6Ink").addEventListener("click",()=>{
+      if(f6.ink){ f6.ink = 0; f6.msg = "annihilated"; f6Render(true); }
+      else { f6.ink = 1; f6.msg = "recorded"; f6Render(false); }
+    });
+    $("f6Light").addEventListener("click",()=>{
+      f6.light++; f6.msg = "light"; f6Render(false);
+    });
+    f6Render(false);
+  }
+
+  buildF1(); buildF2(); buildF3(); buildF4(); buildF5(); buildF6();
+})();</script>
+<script>"use strict";
+/* Part 2: the Fruition game. Card semantics mirror the tuning simulator
+   exactly (20,000-game median = 10 clicks, luck 0.75-1.5 clicks/play). */
+(function(){
+  const $ = id=>document.getElementById(id);
+  const C = window.BCT;
+  const MAG = [1,2,4];
+  const COLN = ["the Red column","the Blue column","the Green column"];
+  const CARDS = {
+    Coin:  {w:3, desc:"Flip for your biggest unfinished column: heads, it leans your way."},
+    Sift:  {w:2, desc:"Your smallest unfinished column leans your way. A sure thing."},
+    Flood: {w:2, desc:"A random half-done column comes all the way to your side."},
+    Slip:  {w:2, desc:"The weakest half-done column slips back. The pull."},
+    Stir:  {w:1, desc:"A random unfinished column leans your way — then the weakest half-done one slips back."},
+  };
+  const PAR = 10;
+  let G = null;      // {goal, cols[3], clicks, hand[3], log[], sealed}
+
+  const draw = function(){
+    const names = Object.keys(CARDS);
+    const tot = names.reduce((s,n)=>s+CARDS[n].w,0);
+    let r = Math.random()*tot;
+    for(const n of names){ r -= CARDS[n].w; if(r<=0) return n; }
+    return names[0];
+  };
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const flip = () => Math.random()<0.5;
+  function weakest(list){
+    let j=-1;
+    list.forEach(i=>{ if(j<0||MAG[i]<MAG[j]) j=i; });
+    return j;
+  }
+  function balance(){
+    return G.cols.reduce((s,c,j)=>s+(c-1)*MAG[j],0);
+  }
+  function toRows(sealed){
+    const w = G.goal==="white";
+    const rows = G.cols.map(c =>
+      c===2 ? (w?0:1) : c===1 ? 2 : (w?1:0));
+    rows.push(sealed ? (w?0:1) : 2);   // the Spectrum recorder
+    return rows;
+  }
+
+  function resolve(name){
+    const cols = G.cols;
+    const unfinished = [0,1,2].filter(j=>cols[j]<2);
+    const mixed = [0,1,2].filter(j=>cols[j]===1);
+    const L = []; let gain = 0;
+    if(name==="Coin"){
+      if(!unfinished.length)
+        return {gain:0, lines:[["Coin — every column is already with you; nothing to lean","zero"]]};
+      const big = Math.max(...unfinished.map(j=>MAG[j]));
+      const j = pick(unfinished.filter(i=>MAG[i]===big));
+      if(flip()){ cols[j]++; gain = MAG[j];
+        L.push(["Coin — heads: "+COLN[j]+" leans your way (+"+MAG[j]+")","pos"]); }
+      else L.push(["Coin — tails: nothing happens","zero"]);
+    } else if(name==="Sift"){
+      if(!unfinished.length)
+        return {gain:0, lines:[["Sift — nothing left to sift; every column is with you","zero"]]};
+      const j = weakest(unfinished);
+      cols[j]++; gain = MAG[j];
+      L.push(["Sift — "+COLN[j]+" leans your way (+"+MAG[j]+")","pos"]);
+    } else if(name==="Flood"){
+      if(!mixed.length)
+        return {gain:0, lines:[["Flood — no half-done column to bring over","zero"]]};
+      const j = pick(mixed);
+      cols[j]=2; gain = MAG[j];
+      L.push(["Flood — "+COLN[j]+" comes all the way over (+"+MAG[j]+")","pos"]);
+    } else if(name==="Slip"){
+      if(!mixed.length)
+        return {gain:0, lines:[["Slip — the pull finds no grip (nothing half-done)","zero"]]};
+      const j = weakest(mixed);
+      cols[j]--; gain = -MAG[j];
+      L.push(["Slip — "+COLN[j]+" slips back (−"+MAG[j]+")","neg"]);
+    } else if(name==="Stir"){
+      if(!unfinished.length)
+        return {gain:0, lines:[["Stir — nothing left to stir","zero"]]};
+      const j = pick(unfinished);
+      cols[j]++; gain = MAG[j];
+      let line = "Stir — "+COLN[j]+" leans your way";
+      const m2 = [0,1,2].filter(k=>cols[k]===1);
+      if(m2.length){
+        const k = weakest(m2);
+        cols[k]--; gain -= MAG[k];
+        line += ", then "+COLN[k]+" slips back ("+(gain>=0?"+":"")+gain+")";
+        L.push([line, gain>0?"pos":"neg"]);
+      } else {
+        L.push([line+" (+"+MAG[j]+")","pos"]);
+      }
+    }
+    return {gain, lines:L};
+  }
+
+  function bestKey(){ return "bct2-best-"+G.goal; }
+  function getBest(goal){
+    try{ const v = localStorage.getItem("bct2-best-"+goal);
+      return v===null ? null : +v; }catch(e){ return null; }
+  }
+  function setBest(val){
+    try{ localStorage.setItem(bestKey(), String(val)); }catch(e){}
+  }
+
+  function newState(){
+    const goal = G.goal;
+    G = {goal, cols:[0,0,0], clicks:0, hand:[draw(),draw(),draw()],
+         log:[], sealed:false};
+    logLine("Start — three columns, all leaning against "+goalLabel()+
+            ". Balance −7. Bring every column fully over and the Spectrum "+
+            "seals your color.","zero");
+  }
+  function goalLabel(){
+    return G.goal==="white" ? "White" : "Black";
+  }
+  function logLine(text, cls){
+    G.log.push({text, cls: cls||""});
+  }
+
+  function play(i){
+    if(!G || G.sealed) return;
+    const name = G.hand[i];
+    const {gain, lines} = resolve(name);
+    lines.forEach(l=>logLine(l[0], l[1]));
+    G.hand[i] = draw();
+    G.clicks++;
+    if(G.cols.every(c=>c===2)){
+      G.sealed = true;
+      let b = getBest(G.goal);
+      let isBest = false;
+      if(b===null || G.clicks<b){ setBest(G.clicks); isBest = b!==null;
+        b = G.clicks; }
+      logLine("SEALED — the Spectrum turns: pure "+goalLabel()+
+              ". Fruition in "+G.clicks+" clicks (par "+PAR+").","seal");
+      renderAll();
+      showWon(b, isBest);
+      return;
+    }
+    renderAll();
+  }
+
+  function colState(j){
+    const c = G.cols[j];
+    return c===2 ? ["with you","st-with"] :
+           c===1 ? ["half-done","st-half"] : ["against you","st-against"];
+  }
+  function colLedger(j){
+    const m = MAG[j], c = G.cols[j], w = G.goal==="white";
+    if(c===2) return w ? "gives "+m+" light" : "absorbs "+m+" ink";
+    if(c===1) return m+" light + "+m+" ink";
+    return w ? "absorbs "+m+" ink" : "gives "+m+" light";
+  }
+
+  function renderAll(){
+    $("gmClicks").textContent = G.clicks;
+    const b = getBest(G.goal);
+    $("gmBest").textContent = b===null ? "—" : b;
+    const rows = toRows(G.sealed);
+    const rgb = C.renderColor(rows);
+    const l = (rgb[0]+rgb[1]+rgb[2])/3;
+    $("gmSwatch").style.background = C.rgbCss(rgb);
+    $("gmSwatch").innerHTML =
+      '<span class="mono" style="color:'+(l>0.62?"#0a0e16":"#dbe3f0")+
+      ';font-size:1rem">'+C.hexOf(rgb)+'</span>'+
+      '<span class="mono" style="color:'+(l>0.62?"#0a0e16":"#8fa0bd")+
+      ';font-size:.8rem">goal: '+goalLabel()+'</span>';
+    const bal = balance();
+    $("gmBMark").style.left = ((bal+7)/14*100)+"%";
+    let html = "";
+    for(let j=0;j<3;j++){
+      const [st,cls] = colState(j);
+      html += '<div class="gm-col"><div class="nm">'+
+        ["Red","Blue","Green"][j]+' column</div>'+
+        '<div class="wt">weight '+MAG[j]+'</div>'+
+        '<div class="st '+cls+'">'+st+'</div>'+
+        '<div class="tiny" style="margin-top:3px">'+colLedger(j)+'</div></div>';
+    }
+    html += '<div class="gm-col"><div class="nm">the Spectrum</div>'+
+      '<div class="wt">weight 8 · the recorder</div>'+
+      '<div class="st '+(G.sealed?"st-seal":"st-half")+'">'+
+      (G.sealed ? "sealed" : "recording")+'</div>'+
+      '<div class="tiny" style="margin-top:3px">'+
+      (G.sealed ? "pure "+goalLabel() : "8 light + 8 ink")+'</div></div>';
+    $("gmCols").innerHTML = html;
+    $("gmHand").innerHTML = G.hand.map((n,i)=>
+      '<button class="gm-card" data-i="'+i+'">'+
+      '<span class="cn">'+n+'</span><span class="cd">'+CARDS[n].desc+
+      '</span></button>').join("");
+    document.querySelectorAll("#gmHand .gm-card").forEach(b=>
+      b.addEventListener("click",()=>play(+b.dataset.i)));
+    const lg = $("gmLog");
+    lg.innerHTML = G.log.map(e=>
+      '<div class="'+(e.cls==="seal"?"seal":"gain-"+e.cls)+'">'+e.text+
+      '</div>').join("");
+    lg.scrollTop = lg.scrollHeight;
+  }
+
+  function showWon(best, isBest){
+    $("gmPlay").hidden = true;
+    const w = $("gmWon");
+    const goal = goalLabel();
+    const rgb = C.renderColor(toRows(true));
+    w.hidden = false;
+    w.innerHTML =
+      '<div class="gm-board"><div><div class="gm-swatch" style="height:170px'+
+      '";background:'+C.rgbCss(rgb)+'"><span class="mono" style="color:'+
+      (goal==="White"?"#0a0e16":"#dbe3f0")+';font-size:1.15rem">pure '+
+      goal+'</span></div></div><div>'+
+      '<h3 style="margin-top:0">Fruition — pure '+goal+' sealed in '+
+      G.clicks+' clicks</h3>'+
+      '<p class="sub">par '+PAR+' · best for '+goal.toLowerCase()+': <b>'+
+      best+'</b>'+(isBest?" — a new best!":"")+'</p>'+
+      '<p class="tiny" style="margin-bottom:6px">the color and its history '+
+      '— every play that made it:</p>'+
+      '<div class="gm-log" style="max-height:180px">'+G.log.map(e=>
+        '<div class="'+(e.cls==="seal"?"seal":"gain-"+e.cls)+'">'+e.text+
+        '</div>').join("")+'</div>'+
+      '<div class="btnrow"><button class="btn primary" id="gmAgain">'+
+      'Play again ('+goal.toLowerCase()+')</button>'+
+      '<button class="btn" id="gmSwitch">Switch to '+
+      (G.goal==="white"?"Black":"White")+'</button></div></div></div>';
+    $("gmAgain").addEventListener("click",()=>{
+      newState(); $("gmWon").hidden = true; $("gmPlay").hidden = false;
+      renderAll();
+    });
+    $("gmSwitch").addEventListener("click",()=>{
+      G = {goal: G.goal==="white"?"black":"white"};
+      newState(); $("gmWon").hidden = true; $("gmPlay").hidden = false;
+      renderAll();
+    });
+    w.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  function startRun(goal){
+    G = {goal};
+    newState();
+    $("gmSetup").hidden = true;
+    $("gmWon").hidden = true;
+    $("gmPlay").hidden = false;
+    renderAll();
+  }
+  function refreshSetupBests(){
+    const bw = getBest("white"), bb = getBest("black");
+    $("gmBestWhite").textContent = bw===null ? "no runs yet" :
+      "best: "+bw+" clicks";
+    $("gmBestBlack").textContent = bb===null ? "no runs yet" :
+      "best: "+bb+" clicks";
+  }
+  function init(){
+    $("gmPickWhite").addEventListener("click",()=>startRun("white"));
+    $("gmPickBlack").addEventListener("click",()=>startRun("black"));
+    $("gmRestart").addEventListener("click",()=>{
+      if(G){ newState(); $("gmWon").hidden = true;
+        $("gmPlay").hidden = false; renderAll(); }
+    });
+    $("gmQuit").addEventListener("click",()=>{
+      $("gmPlay").hidden = true; $("gmWon").hidden = true;
+      $("gmSetup").hidden = false; refreshSetupBests();
+    });
+    refreshSetupBests();
+  }
+  init();
+})();</script>
+<script>"use strict";
+/* Part 3: the BCT-1 instrument, embedded verbatim (wrapped in an IIFE).
+   The only change: the 81-grid click scrolls to the assignment pickers
+   instead of BCT-1's own page anchor. */
+(function(){
+/* ---------------- data (the monograph's constants) ---------------- */
+const CHANNELS = [
+  {m:1, name:"Red / Cyan",        add:"R",  sub:"C", mix:"W₁",
+   addCol:[255,0,0],     subCol:[0,255,255]},
+  {m:2, name:"Blue / Yellow",     add:"B",  sub:"Y", mix:"W₂",
+   addCol:[0,0,255],     subCol:[255,255,0]},
+  {m:4, name:"Green / Magenta",   add:"G",  sub:"M", mix:"W₃",
+   addCol:[0,255,0],     subCol:[255,0,255]},
+  {m:8, name:"Reflex / Spectrum", add:"W₄", sub:"K", mix:"Ω",
+   addCol:[255,255,255], subCol:[0,0,0]},
+];
+const ROWS = [
+  {key:"I",  name:"additive",    sign:+1, vt:m=>[m,0]},
+  {key:"II", name:"subtractive", sign:-1, vt:m=>[0,m]},
+  {key:"III",name:"mixed",       sign: 0, vt:m=>[m,m]},
+];
+const MIX_GREY = [128,128,128];
+function cellName(j,r){ return [CHANNELS[j].add, CHANNELS[j].sub,
+                                CHANNELS[j].mix][r]; }
+function cellColor(j,r){
+  return r===0 ? CHANNELS[j].addCol : r===1 ? CHANNELS[j].subCol : MIX_GREY;
+}
+function cellVT(j,r){ return ROWS[r].vt(CHANNELS[j].m); }
+const ROLE = {
+  "R":"the additive red primary — light, no history",
+  "B":"the additive blue primary — light, no history",
+  "G":"the additive green primary — light, no history",
+  "W₄":"the additive white reflex — appears pure white; its zero trace records its additive origin",
+  "C":"the subtractive cyan primary — absorbs the red band",
+  "Y":"the subtractive yellow primary — absorbs the blue band",
+  "M":"the subtractive magenta primary — absorbs the green band",
+  "K":"the subtractive black reflex — appears pure black; its zero value records its subtractive origin",
+  "W₁":"the mixed white — R + C, holding the red–cyan string; metameric",
+  "W₂":"the mixed white — B + Y, holding the blue–yellow string; metameric",
+  "W₃":"the mixed white — G + M, holding the green–magenta string; metameric",
+  "Ω":"the equilibrium operator — flow and absorption balanced at full magnitude; the full potential spectrum",
+};
+
+/* ---------------- core mathematics ---------------- */
+const SIGN = ROWS.map(r=>r.sign);
+function delta(sel){ return sel.reduce((s,r,j)=>s+SIGN[r]*CHANNELS[j].m,0); }
+function pools(sel){
+  let V=0,T=0;
+  sel.forEach((r,j)=>{const [v,t]=cellVT(j,r); V+=v; T+=t;});
+  return {V,T};
+}
+function renderColor(sel){
+  const d = delta(sel);
+  const l = 0.5 + d/30;
+  const s = sel.slice(0,3).map(r=>SIGN[r]);   // chromatic columns 1..3
+  const c = [s[0]-s[1]-s[2], -s[0]-s[1]+s[2], -s[0]+s[1]-s[2]];
+  const mean = (c[0]+c[1]+c[2])/3;
+  const gain = 2*Math.min(l,1-l)/3;
+  return c.map(x=>Math.max(0,Math.min(1,l+gain*(x-mean))));
+}
+function rgbCss(c){ return "rgb("+c.map(x=>Math.round(x*255)).join(",")+")"; }
+function hexOf(c){
+  return "#"+c.map(x=>Math.round(Math.max(0,Math.min(1,x))*255)
+    .toString(16).padStart(2,"0")).join("");
+}
+function assignIndex(sel){
+  return sel[0]*27+sel[1]*9+sel[2]*3+sel[3]+1;
+}
+const ALL = [];
+for(let i=0;i<81;i++)
+  ALL.push([(i/27|0)%3,(i/9|0)%3,(i/3|0)%3,i%3]);
+
+/* ---------------- state ---------------- */
+let sel = [2,2,2,2];                 // the witness, by default
+const $ = id=>document.getElementById(id);
+
+/* ---------------- the matrix ---------------- */
+function buildMatrix(){
+  const g = $("matrixGrid");
+  g.innerHTML = "";
+  for(let r=0;r<3;r++){
+    for(let j=0;j<4;j++){
+      const [v,t] = cellVT(j,r);
+      const col = cellColor(j,r);
+      const lum = 0.299*col[0]+0.587*col[1]+0.114*col[2];
+      const b = document.createElement("button");
+      b.className = "cell"+(r===2?" mx-mixed":"");
+      b.dataset.j = j; b.dataset.r = r;
+      b.setAttribute("aria-label",
+        cellName(j,r)+", channel "+(j+1)+", row "+ROWS[r].key);
+      b.innerHTML =
+        '<div class="swatch'+(lum>140?" on-dark":"")+'" style="background:'
+        +rgbCss(col.map(x=>x/255))+'">'+cellName(j,r)+
+        '<span class="mag">M='+CHANNELS[j].m+'</span></div>'+
+        '<div class="cname">'+ROWS[r].key+' · '+cellName(j,r)+'</div>'+
+        '<div class="cvals">v='+v+' t='+t+'</div>';
+      b.title = cellName(j,r)+" — "+(ROLE[cellName(j,r)]||"");
+      b.addEventListener("click",()=>{ sel[j]=r; updateAll(); });
+      g.appendChild(b);
+    }
+  }
+}
+function refreshMatrix(){
+  document.querySelectorAll("#matrixGrid .cell").forEach(b=>{
+    b.classList.toggle("sel", sel[+b.dataset.j]===+b.dataset.r);
+  });
+}
+
+/* ---------------- the assignment readout ---------------- */
+function buildPickers(){
+  const g = $("colPickers");
+  g.innerHTML = "";
+  for(let j=0;j<4;j++){
+    const d = document.createElement("div");
+    d.className = "colpick";
+    let html = '<div class="lab">'+CHANNELS[j].name+'<br>M='+CHANNELS[j].m+'</div>';
+    for(let r=0;r<3;r++){
+      html += '<button class="rbtn" data-j="'+j+'" data-r="'+r+'">'+
+        ROWS[r].key+' · '+cellName(j,r)+'</button>';
+    }
+    d.innerHTML = html;
+    g.appendChild(d);
+  }
+  g.querySelectorAll(".rbtn").forEach(b=>{
+    b.addEventListener("click",()=>{
+      sel[+b.dataset.j]=+b.dataset.r; updateAll();
+    });
+  });
+}
+function refreshAssignment(){
+  document.querySelectorAll("#colPickers .rbtn").forEach(b=>{
+    b.classList.toggle("on", sel[+b.dataset.j]===+b.dataset.r);
+  });
+  const {V,T} = pools(sel);
+  const d = delta(sel);
+  const rgb = renderColor(sel);
+  const l = 0.5 + d/30;
+  $("bigSwatch").style.background = rgbCss(rgb);
+  $("bigSwatch").innerHTML =
+    '<span class="mono" style="color:'+(l>0.62?"#0a0e16":"#dbe3f0")+
+    ';font-size:.95rem">'+hexOf(rgb)+'</span>'+
+    '<span class="mono" style="color:'+(l>0.62?"#0a0e16":"#8fa0bd")+
+    ';font-size:.78rem">l = '+l.toFixed(3)+'</span>';
+  $("ladderMark").style.left = (Math.max(0,Math.min(1,l))*100)+"%";
+  const badge = $("classBadge");
+  const names = sel.map((r,j)=>cellName(j,r)).join(" · ");
+  if(d>0) badge.innerHTML = '<span class="badge b-bright">BRIGHT — Δ = +'
+    +d+' · excess flow · one of 40</span>';
+  else if(d<0) badge.innerHTML = '<span class="badge b-dark">DARK — Δ = '
+    +d+' · excess absorption · one of 40</span>';
+  else badge.innerHTML = '<span class="badge b-eq">EQUILIBRIUM — Δ = 0 · '+
+    'the witness · the 81st point</span>';
+  $("assignKV").innerHTML =
+    "<dt>operators</dt><dd>"+names+"</dd>"+
+    "<dt>total operator</dt><dd>X = "+V+" + τ·"+T+"</dd>"+
+    "<dt>flow pool V</dt><dd>"+V+"</dd>"+
+    "<dt>absorption pool T</dt><dd>"+T+"</dd>"+
+    "<dt>imbalance Δ</dt><dd>"+(d>0?"+":"")+d+"</dd>"+
+    "<dt>assignment</dt><dd>#"+assignIndex(sel)+" of 81</dd>";
+  $("assignChips").innerHTML = sel.map((r,j)=>{
+    const c = SIGN[r]*CHANNELS[j].m;
+    return '<span class="chip">'+cellName(j,r)+' <b>'+
+      (c>0?"+":"")+c+'</b></span>';
+  }).join("");
+  const wn = $("witnessNote");
+  if(d===0){
+    wn.style.display = "block";
+    wn.innerHTML = "The witness: <span class='mono'>W₁+W₂+W₃+Ω</span> — "+
+      "value and trace balanced across all four channels. Not a grey among "+
+      "greys: the memory of perfect cancellation, the neutral ledger, the "+
+      "monochrome era persisting inside the six-hue space.";
+  } else wn.style.display = "none";
+}
+
+/* ---------------- the 81 grid + histogram ---------------- */
+function buildGrid81(){
+  const g = $("grid81"), xl = $("gxlab");
+  g.innerHTML = ""; xl.innerHTML = "";
+  const combo = i => ROWS[(i/3|0)].key+"·"+ROWS[i%3].key;
+  for(let gy=0;gy<9;gy++){
+    for(let gx=0;gx<9;gx++){
+      const s = [(gy/3|0),gy%3,(gx/3|0),gx%3];
+      const b = document.createElement("button");
+      b.className = "g81";
+      b.dataset.sel = JSON.stringify(s);
+      const d = delta(s);
+      b.style.background = rgbCss(renderColor(s));
+      b.title = "Ch1:"+ROWS[s[0]].key+" Ch2:"+ROWS[s[1]].key+
+        " Ch3:"+ROWS[s[2]].key+" Ch4:"+ROWS[s[3]].key+
+        "  |  Δ="+(d>0?"+":"")+d+
+        (d===0?"  |  the witness (equilibrium)":
+         d>0?"  |  bright":"  |  dark");
+      if(d===0) b.classList.add("wit");
+      b.addEventListener("click",()=>{ sel = s.slice(); updateAll();
+        document.getElementById("colPickers")
+          .scrollIntoView({behavior:"smooth",block:"center"}); });
+      g.appendChild(b);
+    }
+  }
+  for(let gx=0;gx<9;gx++)
+    xl.innerHTML += "<span>"+combo(gx)+"</span>";
+}
+function refreshGrid81(){
+  document.querySelectorAll("#grid81 .g81").forEach(b=>{
+    b.classList.toggle("here",
+      JSON.stringify(sel)===b.dataset.sel);
+  });
+}
+function buildHist(){
+  const counts = new Map();
+  ALL.forEach(s=>{const d=delta(s);
+    counts.set(d,(counts.get(d)||0)+1);});
+  const max = Math.max(...counts.values());
+  const h = $("hist");
+  h.innerHTML = "";
+  let nPos=0,nNeg=0,nZero=0;
+  ALL.forEach(s=>{const d=delta(s);
+    if(d>0)nPos++; else if(d<0)nNeg++; else nZero++;});
+  for(let d=-15;d<=15;d++){
+    const n = counts.get(d)||0;
+    const bar = document.createElement("div");
+    bar.className = "hbar "+(d===0?"zero":d>0?"pos":"neg");
+    bar.style.height = Math.max(4,n/max*100)+"%";
+    bar.title = "Δ="+(d>0?"+":"")+d+" — "+n+" assignment"+
+      (n===1?"":"s");
+    if(d===0) bar.innerHTML = '<span class="hc">'+n+'</span>';
+    h.appendChild(bar);
+  }
+  $("partStats").innerHTML =
+    '<span class="chip"><b>'+nPos+'</b> bright (Δ&gt;0)</span>'+
+    '<span class="chip"><b>'+nNeg+'</b> dark (Δ&lt;0)</span>'+
+    '<span class="chip"><b>'+nZero+'</b> equilibrium (Δ=0)</span>'+
+    '<span class="chip">the partition <b>40 / 40 / 1</b>, verified live '+
+    'in your browser</span>';
+  let coll = 0, worst = 0, worstD = 0;
+  counts.forEach((n,d)=>{
+    if(n>1 && d!==0){ coll++;
+      if(n>worst){ worst=n; worstD=d; } }
+  });
+  $("collisionNote").innerHTML =
+    "Δ takes "+counts.size+" distinct values. The signed powers of two "+
+    "collide: "+coll+" values of Δ arise more than once — the deepest, "+
+    "Δ="+(worstD>0?"+":"")+worstD+", arises "+worst+
+    " ways. The equilibrium Δ=0 arises exactly once: only the all-mixed "+
+    "choice cancels (a subset of distinct powers of two cannot split "+
+    "evenly). These collisions are the ledger’s signature — assignments "+
+    "that share an imbalance yet carry different histories.";
+}
+
+/* ---------------- conversion ---------------- */
+function decompose(rgb){
+  const [r,g,b] = rgb;
+  return { a:r-(g+b)/2, b:b-(r+g)/2, g:g-(r+b)/2, l:(r+g+b)/3 };
+}
+function gateQuantize(dec,eps){
+  const q = x => x>eps?1:(x<-eps?-1:0);
+  const s = [q(dec.a),q(dec.b),q(dec.g)];
+  const dObs = (dec.l-0.5)*30;
+  const dCh = s[0]*1+s[1]*2+s[2]*4;
+  const res = (dObs-dCh)/15;
+  s.push(q(res));
+  const selQ = s.map(x=> x>0?0:(x<0?1:2));
+  return {sel:selQ, s, dObs, dCh, res};
+}
+function nearestAssign(rgb){
+  let best=null, bd=1e9;
+  ALL.forEach(s=>{
+    const c = renderColor(s);
+    const d = (c[0]-rgb[0])**2+(c[1]-rgb[1])**2+(c[2]-rgb[2])**2;
+    if(d<bd){bd=d;best=s;}
+  });
+  return {sel:best, dist:Math.sqrt(bd)};
+}
+function axisHtml(lab,val,max){
+  const pct = Math.min(100,Math.abs(val)/max*100);
+  return '<div class="axis"><div class="alab"><span>'+lab+
+    '</span><span>'+(val>=0?"+":"")+val.toFixed(3)+'</span></div>'+
+    '<div class="axisbar"><div class="axfill '+(val>=0?"pos":"neg")+
+    '" style="width:'+pct+'%"></div></div></div>';
+}
+function hexToRgb01(hex){
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+  if(!m) return null;
+  const n = parseInt(m[1],16);
+  return [(n>>16&255)/255,(n>>8&255)/255,(n&255)/255];
+}
+function updateConversion(){
+  const rgb = hexToRgb01($("hexIn").value) || [0.5,0.5,0.5];
+  const eps = +$("epsIn").value/100;
+  $("epsVal").textContent = eps.toFixed(2);
+  const dec = decompose(rgb);
+  const gq = gateQuantize(dec,eps);
+  const near = nearestAssign(rgb);
+  $("axes").innerHTML =
+    axisHtml("a · red–cyan (M=1)",dec.a,1.5)+
+    axisHtml("b · blue–yellow (M=2)",dec.b,1.5)+
+    axisHtml("g · green–magenta (M=4)",dec.g,1.5)+
+    axisHtml("reflex · luminance residual (M=8)",gq.res,1.5);
+  const tRgb = renderColor(gq.sel);
+  $("vsYou").style.background = rgbCss(rgb);
+  $("vsTensor").style.background = rgbCss(tRgb);
+  const why = [
+    "a = "+fmt(dec.a)+"  →  Row "+ROWS[gq.sel[0]].key+"  ("+
+      cellName(0,gq.sel[0])+")",
+    "b = "+fmt(dec.b)+"  →  Row "+ROWS[gq.sel[1]].key+"  ("+
+      cellName(1,gq.sel[1])+")",
+    "g = "+fmt(dec.g)+"  →  Row "+ROWS[gq.sel[2]].key+"  ("+
+      cellName(2,gq.sel[2])+")",
+    "luminance residual = "+fmt(gq.res)+"  →  Row "+
+      ROWS[gq.sel[3]].key+"  ("+cellName(3,gq.sel[3])+")",
+    "",
+    "X = "+pools(gq.sel).V+" + τ·"+pools(gq.sel).T+
+      "    Δ = "+(delta(gq.sel)>0?"+":"")+delta(gq.sel)+
+      "   (#"+assignIndex(gq.sel)+" of 81)"
+  ].join("\n");
+  $("gateReasons").textContent = why;
+  const same = JSON.stringify(gq.sel)===JSON.stringify(near.sel);
+  $("nearestLine").innerHTML =
+    "Nearest rendered assignment: #"+assignIndex(near.sel)+
+    " ("+near.sel.map((r,j)=>cellName(j,r)).join(" · ")+"), distance "+
+    near.dist.toFixed(3)+". "+(same
+      ?"The gate and the projection agree."
+      :"The gate and the projection <b>disagree</b> — your color sits "+
+       "between two ledgers; drag ε to move the fare.");
+  sel = gq.sel.slice();
+  updateAll();
+}
+function fmt(x){ return (x>=0?"+":"")+x.toFixed(3); }
+
+/* ---------------- the ring calculator ---------------- */
+const OPS = [{n:"0 (zero)", v:0, t:0}];
+for(let j=0;j<4;j++) for(let r=0;r<3;r++){
+  const [v,t] = cellVT(j,r);
+  OPS.push({n:cellName(j,r)+"  (v="+v+", t="+t+")", v, t});
+}
+function opByName(prefix){
+  return OPS.findIndex(o=>o.n.startsWith(prefix));
+}
+function buildCalc(){
+  const html = OPS.map((o,i)=>'<option value="'+i+'">'+o.n+'</option>');
+  $("calcA").innerHTML = html.join("");
+  $("calcB").innerHTML = html.join("");
+  $("calcA").value = opByName("R");
+  $("calcB").value = opByName("C");
+  $("calcGo").addEventListener("click",runCalc);
+  document.querySelectorAll("[data-preset]").forEach(b=>{
+    b.addEventListener("click",()=>runPreset(b.dataset.preset));
+  });
+}
+function opAdd(a,b){ return {v:a.v+b.v, t:a.t+b.t}; }
+function opMul(a,b){ return {v:a.v*b.v, t:a.v*b.t+a.t*b.v}; }
+function opStr(o){
+  return "X = "+o.v+" + τ·"+o.t+
+    "   (V = "+o.v+", T = "+o.t+", Δ = "+(o.v-o.t)+")";
+}
+function runCalc(){
+  const a = OPS[+$("calcA").value], b = OPS[+$("calcB").value];
+  const isMul = $("calcOp").value==="mul";
+  const r = isMul ? opMul(a,b) : opAdd(a,b);
+  let html = "<div class='mono' style='font-size:.9rem;line-height:1.8'>"+
+    a.n.split("(")[0].trim()+" "+(isMul?"×":"+")+" "+
+    b.n.split("(")[0].trim()+"  =<br>"+opStr(r)+"</div>";
+  if(isMul){
+    html += "<div class='tau'>expansion: (v₁+τt₁)(v₂+τt₂) = v₁v₂ + "+
+      "τ(v₁t₂ + t₁v₂)"+(a.t!==0&&b.t!==0
+        ? "  —  the τ²·(t₁t₂) = "+(a.t*b.t)+
+          " term is <b>annihilated</b> (τ² = 0)"
+        : "")+"</div>";
+    if(a.t!==0&&b.t!==0&&a.v===0&&b.v===0)
+      html += "<div class='tau'>Two pure absorptions multiply to zero: "+
+        "recording the same kind of history twice destroys the record.</div>";
+  }
+  $("calcOut").innerHTML = html;
+}
+function runPreset(p){
+  if(p==="rc"){
+    $("calcA").value = opByName("R"); $("calcB").value = opByName("C");
+    $("calcOp").value = "add"; runCalc();
+    $("calcOut").innerHTML += "<div class='tau'>The metameric white: flow "+
+      "and absorption balanced in one channel — appears neutral to the "+
+      "flow-reading observer, carries the red–cyan string in its ledger.</div>";
+  } else if(p==="cc"){
+    $("calcA").value = opByName("C"); $("calcB").value = opByName("C");
+    $("calcOp").value = "mul"; runCalc();
+  } else if(p==="ww"){
+    $("calcA").value = opByName("W₁"); $("calcB").value = opByName("W₁");
+    $("calcOp").value = "mul"; runCalc();
+  } else if(p==="wit"){
+    let acc = {v:0,t:0};
+    const parts = ["W₁","W₂","W₃","Ω"];
+    const steps = [];
+    parts.forEach(n=>{
+      const o = OPS[opByName(n)];
+      acc = opAdd(acc,o);
+      steps.push(n+" → running total "+acc.v+" + τ·"+acc.t);
+    });
+    $("calcOut").innerHTML =
+      "<div class='mono' style='font-size:.9rem;line-height:1.8'>"+
+      parts.join(" + ")+"  =<br>"+opStr(acc)+"</div>"+
+      "<div class='tau'>"+steps.join("<br>")+"</div>"+
+      "<div class='tau'>The witness: every channel’s flow matched by its "+
+      "absorption; Δ = 0 exactly once in the whole 81-point space — the "+
+      "equilibrium grey, the neutral ledger of the six-hue era.</div>";
+  }
+}
+
+/* ---------------- wiring ---------------- */
+function updateAll(){
+  refreshMatrix();
+  refreshAssignment();
+  refreshGrid81();
+}
+function initPresets(){
+  const list = ["#808080","#ffffff","#000000","#ff0000","#00ffff",
+                "#0000ff","#ffff00","#00ff00","#ff00ff","#d94f3d"];
+  $("presets").innerHTML = "";
+  list.forEach(hx=>{
+    const b = document.createElement("button");
+    b.className = "psw"; b.style.background = hx;
+    b.title = hx; b.setAttribute("aria-label","preset "+hx);
+    b.addEventListener("click",()=>{
+      $("hexIn").value = hx; $("colorIn").value = hx;
+      updateConversion();
+    });
+    $("presets").appendChild(b);
+  });
+}
+function init(){
+  buildMatrix(); buildPickers(); buildGrid81(); buildHist();
+  buildCalc(); initPresets();
+  $("ledgerBtn").addEventListener("click",()=>{
+    document.body.classList.toggle("ledger");
+    $("ledgerBtn").textContent =
+      document.body.classList.contains("ledger")
+      ? "Hide the ledger" : "Reveal the ledger (metamerism)";
+  });
+  $("btnWitness").addEventListener("click",()=>{sel=[2,2,2,2];updateAll();});
+  $("btnAdditive").addEventListener("click",()=>{sel=[0,0,0,0];updateAll();});
+  $("btnSubtractive").addEventListener("click",()=>{sel=[1,1,1,1];updateAll();});
+  $("btnRandom").addEventListener("click",()=>{
+    sel = sel.map(()=>Math.floor(Math.random()*3)); updateAll();
+  });
+  $("colorIn").addEventListener("input",()=>{
+    $("hexIn").value = $("colorIn").value; updateConversion();
+  });
+  $("hexIn").addEventListener("input",()=>{
+    const rgb = hexToRgb01($("hexIn").value);
+    if(rgb){ $("colorIn").value = $("hexIn").value;
+      updateConversion(); }
+  });
+  $("epsIn").addEventListener("input",updateConversion);
+  runCalc();
+  updateAll();
+  updateConversion();
+}
+document.addEventListener("DOMContentLoaded",init);
+})();</script>
+</body>
+</html>
