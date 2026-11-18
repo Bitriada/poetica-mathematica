@@ -1,0 +1,36 @@
+Case 1 -- the flagship variant (32-byte seed), input data 00112233
+=====================================================================
+
+Run from the package root.  The seed is a PUBLISHED demonstration
+seed; real keys come from `keygen` (see the README).
+
+$ python3 -m voidwell2 encode --variant flagship --data 00112233 \
+      --seed 1111111111111111111111111111111111111111111111111111111111111111 \
+      --out examples/case1-flagship/challenge.json \
+      --key-out examples/case1-flagship/key.json
+variant   = flagship
+H         = cc15e65acaf3403effbf3513e92e3fe980348c62594437c4e7db1872e9755550
+published = H + public params only (no schedule digest, no nullifiers)
+wrote examples/case1-flagship/challenge.json and examples/case1-flagship/key.json
+
+$ python3 -m voidwell2 gate --challenge examples/case1-flagship/challenge.json \
+      --key examples/case1-flagship/key.json
+PASS
+
+What just happened:
+
+* `encode` walked the 43-step path derived from the seed (the
+  initial state, three checkpoints and three well matrices are all
+  PRF(seed)), hashed the walk, and wrote the challenge (the hash H
+  plus the public parameters) and the key (the seed).
+* `gate` replayed the walk from the key alone and compared the
+  recomputed H against the published one, in constant time.
+* The two files in this directory are the exact outputs; the
+  expected H above is what your run must print (determinism is
+  check W1 of the battery).
+
+A wrong key fails -- try it:
+
+$ python3 -c "import json; k=json.load(open('examples/case1-flagship/key.json')); k['seed']='00'*32; json.dump(k,open('/tmp/wrong.json','w'))"
+$ python3 -m voidwell2 gate --challenge examples/case1-flagship/challenge.json --key /tmp/wrong.json
+FAIL: binding        (exit code 1)

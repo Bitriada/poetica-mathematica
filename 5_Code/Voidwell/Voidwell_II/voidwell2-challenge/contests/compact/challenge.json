@@ -1,0 +1,32 @@
+{
+ "version": 2,
+ "params": {
+  "p": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f",
+  "L": 43,
+  "k": 3,
+  "hash": "sha256",
+  "lift_version": 1,
+  "digits": 9,
+  "bits_per_digit": 3,
+  "variant": "compact",
+  "seed_bits": 128,
+  "wells": [
+   [
+    3,
+    3
+   ],
+   [
+    14,
+    1
+   ],
+   [
+    15,
+    4
+   ]
+  ]
+ },
+ "H": "19dc40ff856e121bf940a03ea7a973983cf58893d5770bdb97bd1a7166d3d9a3",
+ "data": "00112233",
+ "data_commitment": "aafa373bf008a855815ecb37d8bd52f6a8157cb5833c58edde6d530dbcf3f25d",
+ "nullifier_count": 3
+}
