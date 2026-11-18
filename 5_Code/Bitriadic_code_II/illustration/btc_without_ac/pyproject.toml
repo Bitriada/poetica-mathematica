@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "btc-without-ac"
+version = "1.0.0"
+description = "Computational model and verification of the 'Banach-Tarski Without the Axiom of Choice' case study (sec. 6.6 of Poetica Mathematica)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["banach-tarski", "axiom-of-choice", "dual-complex-numbers", "hopf-fibration", "amenability", "spectator"]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+test = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+include = ["btc_without_ac*"]
