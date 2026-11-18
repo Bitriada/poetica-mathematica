@@ -1,0 +1,36 @@
+{
+ "version": 3,
+ "params": {
+  "construction": "perspective-walk",
+  "variant": "flagship",
+  "seed_bits": 256,
+  "lift_version": 1,
+  "digits": 9,
+  "bits_per_digit": 3,
+  "L": 43,
+  "k": 4,
+  "e": 1,
+  "wells": [
+   [
+    2,
+    2
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    5,
+    5
+   ],
+   [
+    7,
+    7
+   ]
+  ]
+ },
+ "data": "00112233",
+ "data_commitment": "aafa373bf008a855815ecb37d8bd52f6a8157cb5833c58edde6d530dbcf3f25d",
+ "nullifier_count": 4,
+ "H": "9c6e0b62dc5338a414a50552aba0f73f1a8c8f57bea7fe2534186b32fa89a258"
+}
