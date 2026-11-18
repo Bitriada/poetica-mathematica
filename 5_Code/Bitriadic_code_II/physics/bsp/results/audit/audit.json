@@ -1,0 +1,89 @@
+{
+  "paper_case": {
+    "T_s": -10.0,
+    "T_m": 0.0,
+    "T_0": 0.0,
+    "L": 334000.0,
+    "k": 2.2,
+    "rho": 1000.0,
+    "cp": 4186.0,
+    "alpha_paper": 1.15e-06,
+    "dx": 0.001
+  },
+  "Ste": 0.12532934131736526,
+  "lambda": {
+    "Ste": 0.12532934131736526,
+    "printed_equation_rhs": 14.142369474496949,
+    "root_of_printed_equation": 0.06250164277677939,
+    "correct_lambda": 0.24533703819315505,
+    "paper_claim": 0.15,
+    "claim_residual_vs_printed_eq": 0.4115355219854907,
+    "claim_residual_vs_correct_eq": 0.3644885847916878,
+    "paper_coefficient_sqrt_t": 0.00032171415884290824,
+    "correct_coefficient_sqrt_t_paper_alpha": 0.0005261893258354756
+  },
+  "alpha": {
+    "paper_alpha": 1.15e-06,
+    "alpha_from_paper_k_rho_cp": 5.255613951266126e-07,
+    "ratio": 2.1881363636363633,
+    "note": "1.15e-6 matches physical ice (rho=917, cp=2050); the paper mixes water and ice property tables"
+  },
+  "first_event": {
+    "paper_formula": 15.181818181818182,
+    "paper_appendix_B2": 15.2,
+    "this_package": 15.181818181818205,
+    "reproduced": true
+  },
+  "event_tables": {
+    "paper_sec_12_2_first_events": [
+      152.0,
+      366.0,
+      628.0,
+      931.0,
+      1270.0
+    ],
+    "paper_appendix_B2_first_events": [
+      15.2,
+      36.9,
+      63.2,
+      92.8,
+      125.1
+    ],
+    "paper_appendix_B2_event_10_20": {
+      "10": 354.2,
+      "20": 1001.6
+    },
+    "explicit_rule_run": {
+      "termination": "non-positive interface velocity at t=30.4s",
+      "n_events": 2,
+      "t_events": [
+        15.181818181818182,
+        30.363636363636363
+      ],
+      "note": "the paper's printed rule dt = dx/v with v from the current field stalls: after the first transit the just-released interior node still sits at T_m, so v = 0 and no further event can be scheduled"
+    },
+    "faithful_integral_run": {
+      "n_events": 12,
+      "t_events": [
+        15.181818181818205,
+        30.36363636363641,
+        61.46457954545461,
+        108.38158333333243,
+        171.1146477255288,
+        249.66377257853753
+      ],
+      "t_event_10": 722.0204659930799,
+      "t_event_20": null
+    },
+    "tables_mutually_consistent": false
+  },
+  "headline_t1000": {
+    "paper_claim_neumann": 0.0102,
+    "neumann_with_claimed_lambda_and_paper_alpha": 0.010173494974687902,
+    "neumann_with_correct_lambda_paper_alpha": 0.016639567501085847,
+    "neumann_correct_selfconsistent_alpha": 0.011248764951293023,
+    "bsp_faithful_dx_0.5mm": 0.011,
+    "bsp_vs_correct_selfconsistent": 0.022114867931739366,
+    "note": "the paper's 'within 2%' compares its BSP table to a Neumann position computed with the wrong lambda; against the correct self-consistent Neumann position the faithful BSP run agrees to a few percent, which SUPPORTS the method while contradicting the paper's arithmetic"
+  }
+}

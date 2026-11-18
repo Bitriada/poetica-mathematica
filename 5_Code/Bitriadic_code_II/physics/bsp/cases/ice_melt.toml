@@ -1,0 +1,25 @@
+# Melting case: ice block at T_m warmed from the left face.
+# Exercises the melting branch (zone roles mirrored).
+
+[case]
+name = "ice_melt"
+mode = "melting"
+T_m = 0.0
+T_s = 15.0         # warm boundary at x = 0
+T_0 = 0.0          # solid initially at the melting point
+length = 0.05
+dx = 0.001
+t_end = 4000.0
+temp_unit = "C"
+
+[material]
+preset = "water_ice"
+
+[run]
+event_mode = "integral"
+
+[validation]
+neumann = true
+enthalpy = true
+convergence = true
+convergence_levels = 3

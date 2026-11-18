@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qdme-bs"
+version = "1.1.0"
+description = "QDME-bs: Quantum Dynamics Master Equation Bitriadic solver -- verification project for Theorem 8.1 of Poetica Mathematica"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "QDME-bs verification project"}]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "sympy>=1.12",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+qdme-bs = "qdme_bs.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["qdme_bs*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

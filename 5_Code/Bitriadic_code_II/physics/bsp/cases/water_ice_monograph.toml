@@ -1,0 +1,30 @@
+# The BSP paper's own worked case (sec. 12.2 / appendix B):
+# 1D freezing of water from a boundary held at -10 C, liquid at T_m.
+# NOTE: the paper's alpha = 1.15e-6 is inconsistent with these
+# properties (see `python -m bsp.cli audit-monograph`); this case uses
+# the self-consistent alpha = k/(rho cp).
+
+[case]
+name = "water_ice_monograph"
+mode = "freezing"
+T_m = 0.0          # melting point [C]
+T_s = -10.0        # boundary temperature at x = 0 [C]
+T_0 = 0.0          # initial temperature (liquid at T_m: one-phase)
+length = 0.05      # domain length [m]
+dx = 0.001         # lattice spacing [m]
+t_end = 2000.0     # stop time [s]
+temp_unit = "C"
+
+[material]
+preset = "water_ice_monograph"
+
+[run]
+event_mode = "integral"   # crossing condition (default; see README)
+substep_safety = 0.45
+
+[validation]
+neumann = true
+enthalpy = true
+convergence = true
+convergence_levels = 4
+# user_data = "data/my_measurements.csv"

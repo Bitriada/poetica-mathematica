@@ -1,0 +1,153 @@
+{
+  "case": "water_ice_monograph",
+  "params": {
+    "mode": "freezing",
+    "T_m": 0.0,
+    "T_s": -10.0,
+    "T_0": 0.0,
+    "length": 0.05,
+    "dx": 0.001,
+    "t_end": 2000.0,
+    "rho": 1000.0,
+    "L": 334000.0,
+    "k_grown": 2.2,
+    "cp_grown": 4186.0,
+    "k_bulk": 0.6,
+    "cp_bulk": 4186.0,
+    "T_offset": 273.15,
+    "temp_unit": "C",
+    "event_mode": "integral",
+    "substep_safety": 0.45,
+    "max_events": 20000
+  },
+  "lambda_neumann": 0.24533703819315927,
+  "Ste": 0.12532934131736526,
+  "n_events": 16,
+  "termination": "t_end reached",
+  "t_end_reached": 1905.0125881210051,
+  "s_end": 0.016,
+  "substeps": 4681,
+  "checks": [
+    {
+      "name": "neumann_agreement",
+      "claim": "Thm 12.1: BSP event positions track s(t) = 2*lam*sqrt(alpha t)",
+      "verdict": "PASS",
+      "value": "mean rel err 4.916% (max 7.454%, 11 events in window)",
+      "tolerance": "mean < 10% (marginal < 20%)",
+      "detail": "measured on the mid-window events (start-up excluded); the convergence check below is the dx -> 0 statement"
+    },
+    {
+      "name": "convergence",
+      "claim": "Thm 12.1 (dx -> 0): BSP event times converge to Neumann",
+      "verdict": "PASS",
+      "value": "order ~ 0.93 (pairwise 0.86, 0.95, 0.97); errs 4.916%, 2.710%, 1.398%, 0.714%",
+      "tolerance": "fitted order >= 0.7, errors decreasing",
+      "detail": "grids dx = 1.000, 0.500, 0.250, 0.125 mm; node-pinned front tracking is expected to be ~1st order"
+    },
+    {
+      "name": "enthalpy_agreement",
+      "claim": "independent benchmark: apparent-capacity enthalpy method (refined grid dx/4)",
+      "verdict": "PASS",
+      "value": "mean rel diff 7.138% over 11 events",
+      "tolerance": "mean < 10%",
+      "detail": "two independent discretizations agreeing is the strongest simple evidence of correctness"
+    },
+    {
+      "name": "energy_conservation",
+      "claim": "Thm 13.2: energy conserved at each trace event up to the boundary flux (E_after - E_before + Q_out = 0)",
+      "verdict": "PASS",
+      "value": "max per-event drift 0.705% of one cell's latent; cumulative drift 0.204% of total latent exchanged",
+      "tolerance": "both < 5% (marginal < 15%)",
+      "detail": "event 1 excluded: it carries the null-transit fare (first cell's latent + boundary-cell chill), O(dx), a start-up payment rather than a conservation failure"
+    },
+    {
+      "name": "second_law",
+      "claim": "Thm 14.1: entropy production dS = k (grad T)^2 / T^2 dt >= 0, cumulative S monotone",
+      "verdict": "PASS",
+      "value": "min dS = 0.000e+00 J/(m2 K), S(t_end) = 564.7447 J/(m2 K), monotone: True",
+      "tolerance": "dS >= 0 and S non-decreasing",
+      "detail": "dS uses the paper's formula with absolute temperature and the dx volume element added (per-unit area)"
+    },
+    {
+      "name": "sharp_interface",
+      "claim": "Prop 9.3 (tau^2 = 0): the boundary marker never smears -- exactly one interface node at all times",
+      "verdict": "PASS",
+      "value": "interface nodes at end: 1; front advances node-by-node (all dp = 1): True",
+      "tolerance": "exactly 1, dp = 1",
+      "detail": "the trace layer c is 0/1 by construction and tau^2 = 0 keeps multiplication from smearing it (uc_algebra below)"
+    },
+    {
+      "name": "trace_clock",
+      "claim": "Prop 9.2: time emerges from trace events -- strictly increasing, non-uniform clock ticks",
+      "verdict": "PASS",
+      "value": "16 events, dt in [15, 2.4e+02] s (span ratio 15.6), decelerating front captured without any adaptive time-step controller",
+      "tolerance": "t increasing, dt > 0, non-uniform",
+      "detail": "for a sqrt(t) front the intervals grow linearly with event index; the uniform-grid alternative would need dt small enough for the fastest early event"
+    },
+    {
+      "name": "null_transit",
+      "claim": "monograph sec. 2.7.1 via bsp.nodes: nilpotent, irreversible, trace-preserving layer switch at node 0",
+      "verdict": "PASS",
+      "value": "fare_1 = -375860.0 vs expected -375860.0 (0.00% of rho L dx); visited record d = 1 on all 17 visited nodes: True; one-way transits: True; max crossing residual 4.56e-09 dx",
+      "tolerance": "fare within 2%, record complete, one-way, residual < 1e-3 dx",
+      "detail": "the start-up node-0 conflict (boundary layer T_s vs interface layer T_m) is resolved by dynamic layer switching; the fare is O(dx) and vanishes in the convergence limit"
+    },
+    {
+      "name": "user_data",
+      "claim": "YOUR measurements: BSP front vs observed interface positions (and Neumann as reference)",
+      "verdict": "PASS",
+      "value": "BSP RMS rel err 5.389%; Neumann RMS rel err 2.595% (20 points)",
+      "tolerance": "RMS < 10% (marginal < 25%)",
+      "detail": "bring your own (time, position) data via the case file's user_data = 'file.csv'"
+    },
+    {
+      "name": "uc_algebra",
+      "claim": "sec. 3: UC algebra with tau^2 = 0 (sharp interface encoding)",
+      "verdict": "PASS",
+      "value": "tau^2 = 0 exactly: True; Prop 3.2's printed product deviates from the algebra it defines by up to 5.914 (tau-real) / 15.317 (tau-imag) on random samples (value parts agree)",
+      "tolerance": "tau^2 = 0 exact",
+      "detail": "bsp.uc implements the correct Leibniz product; the paper's Prop 3.2 drops the -bd'-b'd contribution and flips a sign -- see the audit report"
+    },
+    {
+      "name": "lattice_counts",
+      "claim": "sec. 4: 1DB = 117 = 9 + 27 + 81 points, 2DB = 243 positions, value tables as printed",
+      "verdict": "PASS",
+      "value": "1DB points: 117, L-table match: True, M-table match: True, 2DB zone accounting: (351, 243)",
+      "tolerance": "all counts and tables match",
+      "detail": "finding: the lattices are sound combinatorial objects but Algorithm 9.1 never uses them (it runs on a plain uniform lattice); they are not load-bearing for the solver"
+    }
+  ],
+  "n_pass": 11,
+  "n_graded": 11,
+  "convergence": [
+    {
+      "dx_mm": 1.0,
+      "mean_err": 0.04915960363219563,
+      "max_err": 0.07453748041307212,
+      "n_events": 16,
+      "enthalpy_err": 0.1405369720078469
+    },
+    {
+      "dx_mm": 0.5,
+      "mean_err": 0.02710171074828213,
+      "max_err": 0.046213702843986924,
+      "n_events": 32,
+      "enthalpy_err": 0.07253352836053228
+    },
+    {
+      "dx_mm": 0.25,
+      "mean_err": 0.01398303545896197,
+      "max_err": 0.02481763893181836,
+      "n_events": 64,
+      "enthalpy_err": 0.035708360876479425
+    },
+    {
+      "dx_mm": 0.125,
+      "mean_err": 0.007138109028867396,
+      "max_err": 0.013052586540484844,
+      "n_events": 127,
+      "enthalpy_err": 0.01750167209049159
+    }
+  ],
+  "convergence_order": 0.9306284667321698
+}

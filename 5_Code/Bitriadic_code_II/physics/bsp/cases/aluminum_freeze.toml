@@ -1,0 +1,25 @@
+# Aluminum casting case: molten aluminum quenched at the mold face.
+# A professional's own-data example: adjust to your process numbers.
+
+[case]
+name = "aluminum_freeze"
+mode = "freezing"
+T_m = 660.3        # melting point [C]
+T_s = 200.0        # mold face temperature [C]
+T_0 = 660.3        # liquid initially at the melting point (one-phase)
+length = 0.03      # [m]
+dx = 0.0005        # [m]
+t_end = 120.0      # [s]
+temp_unit = "C"
+
+[material]
+preset = "aluminum"
+
+[run]
+event_mode = "integral"
+
+[validation]
+neumann = true
+enthalpy = true
+convergence = true
+convergence_levels = 3

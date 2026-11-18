@@ -1,0 +1,24 @@
+# SYNTHETIC demonstration data: exact Neumann front positions + 3% Gaussian noise (seed 42).
+# Replace this file with your real measurements:
+#   columns: t_s (time in seconds), s_m (front position in meters)
+t_s,s_m
+200.0,0.005077
+284.2,0.005810
+368.4,0.006981
+452.6,0.007781
+536.8,0.007760
+621.1,0.008518
+705.3,0.009483
+789.5,0.009900
+873.7,0.010509
+957.9,0.010728
+1042.1,0.011786
+1126.3,0.012217
+1210.5,0.012401
+1294.7,0.013232
+1378.9,0.013395
+1463.2,0.013256
+1547.4,0.014148
+1631.6,0.013955
+1715.8,0.015123
+1800.0,0.015069
