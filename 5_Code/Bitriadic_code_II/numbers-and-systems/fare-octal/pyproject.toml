@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fare-octal"
+version = "1.0.0"
+description = "The Fare-Octal counting system of Poetica Mathematica (Appendix A), operational: 27-bit tau states, squarefree Fare arithmetic, the 117-point lattice as a storage convention, and a proof-by-trial verification dossier"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "QDME verification workbench" }]
+dependencies = []   # zero dependencies, pure standard library
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+fare-octal = "fareoctal.__main__:main"
+
+[tool.setuptools]
+packages = ["fareoctal"]
