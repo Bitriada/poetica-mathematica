@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trinumeral"
+version = "1.0.0"
+description = "The heterobase counting system of Poetica Mathematica Ch. VIII 8.4: one value in three bases (binary | integer | float) with an exact graded trace, an annihilation ladder of memory regimes, a ghost disc, spin tallies, and the spinorial double cover -- proof by trial"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "QDME verification workbench" }]
+dependencies = []   # zero dependencies; exact arithmetic via fractions
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+trinumeral = "trinumeral.__main__:main"
+
+[tool.setuptools]
+packages = ["trinumeral"]

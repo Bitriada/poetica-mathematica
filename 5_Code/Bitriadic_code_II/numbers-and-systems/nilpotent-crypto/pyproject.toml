@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nilpotent-crypto"
+version = "1.0.0"
+description = "NPCS: the Nilpotent Path-Commitment Scheme -- bi-sheet credentials on Fare-Octal states and the UC-Q algebra (Poetica Mathematica Ch. VI 6.2.8), exact integer arithmetic, proof by trial"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "QDME verification workbench" }]
+dependencies = []   # zero dependencies; fareoctal is vendored
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+npcs = "npcs.__main__:main"
+
+[tool.setuptools]
+packages = ["npcs", "fareoctal"]
