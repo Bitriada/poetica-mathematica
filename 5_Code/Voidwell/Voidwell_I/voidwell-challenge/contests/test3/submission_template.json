@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "seed": "<64 hex chars: your 256-bit seed>",
+  "schedule": [
+    [0, 0],
+    [0, 0],
+    [0, 0]
+  ]
+}

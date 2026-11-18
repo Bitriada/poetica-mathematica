@@ -1,0 +1,222 @@
+{
+ "project": "voidwell-demo",
+ "date": "2026-11-16",
+ "spec": "hashkey.docx (Nilpotent Voidwell Cryptography)",
+ "monograph": [
+  "UC-Q (VI 6.2.8)",
+  "Multinumeral (App. A)",
+  "UC-polynomials (VIII 8.5)"
+ ],
+ "files": [
+  {
+   "path": "Makefile",
+   "sha256": "45ff30d09c6be4e2e766dfc97352fc6e271ce8d113127cde6bb591b1792c9af4",
+   "bytes": 2007
+  },
+  {
+   "path": "README.md",
+   "sha256": "406ceae31430a6e9e3b8fa7c44898457d15694e121c0f2771844777fa6c3fbba",
+   "bytes": 7008
+  },
+  {
+   "path": "contests/test3/challenge.json",
+   "sha256": "42eba3e012564aa58d8a8b08d7dc1bc2b0fbae5ad427e7b30fe1c2ae2392df07",
+   "bytes": 733
+  },
+  {
+   "path": "contests/test3/rules.md",
+   "sha256": "e84ae6c8b644943d89e2e87c0854d1dbae8ca16b94c2a50fe18476a1149591e3",
+   "bytes": 6243
+  },
+  {
+   "path": "contests/test3/submission_template.json",
+   "sha256": "fbf6e0fc8f589530f9528e915c196a6dfa9693619a445f361f2b3c4f29ac2387",
+   "bytes": 122
+  },
+  {
+   "path": "contests/test3/verify.sh",
+   "sha256": "1021fda196789e0ddb1a8003372f67c0f4025aff9275a57f540540305cf8f789",
+   "bytes": 191
+  },
+  {
+   "path": "fareoctal/__init__.py",
+   "sha256": "1f823802650dc72dce7fbf140dc94997b621c8925f428c5fa57a03157e97add4",
+   "bytes": 1699
+  },
+  {
+   "path": "fareoctal/__main__.py",
+   "sha256": "bf3e3ccd0b58dceee41371321a784afff5e5f825594c5cf21c3190def2947c68",
+   "bytes": 3265
+  },
+  {
+   "path": "fareoctal/algebra.py",
+   "sha256": "8be702695cc1d0e95b1b63dfea2433839ba0a8945c174bb83f9abbffcf16e823",
+   "bytes": 8389
+  },
+  {
+   "path": "fareoctal/core.py",
+   "sha256": "34dc6d36159ed8bb96f2d5c46398abcc5ff66e90a6baf353656ef66eaf4719ab",
+   "bytes": 12407
+  },
+  {
+   "path": "fareoctal/lattice.py",
+   "sha256": "20f8c3ccfe375f83004bf9e0e1f6d677940f83c6b70fa0e90eb75414dfa5738d",
+   "bytes": 6046
+  },
+  {
+   "path": "fareoctal/tour.py",
+   "sha256": "b151f21b9e3f0c1ac4043f5ca2bd459bb44c192e5e57cd51716adbf26cdf3a55",
+   "bytes": 3751
+  },
+  {
+   "path": "fareoctal/verify.py",
+   "sha256": "89cb43d49576ceb1154a8987ccbc44d92c3b9e172b9f98794aa52561456d3ed1",
+   "bytes": 18608
+  },
+  {
+   "path": "pyproject.toml",
+   "sha256": "31b624f5886808601b849a35f2720dc1ee691885bf1e5acf0f39660a8e3ee45c",
+   "bytes": 711
+  },
+  {
+   "path": "results/DEMONSTRATION.md",
+   "sha256": "af733b54665533bdb3e52384f1f486255b7759b9bd879bfceb777003f97a5541",
+   "bytes": 19659
+  },
+  {
+   "path": "results/VERIFICATION.md",
+   "sha256": "46d2182e32c0660708895182920ca9c4a5b6ae7434836e4527e473d752972821",
+   "bytes": 5935
+  },
+  {
+   "path": "results/cryptanalysis_verification.json",
+   "sha256": "de380a5e0b558dcf6285808da81c76d5c3b0269212f1ddf3b43dbad692e94a4d",
+   "bytes": 3073
+  },
+  {
+   "path": "results/measurements.json",
+   "sha256": "0988d5f61fe92b7193c1cf44eb3a8d6aadec71cf51bc38a8d208a40697045eb5",
+   "bytes": 6778
+  },
+  {
+   "path": "results/small_model.json",
+   "sha256": "84e18539b2921a5eb72a5826797a26c19ccf51ea5478f6f1787796cd4e432c66",
+   "bytes": 3313
+  },
+  {
+   "path": "results/test3_withheld_key.json",
+   "sha256": "7262be6f36e606993ced50b74d2f20d780d7ae13179fb9a5921bc3062b28565c",
+   "bytes": 176
+  },
+  {
+   "path": "tests/measurements.py",
+   "sha256": "c921dd024b0c94ce6edd27ec1fe1d586a431853297bb6b965649c61fbdf95f5f",
+   "bytes": 11574
+  },
+  {
+   "path": "tests/test1/challenge.json",
+   "sha256": "dd9350713996552464134023dad67200aaac7d8cd6ad29576ffe62e0bc564828",
+   "bytes": 522
+  },
+  {
+   "path": "tests/test1/key.json",
+   "sha256": "5941a1fc99a6f9c545dbbd5e71af3e2a0070e8f1064b66eabe28495142b28835",
+   "bytes": 112
+  },
+  {
+   "path": "tests/test2/challenge.json",
+   "sha256": "b5355ce9901adb21d587fd876a60b883391f3b2526d335f30766400c1cd91066",
+   "bytes": 593
+  },
+  {
+   "path": "tests/test2/key.json",
+   "sha256": "df45683d4220402cde9ef6006afe6b92f1d1afe1b7cb2d01f07cc153f3427cc5",
+   "bytes": 134
+  },
+  {
+   "path": "tests/test_gate.py",
+   "sha256": "9a437a4c0ad66bc255d7f6efd1b8437cc70c82f900d9d4fa7e6f9ce5816a7440",
+   "bytes": 3603
+  },
+  {
+   "path": "tests/verify.py",
+   "sha256": "88000e180d4b30f35991533a8782287a8aa517d1050a3ca6b03b718387218958",
+   "bytes": 9719
+  },
+  {
+   "path": "ucq/__init__.py",
+   "sha256": "d2a62dd90ccc096dc74c7e5447f6f7a51f57a4a85b3b9a3ce8061bcfbc9ee20d",
+   "bytes": 1746
+  },
+  {
+   "path": "ucq/conjugate.py",
+   "sha256": "89fe42019ed1728aa637183b3f27bb1303580aa9240ff4063da980f7f96725b5",
+   "bytes": 2298
+  },
+  {
+   "path": "ucq/field.py",
+   "sha256": "08051122b5cc3f6f304dd7a45991eb17d05cf9e2ce9154ec1e1aea686ad8403e",
+   "bytes": 1346
+  },
+  {
+   "path": "ucq/lift.py",
+   "sha256": "fbca4e17b8e0da823e2f4c1ba7afb33e969576c44659579378965b801272dbef",
+   "bytes": 4253
+  },
+  {
+   "path": "ucq/matrix.py",
+   "sha256": "5b59e1b8e950cb5ae0419074714ede3ed63245f412da7b84b550a861b8f691df",
+   "bytes": 4550
+  },
+  {
+   "path": "ucq/multinumeral.py",
+   "sha256": "7b1703d582dd2e659a9bb2023d0f41da4b2a88a677ab5019f960bcdfb1f48f97",
+   "bytes": 4199
+  },
+  {
+   "path": "ucq/ucpoly.py",
+   "sha256": "a125250daba558a33ee7db568a0a501317a6ee550c7b2d271ab88fb2fb757092",
+   "bytes": 4579
+  },
+  {
+   "path": "voidwell/__init__.py",
+   "sha256": "09a9dc18877c06d2dd990e065411ea8a0244c911996d69ebda4ab263d14468df",
+   "bytes": 605
+  },
+  {
+   "path": "voidwell/__main__.py",
+   "sha256": "e0eb7ee14c141f687846a4ba3e4043f9e66aa3e328548c6b5cc85d484c29029b",
+   "bytes": 3459
+  },
+  {
+   "path": "voidwell/encoder.py",
+   "sha256": "0e1976f96efdb85bb5cc142528d9a9a427fe34b5d0a80bed474cca10a542a111",
+   "bytes": 8274
+  },
+  {
+   "path": "voidwell/gate.py",
+   "sha256": "a82ed3214d31ab155c258a005a5113a464971572be7c8c0287a1f3d33c8ef60c",
+   "bytes": 4798
+  },
+  {
+   "path": "voidwell/prf.py",
+   "sha256": "d9e55bd63b59b004c32568b748252895021a527c63d26694a3e9b3ebf9089aa7",
+   "bytes": 3820
+  },
+  {
+   "path": "voidwell/schedule.py",
+   "sha256": "d52bcb7dd2359e93c3182600c2b231bf46accc9d6befab03a911c1a8b780ea65",
+   "bytes": 2046
+  },
+  {
+   "path": "voidwell/small_model/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "bytes": 0
+  },
+  {
+   "path": "voidwell/small_model/harness.py",
+   "sha256": "e98709b30e6411cf380303c29d6310f3af18260d8cd22ed0fef76e412f4ddbe3",
+   "bytes": 9309
+  }
+ ]
+}

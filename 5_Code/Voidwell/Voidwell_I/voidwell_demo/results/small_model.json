@@ -1,0 +1,103 @@
+{
+ "model": "F_7 2x2 3-bit L=8 256-seed exhaustive",
+ "revision": 2,
+ "note": "rev. 2 after the independent cryptanalysis: the 'attack_cost_measured' field of revision 1 was the inverse key density (|K| / keys-per-reference-H), not the work of any adversary; it is retained as density_artifact for transparency, and the structured attack is the measured baseline",
+ "rows": [
+  {
+   "k": 0,
+   "key_space": 256,
+   "distinct_H": 8,
+   "keys_per_H_mean": 32.0,
+   "keys_per_H_max": 41,
+   "reference_H": "9b50d8a0e5a9e07312c022dffc495577657ace66c78461b053fd332c1dd435b3",
+   "reference_collisions": 36,
+   "density_artifact": 7.111111111111111,
+   "log2_density": 2.8300749985576874,
+   "log2_space": 8.0,
+   "structured_attack_worst_case": 257,
+   "structured_attack_ops": {
+    "schedule_preimage": 1,
+    "nullifier_scan": 0,
+    "seed_replay": 256
+   },
+   "log2_structured": 8.005624549193879,
+   "structured_speedup_vs_key_space": 0.9961089494163424,
+   "structured_attack_found_passing_key": true,
+   "seconds": 0.0
+  },
+  {
+   "k": 1,
+   "key_space": 6144,
+   "distinct_H": 2777,
+   "keys_per_H_mean": 2.212459488656824,
+   "keys_per_H_max": 11,
+   "reference_H": "ecfd9849f71a1a53a324e269ba696221ce841f08f8ead5bf51ecddc6f3592bb5",
+   "reference_collisions": 1,
+   "density_artifact": 6144.0,
+   "log2_density": 12.584962500721156,
+   "log2_space": 12.584962500721156,
+   "structured_attack_worst_case": 288,
+   "structured_attack_ops": {
+    "schedule_preimage": 24,
+    "nullifier_scan": 8,
+    "seed_replay": 256
+   },
+   "log2_structured": 8.169925001442312,
+   "structured_speedup_vs_key_space": 21.333333333333332,
+   "structured_attack_found_passing_key": true,
+   "seconds": 0.6
+  },
+  {
+   "k": 2,
+   "key_space": 64512,
+   "distinct_H": 60367,
+   "keys_per_H_mean": 1.068663342554707,
+   "keys_per_H_max": 4,
+   "reference_H": "9d0800ff30a2500f7245bdf9d3a373d8c13a46cd472418a08561e428b35d2aaf",
+   "reference_collisions": 1,
+   "density_artifact": 64512.0,
+   "log2_density": 15.977279923499916,
+   "log2_space": 15.977279923499916,
+   "structured_attack_worst_case": 516,
+   "structured_attack_ops": {
+    "schedule_preimage": 252,
+    "nullifier_scan": 8,
+    "seed_replay": 256
+   },
+   "log2_structured": 9.011227255423254,
+   "structured_speedup_vs_key_space": 125.02325581395348,
+   "structured_attack_found_passing_key": true,
+   "seconds": 11.4
+  },
+  {
+   "k": 3,
+   "key_space": 387072,
+   "distinct_H": 384688,
+   "keys_per_H_mean": 1.0061972299629829,
+   "keys_per_H_max": 2,
+   "reference_H": "4bc74bcafbe35fb5967694ecbd0076032f31908b5bf94370c9c95c9a6eed35e7",
+   "reference_collisions": 1,
+   "density_artifact": 387072.0,
+   "log2_density": 18.562242424221072,
+   "log2_space": 18.562242424221072,
+   "structured_attack_worst_case": 1776,
+   "structured_attack_ops": {
+    "schedule_preimage": 1512,
+    "nullifier_scan": 8,
+    "seed_replay": 256
+   },
+   "log2_structured": 10.794415866350105,
+   "structured_speedup_vs_key_space": 217.94594594594594,
+   "structured_attack_found_passing_key": true,
+   "seconds": 98.3
+  }
+ ],
+ "slopes": {
+  "density_k_ge_1": 2.988639961749958,
+  "density_r2": 0.9939554016481871,
+  "key_space_k_ge_1": 2.988639961749958,
+  "key_space_r2": 0.9939554016481871,
+  "structured_k_ge_1": 1.3122454324538966,
+  "structured_r2": 0.9588348740618573
+ }
+}

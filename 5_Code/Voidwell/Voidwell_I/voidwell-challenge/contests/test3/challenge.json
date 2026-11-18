@@ -1,0 +1,22 @@
+{
+ "version": 1,
+ "params": {
+  "p": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f",
+  "L": 43,
+  "k": 3,
+  "hash": "sha256",
+  "lift_version": 1,
+  "digits": 9,
+  "bits_per_digit": 3
+ },
+ "H": "578004f99cffb70e077e267e462708701ee4bf65a06e8f48f279fb836906ec4a",
+ "schedule_digest": "96420258ec4d92a72ee0f5641297f3d7d450734e27266fd0a303c07265f093ec",
+ "data": "00112233",
+ "data_commitment": "aafa373bf008a855815ecb37d8bd52f6a8157cb5833c58edde6d530dbcf3f25d",
+ "nullifier_count": 3,
+ "nullifiers": [
+  "a3720bd1e1aa90c74dabd0ba279e49c327ce49a8d26d061dae257167d8c73ce2",
+  "e3b57194159b525697fabf3c87f5c871d0cc18ab8dcadd16f422ed2a41d45b7a",
+  "8deb7a54bed3f6cf5066f9d69d6def7c7214e2afe7375284f5eb2a13aac386b0"
+ ]
+}

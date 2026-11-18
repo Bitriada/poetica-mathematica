@@ -1,0 +1,141 @@
+{
+ "provenance": {
+  "prf_schedule_matches_key": true,
+  "seed_source": "secrets.token_bytes(32) (CSPRNG) at sealing time"
+ },
+ "F1_schedule_preimage": {
+  "candidates": 8996589,
+  "matches": 1,
+  "recovered": [
+   [
+    [
+     28,
+     0
+    ],
+    [
+     32,
+     5
+    ],
+    [
+     42,
+     3
+    ]
+   ]
+  ],
+  "seconds": 2.95,
+  "matches_withheld_key": true,
+  "log2_space": 23.100946685704724
+ },
+ "F2_nullifier_preimage": {
+  "scan_space": 134217728,
+  "seconds": 63.3,
+  "rate_per_s": 2119788,
+  "recovered": {
+   "1": 38644752,
+   "2": 86246842,
+   "3": 92106969
+  },
+  "derived_from_key": {
+   "1": 38644752,
+   "2": 86246842,
+   "3": 92106969
+  },
+  "digits_zeroed_ok": true,
+  "matches_key_derivation": true,
+  "nullifiers_recomputed_ok": true
+ },
+ "F3_base_collapse": {
+  "seeds_tested": 300,
+  "digits_ever_changed": [
+   0,
+   4,
+   8
+  ],
+  "untouched_digits": [
+   1,
+   2,
+   3,
+   5,
+   6,
+   7
+  ],
+  "untouched_bits": 18,
+  "period4_description_holds": true,
+  "digit6_fallback_fired": false,
+  "D_L_equals_C3_digit8_zeroed": true,
+  "C3_digit8": 6,
+  "replication_matches_run_path": true
+ },
+ "F4_accounting": {
+  "schedule_space_log2": 23.1,
+  "path_binding_bits": 108,
+  "nullifier_binding_bits": 72,
+  "effective_security_log2": 180,
+  "unstructured_bruteforce_log2": 203.1,
+  "claimed_log2": 279.1,
+  "overstatement_bits": 99.1,
+  "metric_error_bits": 76.0,
+  "decomposition_gain_bits": 23.1,
+  "full_replay_rate_per_s": 184.3,
+  "early_abort_rate_per_s": 554.8,
+  "years_at_abort_rate": 8.753166455679507e+43,
+  "years_at_full_rate": 2.6351271096020144e+44
+ },
+ "F5_small_model": {
+  "rows": [
+   {
+    "k": 1,
+    "key_space": 6144,
+    "log2_claimed": 12.585,
+    "structured_worst_case": 288,
+    "log2_structured": 8.17,
+    "speedup": 21.3,
+    "ops_schedule_preimage": 24,
+    "ops_nullifier_scan": 8,
+    "ops_seed_replay": 256,
+    "attack_found_passing_key": true,
+    "reference_seed_passes": true
+   },
+   {
+    "k": 2,
+    "key_space": 64512,
+    "log2_claimed": 15.977,
+    "structured_worst_case": 516,
+    "log2_structured": 9.011,
+    "speedup": 125.0,
+    "ops_schedule_preimage": 252,
+    "ops_nullifier_scan": 8,
+    "ops_seed_replay": 256,
+    "attack_found_passing_key": true,
+    "reference_seed_passes": true
+   },
+   {
+    "k": 3,
+    "key_space": 387072,
+    "log2_claimed": 18.562,
+    "structured_worst_case": 1776,
+    "log2_structured": 10.794,
+    "speedup": 217.9,
+    "ops_schedule_preimage": 1512,
+    "ops_nullifier_scan": 8,
+    "ops_seed_replay": 256,
+    "attack_found_passing_key": true,
+    "reference_seed_passes": true
+   }
+  ],
+  "slope_claimed_bits_per_well": 2.989,
+  "slope_claimed_r2": 0.994,
+  "slope_structured_bits_per_well": 1.312,
+  "slope_structured_r2": 0.9588
+ },
+ "U_uniformity": {
+  "seeds": 4000,
+  "chi2": 241.0,
+  "df": 255,
+  "critical_alpha_0.05": 293.2,
+  "uniform_at_0.05": true,
+  "rejection_counter_mean_tries": 7.9,
+  "expected_tries": 8,
+  "note": "D'_1 bucketed on 8 of its 24 free bits (digit 0 is nullified); uniformity is what makes each nullifier an exact 2^-24 filter"
+ }
+}
