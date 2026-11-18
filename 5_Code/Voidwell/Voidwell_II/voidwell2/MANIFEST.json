@@ -1,0 +1,90 @@
+{
+ "project": "voidwell2",
+ "version": "2.0.0",
+ "what": "a hash-and-key construction: a seed derives a 43-step three-layer walk, published as one SHA-256 hash; the key is the seed alone",
+ "variants": {
+  "flagship": {
+   "key_bytes": 32,
+   "security": "2^256"
+  },
+  "compact": {
+   "key_bytes": 16,
+   "security": "2^128"
+  }
+ },
+ "design_facts": [
+  "full-width nullifiers: N_j = SHA-256(ser(D') || full conjugated matrix) -- preimage domain 2^4123",
+  "H-only publication: the challenge carries H + public params; the gate enforces the surface",
+  "seed-only key; wells at public pi-skeleton constants (positions 3/14/15, digits 3/1/4)",
+  "fixed L=43, k=3; the variants differ only in seed width"
+ ],
+ "programs": "python3 -m voidwell2 keygen|encode|gate|params|tickkey (see README.md)",
+ "examples": [
+  "examples/case1-flagship",
+  "examples/case2-compact"
+ ],
+ "sealed_challenges": [
+  "contests/flagship (2^256, the publishable challenge)",
+  "contests/compact (2^128, study)"
+ ],
+ "attacker_package": "attacker/ (seed_search, toy_dictionary, surface_audit)",
+ "tick_key_toy": "voidwell2/tickkey.py (the floor piece)",
+ "parked": "RESEARCH-V3.md (the group-action well)",
+ "changelog": "CHANGELOG.md (what changed relative to Voidwell-1 and why -- the package itself stands alone)",
+ "claims": "security = min(seed bits, 256); assumption: SHA-256 preimage resistance",
+ "note": "withheld challenge keys are NOT in this archive (demo disclosure: voidwell2_challenge_KEY.json, kept outside)",
+ "files": [
+  "CHANGELOG.md",
+  "Makefile",
+  "README.md",
+  "RESEARCH-V3.md",
+  "attacker/README-ATTACKER.md",
+  "attacker/seed_search.py",
+  "attacker/surface_audit.py",
+  "attacker/toy_dictionary.py",
+  "contests/compact/challenge.json",
+  "contests/flagship/README-CHALLENGE.md",
+  "contests/flagship/challenge.json",
+  "docs/voidwell2_design_study.pdf",
+  "examples/case1-flagship/OUTPUT.txt",
+  "examples/case1-flagship/challenge.json",
+  "examples/case1-flagship/key.json",
+  "examples/case2-compact/OUTPUT.txt",
+  "examples/case2-compact/challenge.json",
+  "examples/case2-compact/key.json",
+  "fareoctal/__init__.py",
+  "fareoctal/__main__.py",
+  "fareoctal/algebra.py",
+  "fareoctal/core.py",
+  "fareoctal/lattice.py",
+  "fareoctal/tour.py",
+  "fareoctal/verify.py",
+  "results/RUN.md",
+  "results/measurements.json",
+  "results/small_model.json",
+  "results/toy_dictionary.json",
+  "tests/demo/compact.json",
+  "tests/demo/compact.key.json",
+  "tests/demo/flagship.json",
+  "tests/demo/flagship.key.json",
+  "tests/measurements.py",
+  "tests/verify.py",
+  "ucq/__init__.py",
+  "ucq/conjugate.py",
+  "ucq/field.py",
+  "ucq/lift.py",
+  "ucq/matrix.py",
+  "ucq/multinumeral.py",
+  "ucq/ucpoly.py",
+  "voidwell2/__init__.py",
+  "voidwell2/__main__.py",
+  "voidwell2/encoder.py",
+  "voidwell2/gate.py",
+  "voidwell2/pi_const.json",
+  "voidwell2/prf.py",
+  "voidwell2/small_model/__init__.py",
+  "voidwell2/small_model/harness.py",
+  "voidwell2/tickkey.py",
+  "voidwell2/wells.py"
+ ]
+}

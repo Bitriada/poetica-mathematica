@@ -1,0 +1,32 @@
+{
+ "version": 2,
+ "params": {
+  "p": "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f",
+  "L": 43,
+  "k": 3,
+  "hash": "sha256",
+  "lift_version": 1,
+  "digits": 9,
+  "bits_per_digit": 3,
+  "variant": "compact",
+  "seed_bits": 128,
+  "wells": [
+   [
+    3,
+    3
+   ],
+   [
+    14,
+    1
+   ],
+   [
+    15,
+    4
+   ]
+  ]
+ },
+ "H": "a34f001209778210a60a193782b602f914fa5734602b4271e7525e50d85a7c99",
+ "data": "deadbeef",
+ "data_commitment": "5f78c33274e43fa9de5659265c1d917e25c03722dcb0b8d27db8d5feaa813953",
+ "nullifier_count": 3
+}

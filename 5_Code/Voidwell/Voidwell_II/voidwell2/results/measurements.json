@@ -1,0 +1,84 @@
+{
+ "model": "voidwell-2",
+ "encode_rate": {
+  "flagship": {
+   "trials": 150,
+   "seconds": 0.841,
+   "rate_per_s": 178.3
+  },
+  "compact": {
+   "trials": 150,
+   "seconds": 0.944,
+   "rate_per_s": 158.9
+  }
+ },
+ "wrong_seed_rate": {
+  "flagship": {
+   "trials": 150,
+   "hits": 0,
+   "seconds": 0.837,
+   "rate_per_s": 179.3
+  },
+  "compact": {
+   "trials": 150,
+   "hits": 0,
+   "seconds": 0.826,
+   "rate_per_s": 181.5
+  }
+ },
+ "no_early_abort_ratio": 1.01,
+ "attacks": {
+  "compact": {
+   "expected_trials": "2^127",
+   "per_trial": "full replay",
+   "years": "3.02e+28"
+  },
+  "flagship": {
+   "expected_trials": "2^255",
+   "per_trial": "full replay",
+   "years": "1.03e+67"
+  }
+ },
+ "tickkey": {
+  "ticks": 100000,
+  "seconds": 1.64,
+  "ticks_per_s": 61113.0,
+  "expected_climb_to_demo_tick_seconds": 25703.0,
+  "demo_tick": 3141592653,
+  "demo_tick_log2": 31.55
+ },
+ "surface_audit": {
+  "published_fields": [
+   "H",
+   "data",
+   "data_commitment",
+   "nullifier_count",
+   "params",
+   "version"
+  ],
+  "allowed_fields": [
+   "H",
+   "data",
+   "data_commitment",
+   "nullifier_count",
+   "params",
+   "version"
+  ],
+  "match": true,
+  "nature": {
+   "version": "public data / count -- public by design",
+   "params": "public parameters (pi-skeleton wells, variant, widths) -- public by design",
+   "H": "256-bit SHA-256 of full-width material (>= 2^256 preimage domain)",
+   "data": "public data / count -- public by design",
+   "data_commitment": "256-bit SHA-256 of full-width material (>= 2^256 preimage domain)",
+   "nullifier_count": "public data / count -- public by design"
+  },
+  "leak_fields_absent": true
+ },
+ "claims": {
+  "flagship": "security = min(256, 256) = 2^256",
+  "compact": "security = min(128, 256) = 2^128",
+  "assumption": "SHA-256 preimage resistance; all other layers are integrity and narrative",
+  "best_attack": "seed enumeration at full replay cost"
+ }
+}

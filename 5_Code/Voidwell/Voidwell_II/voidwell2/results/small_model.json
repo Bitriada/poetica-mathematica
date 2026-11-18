@@ -1,0 +1,63 @@
+{
+ "revision": 3,
+ "model": "2x2/F_7, 3-bit, L=8",
+ "wells_public": true,
+ "rows": [
+  {
+   "k": 0,
+   "key_space": 256,
+   "seeds_hitting_ref_H": 36,
+   "density_quotient": 7.111111111111111,
+   "density_quotient_is_artifact": "at k=0 it undercounts the collapse; at k>=1 it equals the seed space for the right reason (the key space IS the seed space)",
+   "seed_enumeration_trials_to_ref_seed": 3,
+   "seed_enumeration_expected": 128.5,
+   "seed_enumeration_worst": 256,
+   "seed_enumeration_seconds": 0.0,
+   "distinct_H": 8
+  },
+  {
+   "k": 1,
+   "key_space": 256,
+   "seeds_hitting_ref_H": 1,
+   "density_quotient": 256.0,
+   "density_quotient_is_artifact": "at k=0 it undercounts the collapse; at k>=1 it equals the seed space for the right reason (the key space IS the seed space)",
+   "seed_enumeration_trials_to_ref_seed": 91,
+   "seed_enumeration_expected": 128.5,
+   "seed_enumeration_worst": 256,
+   "seed_enumeration_seconds": 0.01,
+   "distinct_H": 231
+  },
+  {
+   "k": 2,
+   "key_space": 256,
+   "seeds_hitting_ref_H": 1,
+   "density_quotient": 256.0,
+   "density_quotient_is_artifact": "at k=0 it undercounts the collapse; at k>=1 it equals the seed space for the right reason (the key space IS the seed space)",
+   "seed_enumeration_trials_to_ref_seed": 91,
+   "seed_enumeration_expected": 128.5,
+   "seed_enumeration_worst": 256,
+   "seed_enumeration_seconds": 0.017,
+   "distinct_H": 251
+  },
+  {
+   "k": 3,
+   "key_space": 256,
+   "seeds_hitting_ref_H": 1,
+   "density_quotient": 256.0,
+   "density_quotient_is_artifact": "at k=0 it undercounts the collapse; at k>=1 it equals the seed space for the right reason (the key space IS the seed space)",
+   "seed_enumeration_trials_to_ref_seed": 91,
+   "seed_enumeration_expected": 128.5,
+   "seed_enumeration_worst": 256,
+   "seed_enumeration_seconds": 0.024,
+   "distinct_H": 256
+  }
+ ],
+ "toy_dictionary": {
+  "domain": 19208,
+  "domain_log2": 14.2,
+  "build_seconds": 0.1,
+  "recovered": 3,
+  "published": 3,
+  "full_model_domain_log2": 4123
+ }
+}

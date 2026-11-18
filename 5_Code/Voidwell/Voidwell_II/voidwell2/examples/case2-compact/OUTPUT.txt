@@ -1,0 +1,31 @@
+Case 2 -- the compact variant (16-byte seed), input data deadbeef
+=====================================================================
+
+Same flow as case 1, but: the compact variant (a 16-byte key,
+security 2^128) and a different --data input.  The data is mixed
+into every base step of the walk, so the same seed with different
+data yields a completely different H.
+
+$ python3 -m voidwell2 encode --variant compact --data deadbeef \
+      --seed 22222222222222222222222222222222 \
+      --out examples/case2-compact/challenge.json \
+      --key-out examples/case2-compact/key.json
+variant   = compact
+H         = a34f001209778210a60a193782b602f914fa5734602b4271e7525e50d85a7c99
+published = H + public params only (no schedule digest, no nullifiers)
+wrote examples/case2-compact/challenge.json and examples/case2-compact/key.json
+
+$ python3 -m voidwell2 gate --challenge examples/case2-compact/challenge.json \
+      --key examples/case2-compact/key.json
+PASS
+
+Notes:
+
+* The seed here is a PUBLISHED demonstration seed; real keys come
+  from `python3 -m voidwell2 keygen --variant compact --out
+  mykey.json` (or omit --seed in encode for a random key).
+* The two files in this directory are the exact outputs; the
+  expected H above is what your run must print.
+* The gate's exit codes: 0 PASS, 1 FAIL (wrong or malformed key
+  content), 2 MALFORMED (schema violation -- including a challenge
+  that publishes more than H and the public parameters).
